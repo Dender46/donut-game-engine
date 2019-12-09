@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.902
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sandbox", "Sandbox\Sandbox.vcxproj", "{C55A86D4-71DF-4D9B-B202-28607C3EEAF7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DonutEngine", "DonutEngine\DonutEngine.vcxproj", "{EF7E4AD2-A995-4341-A7B5-2A1E0AB839AD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EF7E4AD2-A995-4341-A7B5-2A1E0AB839AD}.Debug|x64.ActiveCfg = Debug|x64
+		{EF7E4AD2-A995-4341-A7B5-2A1E0AB839AD}.Debug|x64.Build.0 = Debug|x64
+		{EF7E4AD2-A995-4341-A7B5-2A1E0AB839AD}.Release|x64.ActiveCfg = Release|x64
+		{EF7E4AD2-A995-4341-A7B5-2A1E0AB839AD}.Release|x64.Build.0 = Release|x64
+		{C55A86D4-71DF-4D9B-B202-28607C3EEAF7}.Debug|x64.ActiveCfg = Debug|x64
+		{C55A86D4-71DF-4D9B-B202-28607C3EEAF7}.Debug|x64.Build.0 = Debug|x64
+		{C55A86D4-71DF-4D9B-B202-28607C3EEAF7}.Release|x64.ActiveCfg = Release|x64
+		{C55A86D4-71DF-4D9B-B202-28607C3EEAF7}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C81F7817-C5A3-484F-B54D-941D833388B0}
+	EndGlobalSection
+EndGlobal
