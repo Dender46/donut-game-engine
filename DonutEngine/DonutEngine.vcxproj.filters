@@ -4,6 +4,9 @@
     <Filter Include="Donut">
       <UniqueIdentifier>{EF430C0D-5B58-34BE-24DA-D71D90AD30EF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Donut\Events">
+      <UniqueIdentifier>{F34C2EFF-DFAF-BDA3-8835-F65974778926}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Donut.h" />
@@ -15,6 +18,18 @@
     </ClInclude>
     <ClInclude Include="src\Donut\EntryPoint.h">
       <Filter>Donut</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Donut\Events\ApplicationEvent.h">
+      <Filter>Donut\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Donut\Events\Event.h">
+      <Filter>Donut\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Donut\Events\KeyEvent.h">
+      <Filter>Donut\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Donut\Events\MouseEvent.h">
+      <Filter>Donut\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Donut\Log.h">
       <Filter>Donut</Filter>

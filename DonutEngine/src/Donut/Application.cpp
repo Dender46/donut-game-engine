@@ -1,5 +1,8 @@
 #include "Application.h"
 
+#include "Donut/Events/ApplicationEvent.h"
+#include "Donut/Log.h"
+
 namespace Donut {
 
 	Application::Application()
@@ -14,6 +17,9 @@ namespace Donut {
 	
 	void Application::Run()
 	{
+		WindowResizedEvent e(1280, 720);
+		DN_TRACE(e);
+
 		while (true);
 	}
 }
