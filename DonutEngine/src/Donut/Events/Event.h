@@ -2,9 +2,6 @@
 
 #include "Donut/Core.h"
 
-#include <string>
-#include <functional>
-
 namespace Donut {
 
 	enum class EventType

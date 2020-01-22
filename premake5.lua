@@ -18,6 +18,9 @@ project "DonutEngine"
     targetdir  ("bin/" .. outputDir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputDir .. "/%{prj.name}")
 
+	pchheader "dnpch.h"
+	pchsource "DonutEngine/src/dnpch.cpp"
+
     files
     {
         "%{prj.name}/src/**.h",

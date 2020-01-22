@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace Donut {
 
 	class DONUT_API MouseMovedEvent : public Event
@@ -25,7 +23,7 @@ namespace Donut {
 		EVENT_CLASS_TYPE(MouseMoved)
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	private:
-		float m_MouseX, float m_MouseY;
+		float m_MouseX, m_MouseY;
 	};
 
 

@@ -1,3 +1,5 @@
+#include "dnpch.h"
+
 #include "Application.h"
 
 #include "Donut/Events/ApplicationEvent.h"

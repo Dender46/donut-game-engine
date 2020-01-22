@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace Donut {
 
 	class DONUT_API WindowResizedEvent : public Event
