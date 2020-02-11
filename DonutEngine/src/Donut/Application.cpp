@@ -5,11 +5,13 @@
 #include "Donut/Events/ApplicationEvent.h"
 #include "Donut/Log.h"
 
+#include <GLFW/glfw3.h>
+
 namespace Donut {
 
 	Application::Application()
 	{
-
+		m_Window = std::unique_ptr<Window>(Window::Create());
 	}
 
 	Application::~Application()
@@ -19,9 +21,12 @@ namespace Donut {
 	
 	void Application::Run()
 	{
-		WindowResizedEvent e(1280, 720);
-		DN_TRACE(e);
-
-		while (true);
+		while (m_Running)
+		{
+			// testing opengl context
+			glClearColor(1, 0, 1, 1);
+			glClear(GL_COLOR_BUFFER_BIT);
+			m_Window->OnUpdate();
+		}
 	}
 }

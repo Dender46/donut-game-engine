@@ -12,6 +12,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "Donut/Log.h"
+
 #ifdef DN_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif

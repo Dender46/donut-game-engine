@@ -8,15 +8,21 @@ workspace "DonutEngine"
         "Dist"
     }
 
-outputDir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
+
+-- Include directories relative to root folder (solution directory)
+IncludeDir = {}
+IncludeDir["GLFW"] = "DonutEngine/vendor/GLFW/include"
+
+include "DonutEngine/vendor/GLFW"
 
 project "DonutEngine"
     location "DonutEngine"
     kind "SharedLib"
     language "C++"
 
-    targetdir  ("bin/" .. outputDir .. "/%{prj.name}")
-    objdir ("bin-int/" .. outputDir .. "/%{prj.name}")
+    targetdir  ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "dnpch.h"
 	pchsource "DonutEngine/src/dnpch.cpp"
@@ -31,7 +37,14 @@ project "DonutEngine"
     {
 		"%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
+		"%{IncludeDir.GLFW}"
     }
+
+	links
+	{
+		"GLFW",
+		"opengl32.lib"
+	}
 
     filter "system:windows"
         cppdialect "C++17"
@@ -46,7 +59,7 @@ project "DonutEngine"
 
         postbuildcommands
         {
-            ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputDir .. "/Sandbox")
+            ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
         }
     
     filter "configurations:Debug"
@@ -67,8 +80,8 @@ project "Sandbox"
     kind "ConsoleApp"
     language "C++"
 
-    targetdir  ("bin/" .. outputDir .. "/%{prj.name}")
-    objdir ("bin-int/" .. outputDir .. "/%{prj.name}")
+    targetdir  ("bin/" .. outputdir .. "/%{prj.name}")
+    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
     files
     {
