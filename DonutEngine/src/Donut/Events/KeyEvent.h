@@ -13,7 +13,7 @@ namespace Donut {
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 	protected:
 		KeyEvent(int keyCode)
-			: m_KeyCode(keycode) {}
+			: m_KeyCode(keyCode) {}
 
 		int m_KeyCode;
 	};
@@ -22,7 +22,7 @@ namespace Donut {
 	{
 	public:
 		KeyPressedEvent(int keycode, int repeatCount)
-			: KeyEvent(keycode), m_RepeatedCount(repeatCount) {}
+			: KeyEvent(keycode), m_RepeatCount(repeatCount) {}
 
 		inline int GetRepeatCount() const { return m_RepeatCount; }
 
@@ -41,7 +41,7 @@ namespace Donut {
 	class DONUT_API KeyReleasedEvent : public KeyEvent
 	{
 	public:
-		KeyPressedEvent(int keycode)
+		KeyReleasedEvent(int keycode)
 			: KeyEvent(keycode) {}
 
 		std::string ToString() const override
@@ -51,6 +51,6 @@ namespace Donut {
 			return ss.str();
 		}
 
-		EVENT_CLASS_TYPE(KeyReleasedEvent )
+		EVENT_CLASS_TYPE(KeyReleased)
 	};
 }

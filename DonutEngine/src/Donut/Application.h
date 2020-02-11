@@ -3,6 +3,8 @@
 #include "Core.h"
 #include "Window.h"
 
+#include "Donut\Events\ApplicationEvent.h"
+
 namespace Donut {
 
 	class DONUT_API Application
@@ -12,7 +14,11 @@ namespace Donut {
 		virtual ~Application();
 
 		void Run();
+
+		void OnEvent(Event& e);
 	private:
+		bool OnWindowClosed(WindowCloseEvent& e);
+
 		std::unique_ptr<Window> m_Window;
 		bool m_Running = true;
 	};
