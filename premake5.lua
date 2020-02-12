@@ -13,8 +13,10 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
 IncludeDir["GLFW"] = "DonutEngine/vendor/GLFW/include"
+IncludeDir["Glad"] = "DonutEngine/vendor/Glad/include"
 
 include "DonutEngine/vendor/GLFW"
+include "DonutEngine/vendor/Glad"
 
 project "DonutEngine"
     location "DonutEngine"
@@ -37,12 +39,14 @@ project "DonutEngine"
     {
 		"%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}"
     }
 
 	links
 	{
 		"GLFW",
+		"Glad",
 		"opengl32.lib"
 	}
 
@@ -54,7 +58,8 @@ project "DonutEngine"
         defines
         {
             "DN_PLATFORM_WINDOWS",
-            "DN_BUILD_DLL"
+            "DN_BUILD_DLL",
+			"GLFW_INCLUDE_NONE"
         }
 
         postbuildcommands
