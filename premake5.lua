@@ -64,14 +64,17 @@ project "DonutEngine"
     
     filter "configurations:Debug"
         defines "DN_DEBUG"
+		buildoptions "/MDd"
         symbols "On"
     
     filter "configurations:Release"
         defines "DN_RELEASE"
+		buildoptions "/MD"
         optimize "On"
     
     filter "configurations:Dist"
         defines "DN_DIST"
+		buildoptions "/MD"
         optimize "On"
     
 
@@ -112,12 +115,15 @@ project "Sandbox"
 
     filter "configurations:Debug"
         defines "DN_DEBUG"
+		buildoptions "/MDd"
         symbols "On"
 
     filter "configurations:Release"
         defines "DN_RELEASE"
+		buildoptions "/MD"
         optimize "On"
 
     filter "configurations:Dist"
         defines "DN_DIST"
+		buildoptions "/MD"
         optimize "On"

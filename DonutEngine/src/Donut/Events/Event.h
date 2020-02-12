@@ -37,13 +37,13 @@ namespace Donut {
 		virtual const char* GetName()     const = 0;
 		virtual int  GetCategoryFlags()   const = 0;
 		virtual std::string ToString()    const { return GetName(); }
+		
+		bool Handled = false;
 
 		inline bool IsInCategory(EventCategory category)
 		{
 			return GetCategoryFlags() & category;
 		}
-	protected:
-		bool m_Handled = false;
 	};
 
 
@@ -62,7 +62,7 @@ namespace Donut {
 		{
 			if (m_Event.GetEventType() == T::GetStaticType())
 			{
-				m_Event.m_Handled = func(*(T*)&m_Event);
+				m_Event.Handled = func(*(T*)&m_Event);
 				return true;
 			}
 			return false;
