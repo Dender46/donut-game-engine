@@ -4,3 +4,6 @@
 [submodule "DonutEngine/vendor/GLFW"]
 	path = DonutEngine/vendor/GLFW
 	url = https://github.com/Dender46/glfw
+[submodule "DonutEngine/vendor/imgui"]
+	path = DonutEngine/vendor/imgui
+	url = https://github.com/Dender46/imgui.git

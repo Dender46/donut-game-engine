@@ -12,11 +12,13 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
-IncludeDir["GLFW"] = "DonutEngine/vendor/GLFW/include"
-IncludeDir["Glad"] = "DonutEngine/vendor/Glad/include"
+IncludeDir["GLFW"]  = "DonutEngine/vendor/GLFW/include"
+IncludeDir["Glad"]  = "DonutEngine/vendor/Glad/include"
+IncludeDir["ImGui"] = "DonutEngine/vendor/imgui"
 
 include "DonutEngine/vendor/GLFW"
 include "DonutEngine/vendor/Glad"
+include "DonutEngine/vendor/imgui"
 
 project "DonutEngine"
     location "DonutEngine"
@@ -40,13 +42,15 @@ project "DonutEngine"
 		"%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}"
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.ImGui}"
     }
 
 	links
 	{
 		"GLFW",
 		"Glad",
+		"ImGui",
 		"opengl32.lib"
 	}
 
