@@ -33,7 +33,7 @@ namespace Donut {
 
 	void Application::PushOverlay(Layer* overlay)
 	{
-		m_LayerStack.PushLayer(overlay);
+		m_LayerStack.PushOverlay(overlay);
 		overlay->OnAttach();
 	}
 

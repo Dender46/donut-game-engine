@@ -10,7 +10,7 @@ public:
 
 	void OnUpdate() override
 	{
-		DN_INFO("ExampleLayer::Update()");
+		
 	}
 
 	void OnEvent(Donut::Event& e) override
