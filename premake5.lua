@@ -1,5 +1,6 @@
 workspace "DonutEngine"
     architecture "x64"
+	startproject "Sandbox"
 
     configurations
     {
@@ -16,9 +17,11 @@ IncludeDir["GLFW"]  = "DonutEngine/vendor/GLFW/include"
 IncludeDir["Glad"]  = "DonutEngine/vendor/Glad/include"
 IncludeDir["ImGui"] = "DonutEngine/vendor/imgui"
 
-include "DonutEngine/vendor/GLFW"
-include "DonutEngine/vendor/Glad"
-include "DonutEngine/vendor/imgui"
+group "Dependencies"
+	include "DonutEngine/vendor/GLFW"
+	include "DonutEngine/vendor/Glad"
+	include "DonutEngine/vendor/imgui"
+group ""
 
 project "DonutEngine"
     location "DonutEngine"
