@@ -4,7 +4,9 @@
 
 #include "imgui.h"
 #include "Donut\Platform\OpenGL\ImGuiOpenGLRenderer.h"
-#include "GLFW\glfw3.h"
+
+#include <GLFW\glfw3.h>
+#include <glad\glad.h>
 
 namespace Donut {
 
@@ -88,6 +90,7 @@ namespace Donut {
 		dispatcher.Dispatch<MouseScrolledEvent>(DN_BIND_EVENT_FN(ImGuiLayer::OnMouseScrolledEvent));
 		dispatcher.Dispatch<KeyPressedEvent>(DN_BIND_EVENT_FN(ImGuiLayer::OnKeyPressedEvent));
 		dispatcher.Dispatch<KeyReleasedEvent>(DN_BIND_EVENT_FN(ImGuiLayer::OnKeyRealesedEvent));
+		dispatcher.Dispatch<KeyTypedEvent>(DN_BIND_EVENT_FN(ImGuiLayer::OnKeyTypedEvent));
 		dispatcher.Dispatch<WindowResizeEvent>(DN_BIND_EVENT_FN(ImGuiLayer::OnWindowResizedEvent));
 	}
 
@@ -129,6 +132,10 @@ namespace Donut {
 		ImGuiIO& io = ImGui::GetIO();
 		io.KeysDown[e.GetKeyCode()] = true;
 
+		io.KeyCtrl	= io.KeysDown[GLFW_KEY_LEFT_CONTROL]	|| io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+		io.KeyAlt	= io.KeysDown[GLFW_KEY_LEFT_ALT]		|| io.KeysDown[GLFW_KEY_RIGHT_ALT];
+		io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT]		|| io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+		io.KeySuper	= io.KeysDown[GLFW_KEY_LEFT_SUPER]		|| io.KeysDown[GLFW_KEY_RIGHT_SUPER];
 		return false;
 	}
 
@@ -140,10 +147,20 @@ namespace Donut {
 		return false;
 	}
 
+	bool ImGuiLayer::OnKeyTypedEvent(KeyTypedEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.AddInputCharacter(e.GetKeyCode());
+
+		return false;
+	}
+
 	bool ImGuiLayer::OnWindowResizedEvent(WindowResizeEvent& e)
 	{
-		//ImGuiIO& io = ImGui::GetIO();
-		//io.DisplaySize
+		ImGuiIO& io = ImGui::GetIO();
+		io.DisplaySize = ImVec2(e.GetWidth(), e.GetHeight());
+		io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
+		glViewport(0, 0, e.GetWidth(), e.GetHeight());
 
 		return false;
 	}

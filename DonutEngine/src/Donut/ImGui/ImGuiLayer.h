@@ -25,6 +25,7 @@ namespace Donut {
 		bool OnMouseScrolledEvent(MouseScrolledEvent& e);
 		bool OnKeyPressedEvent(KeyPressedEvent& e);
 		bool OnKeyRealesedEvent(KeyReleasedEvent& e);
+		bool OnKeyTypedEvent(KeyTypedEvent& e);
 		bool OnWindowResizedEvent(WindowResizeEvent& e);
 	private:
 		float m_Time = 0.0f;
