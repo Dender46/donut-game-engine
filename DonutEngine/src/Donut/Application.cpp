@@ -65,9 +65,6 @@ namespace Donut {
 				layer->OnUpdate();
 
 			m_Window->OnUpdate();
-
-			auto[x, y] = Input::GetMousePosition();
-			DN_CORE_TRACE("Mouse position: {0}, {1}", x, y);
 		}
 	}
 

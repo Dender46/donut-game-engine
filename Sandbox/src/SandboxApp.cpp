@@ -10,7 +10,8 @@ public:
 
 	void OnUpdate() override
 	{
-		
+		if (Donut::Input::IsKeyPressed(DN_KEY_TAB))
+			DN_TRACE("Tab key is pressed!");
 	}
 
 	void OnEvent(Donut::Event& e) override
