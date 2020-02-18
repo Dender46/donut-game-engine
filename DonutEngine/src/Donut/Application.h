@@ -6,6 +6,8 @@
 #include "Donut\Events\Event.h"
 #include "Donut\Events\ApplicationEvent.h"
 
+#include "Donut\ImGui\ImGuiLayer.h"
+
 namespace Donut {
 
 	class DONUT_API Application
@@ -28,6 +30,7 @@ namespace Donut {
 		bool OnWindowClosed(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 	private:

@@ -43,7 +43,6 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer());
-		PushOverlay(new Donut::ImGuiLayer());
 	}
 
 	~Sandbox()
