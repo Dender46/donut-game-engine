@@ -7,3 +7,6 @@
 [submodule "DonutEngine/vendor/glm"]
 	path = DonutEngine/vendor/glm
 	url = https://github.com/g-truc/glm.git
+[submodule "DonutEngine/vendor/imgui"]
+	path = DonutEngine/vendor/imgui
+	url = https://github.com/Dender46/imgui.git
