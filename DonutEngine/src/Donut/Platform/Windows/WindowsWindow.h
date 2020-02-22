@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Donut\Window.h"
+#include "Donut\Renderer\RenderingContext.h"
 
 #include <GLFW\glfw3.h>
 
@@ -26,6 +27,7 @@ namespace Donut {
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
+		RenderingContext* m_Context;
 
 		struct WindowData
 		{
