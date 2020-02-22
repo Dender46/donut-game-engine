@@ -37,6 +37,11 @@ project "DonutEngine"
     pchheader "dnpch.h"
     pchsource "DonutEngine/src/dnpch.cpp"
 
+    defines
+    {
+        "_CRT_SECURE_NO_WARNINGS"
+    }
+
     files
     {
         "%{prj.name}/src/**.h",
