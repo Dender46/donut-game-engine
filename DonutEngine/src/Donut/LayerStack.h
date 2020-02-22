@@ -7,7 +7,7 @@
 
 namespace Donut {
 
-	class DONUT_API LayerStack
+	class  LayerStack
 	{
 	public:
 		LayerStack();

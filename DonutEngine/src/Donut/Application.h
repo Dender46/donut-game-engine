@@ -10,7 +10,7 @@
 
 namespace Donut {
 
-	class DONUT_API Application
+	class Application
 	{
 	public:
 		Application();

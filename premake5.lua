@@ -1,7 +1,7 @@
 workspace "DonutEngine"
     architecture "x64"
-	startproject "Sandbox"
-
+    startproject "Sandbox"
+    
     configurations
     {
         "Debug",
@@ -19,22 +19,23 @@ IncludeDir["ImGui"] = "DonutEngine/vendor/imgui"
 IncludeDir["glm"]   = "DonutEngine/vendor/glm"
 
 group "Dependencies"
-	include "DonutEngine/vendor/GLFW"
-	include "DonutEngine/vendor/Glad"
-	include "DonutEngine/vendor/imgui"
+    include "DonutEngine/vendor/GLFW"
+    include "DonutEngine/vendor/Glad"
+    include "DonutEngine/vendor/imgui"
 group ""
 
 project "DonutEngine"
     location "DonutEngine"
-    kind "SharedLib"
+    kind "StaticLib"
     language "C++"
-	staticruntime "off"
+    cppdialect "C++17"
+    staticruntime "on"
 
     targetdir  ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
-	pchheader "dnpch.h"
-	pchsource "DonutEngine/src/dnpch.cpp"
+    pchheader "dnpch.h"
+    pchsource "DonutEngine/src/dnpch.cpp"
 
     files
     {
@@ -46,101 +47,95 @@ project "DonutEngine"
 
     includedirs
     {
-		"%{prj.name}/src",
+        "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
-		"%{IncludeDir.GLFW}",
-		"%{IncludeDir.Glad}",
-		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}",
+        "%{IncludeDir.GLFW}",
+        "%{IncludeDir.Glad}",
+        "%{IncludeDir.ImGui}",
+        "%{IncludeDir.glm}",
     }
 
-	links
-	{
-		"GLFW",
-		"Glad",
-		"ImGui",
-		"opengl32.lib"
-	}
+    links
+    {
+        "GLFW",
+        "Glad",
+        "ImGui",
+        "opengl32.lib"
+    }
 
     filter "system:windows"
-        cppdialect "C++17"
         systemversion "latest"
-
+        
         defines
         {
             "DN_PLATFORM_WINDOWS",
             "DN_BUILD_DLL",
-			"GLFW_INCLUDE_NONE"
-        }
-
-        postbuildcommands
-        {
-            ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
+            "GLFW_INCLUDE_NONE"
         }
     
     filter "configurations:Debug"
         defines "DN_DEBUG"
-		runtime "Debug"
-        symbols "On"
+        runtime "Debug"
+        symbols "on"
     
     filter "configurations:Release"
         defines "DN_RELEASE"
-		runtime "Release"
-        optimize "On"
+        runtime "Release"
+        optimize "on"
     
     filter "configurations:Dist"
         defines "DN_DIST"
-		runtime "Release"
-        optimize "On"
-    
+        runtime "Release"
+        optimize "on"
+
 
 project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp"
     language "C++"
-	staticruntime "off"
-
+    cppdialect "C++17"
+    staticruntime "on"
+    
     targetdir  ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
+    
     files
     {
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp",
     }
-
+    
     includedirs
     {
         "DonutEngine/vendor/spdlog/include",
         "DonutEngine/src",
         "%{IncludeDir.glm}"
     }
-
+    
     links
     {
         "DonutEngine"
     }
-
+    
     filter "system:windows"
-        cppdialect "C++17"
         systemversion "latest"
-
+        
         defines
         {
             "DN_PLATFORM_WINDOWS"
         }
-
+    
     filter "configurations:Debug"
         defines "DN_DEBUG"
-		buildoptions "/MDd"
-        symbols "On"
-
+        runtime "Debug"
+        symbols "on"
+    
     filter "configurations:Release"
         defines "DN_RELEASE"
-		buildoptions "/MD"
-        optimize "On"
-
+        runtime "Release"
+        optimize "on"
+    
     filter "configurations:Dist"
         defines "DN_DIST"
-		buildoptions "/MD"
-        optimize "On"
+        runtime "Release"
+        optimize "on"
