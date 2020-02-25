@@ -119,7 +119,7 @@ namespace Donut {
 		glUseProgram(m_RendererID);
 	}
 
-	void Shader::UnBind() const
+	void Shader::Unbind() const
 	{
 		glUseProgram(0);
 	}
