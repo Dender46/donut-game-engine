@@ -8,6 +8,7 @@
 
 #include "Donut\Renderer\Shader.h"
 #include "Donut\Renderer\Buffers.h"
+#include "Donut\Renderer\VertexArray.h"
 
 #include "Donut\ImGui\ImGuiLayer.h"
 
@@ -37,10 +38,8 @@ namespace Donut {
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 
-		unsigned int m_VertexArray;
-		std::unique_ptr<Shader> m_Shader;
-		std::unique_ptr<VertexBuffer> m_VertexBuffer;
-		std::unique_ptr<IndexBuffer> m_IndexBuffer;
+		std::shared_ptr<Shader> m_Shader, m_BlueShader;
+		std::shared_ptr<VertexArray> m_VertexArray, m_SquareVA;
 	private:
 		static Application* s_Instance;
 	};
