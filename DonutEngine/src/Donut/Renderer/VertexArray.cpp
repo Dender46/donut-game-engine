@@ -11,11 +11,11 @@ namespace Donut {
 	{
 		switch (Renderer::CurrentAPI())
 		{
-		case RendererAPI::None:
+		case RendererAPI::API::None:
 			DN_CORE_ASSERT(false, "RendererAPI::None is currently unsupported!");
 			return nullptr;
 			break;
-		case RendererAPI::OpenGL:
+		case RendererAPI::API::OpenGL:
 			return new OpenGLVertexArray();
 			break;
 		}

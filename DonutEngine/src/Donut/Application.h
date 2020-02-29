@@ -9,6 +9,8 @@
 #include "Donut\Renderer\Shader.h"
 #include "Donut\Renderer\Buffers.h"
 #include "Donut\Renderer\VertexArray.h"
+#include "Donut\Renderer\RenderCommand.h"
+#include "Donut\Renderer\Renderer.h"
 
 #include "Donut\ImGui\ImGuiLayer.h"
 

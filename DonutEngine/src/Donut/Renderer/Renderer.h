@@ -1,18 +1,19 @@
 #pragma once
 
-namespace Donut {
+#include "RenderCommand.h"
 
-	enum class RendererAPI
-	{
-		None = 0, OpenGL = 1
-	};
+namespace Donut {
 
 	class Renderer
 	{
 	public:
-		inline static RendererAPI CurrentAPI() { return s_RendererAPI; };
-	private: 
-		static RendererAPI s_RendererAPI;
+		static void BeginScene();
+		static void EndScene();
+
+		static void Submit(const std::shared_ptr<VertexArray>& vertexArray);
+
+	public:
+		inline static RendererAPI::API CurrentAPI() { return RendererAPI::GetAPI(); };
 	};
 
 }
