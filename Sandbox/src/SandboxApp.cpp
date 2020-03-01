@@ -1,5 +1,7 @@
 #include <Donut.h>
 
+#include <glm/gtc/matrix_transform.hpp>
+
 class ExampleLayer : public Donut::Layer
 {
 public:
@@ -54,6 +56,7 @@ public:
 			layout(location = 1) in vec4 a_Color;
 
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
 
 			out vec3 v_Position;
 			out vec4 v_Color;
@@ -62,7 +65,7 @@ public:
 			{
 				v_Position  = a_Position;
 				v_Color = a_Color;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -107,13 +110,14 @@ public:
 			layout(location = 0) in vec3 a_Position;
 
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
 
 			out vec3 v_Position;
 
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -138,13 +142,13 @@ public:
 		Donut::RenderCommand::Clear();
 
 		if (Donut::Input::IsKeyPressed(DN_KEY_LEFT))
-			m_CameraPosition.x += m_CameraMoveSpeed * ts;
-		if (Donut::Input::IsKeyPressed(DN_KEY_RIGHT))
 			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
+		if (Donut::Input::IsKeyPressed(DN_KEY_RIGHT))
+			m_CameraPosition.x += m_CameraMoveSpeed * ts;
 		if (Donut::Input::IsKeyPressed(DN_KEY_UP))
-			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
-		if (Donut::Input::IsKeyPressed(DN_KEY_DOWN))
 			m_CameraPosition.y += m_CameraMoveSpeed * ts;
+		if (Donut::Input::IsKeyPressed(DN_KEY_DOWN))
+			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
 
 		if (Donut::Input::IsKeyPressed(DN_KEY_Q))
 			m_CameraRotation -= m_CameraRotationSpeed * ts;
@@ -154,9 +158,11 @@ public:
 		m_Camera.SetPosition(m_CameraPosition);
 		m_Camera.SetRotation(m_CameraRotation);
 
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+
 		Donut::Renderer::BeginScene(m_Camera);
 
-		Donut::Renderer::Submit(m_BlueShader, m_SquareVA);
+		Donut::Renderer::Submit(m_BlueShader, m_SquareVA, transform);
 		Donut::Renderer::Submit(m_RainbowShader, m_TriangleVA);
 
 		Donut::Renderer::EndScene();
