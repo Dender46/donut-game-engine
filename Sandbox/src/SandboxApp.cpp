@@ -6,8 +6,6 @@ public:
 	ExampleLayer()
 		: Layer("Example")
 	{
-
-		//auto cam = camera(5.0f, { 0.5f, 0.5f });
 	}
 
 	void OnUpdate() override
@@ -26,7 +24,7 @@ class OpenGLExampleLayer : public Donut::Layer
 {
 public:
 	OpenGLExampleLayer()
-		: Layer("OpenGLExampleLayer")
+		: Layer("OpenGLExampleLayer"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
 		m_TriangleVA.reset(Donut::VertexArray::Create());
 
@@ -55,6 +53,8 @@ public:
 			layout(location = 0) in vec3 a_Position;
 			layout(location = 1) in vec4 a_Color;
 
+			uniform mat4 u_ViewProjection;
+
 			out vec3 v_Position;
 			out vec4 v_Color;
 
@@ -62,7 +62,7 @@ public:
 			{
 				v_Position  = a_Position;
 				v_Color = a_Color;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -106,12 +106,14 @@ public:
 
 			layout(location = 0) in vec3 a_Position;
 
+			uniform mat4 u_ViewProjection;
+
 			out vec3 v_Position;
 
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 			}
 		)";
 
@@ -132,24 +134,46 @@ public:
 
 	void OnUpdate() override
 	{
-		// testing opengl context
 		Donut::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1 });
 		Donut::RenderCommand::Clear();
 
-		// binding here purely because other render APIs require to bind firstly
-		m_BlueShader->Bind();
-		Donut::Renderer::Submit(m_SquareVA);
+		Donut::Renderer::BeginScene(m_Camera);
 
-		m_RainbowShader->Bind();
-		Donut::Renderer::Submit(m_TriangleVA);
+		CheckNewCameraPosition();
+		Donut::Renderer::Submit(m_BlueShader, m_SquareVA);
+		Donut::Renderer::Submit(m_RainbowShader, m_TriangleVA);
+
+		Donut::Renderer::EndScene();
+	}
+
+	void CheckNewCameraPosition()
+	{
+		glm::vec3 newPosition = {
+			m_Camera.GetPosition().x,
+			m_Camera.GetPosition().y,
+			m_Camera.GetPosition().z
+		};
+
+		if (Donut::Input::IsKeyPressed(DN_KEY_LEFT))
+			newPosition.x += 0.01f;
+		if (Donut::Input::IsKeyPressed(DN_KEY_RIGHT))
+			newPosition.x -= 0.01f;
+		if (Donut::Input::IsKeyPressed(DN_KEY_UP))
+			newPosition.y -= 0.01f;
+		if (Donut::Input::IsKeyPressed(DN_KEY_DOWN))
+			newPosition.y += 0.01f;
+		
+		m_Camera.SetPosition(newPosition);
 	}
 
 	void OnEvent(Donut::Event& e) override
 	{
-		
+
 	}
 
 	private:
+		Donut::OrthographicCamera m_Camera;
+
 		std::shared_ptr<Donut::VertexArray> m_TriangleVA, m_SquareVA;
 		std::shared_ptr<Donut::Shader> m_RainbowShader, m_BlueShader;
 };

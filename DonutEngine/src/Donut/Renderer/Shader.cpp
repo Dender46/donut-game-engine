@@ -3,6 +3,7 @@
 #include "Shader.h"
 
 #include <glad\glad.h>
+#include <glm\gtc\type_ptr.hpp>
 
 namespace Donut {
 
@@ -122,6 +123,14 @@ namespace Donut {
 	void Shader::Unbind() const
 	{
 		glUseProgram(0);
+	}
+
+	void Shader::UploadUniformMat4(const std::string& name, const glm::mat4 matrix)
+	{
+		int location = glGetUniformLocation(m_RendererID, name.c_str());
+		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program!");
+
+		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 }

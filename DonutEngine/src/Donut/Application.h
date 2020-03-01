@@ -2,8 +2,12 @@
 
 #include "Core.h"
 #include "Window.h"
+#include "Donut\Input.h"
 #include "Donut\LayerStack.h"
+
 #include "Donut\Events\Event.h"
+#include "Donut\Events\KeyEvent.h"
+#include "Donut\Events\MouseEvent.h"
 #include "Donut\Events\ApplicationEvent.h"
 
 #include "Donut\Renderer\Shader.h"
@@ -11,6 +15,7 @@
 #include "Donut\Renderer\VertexArray.h"
 #include "Donut\Renderer\RenderCommand.h"
 #include "Donut\Renderer\Renderer.h"
+#include "Donut\Renderer\Camera.h"
 
 #include "Donut\ImGui\ImGuiLayer.h"
 
@@ -39,9 +44,6 @@ namespace Donut {
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
-
-		std::shared_ptr<Shader> m_Shader, m_BlueShader;
-		std::shared_ptr<VertexArray> m_VertexArray, m_SquareVA;
 	private:
 		static Application* s_Instance;
 	};

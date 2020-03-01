@@ -1,7 +1,6 @@
 #include "dnpch.h"
 
 #include "Application.h"
-#include "Donut/Log.h"
 
 namespace Donut {
 
