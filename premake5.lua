@@ -114,6 +114,7 @@ project "Sandbox"
     {
         "DonutEngine/vendor/spdlog/include",
         "DonutEngine/src",
+        "DonutEngine/vendor",
         "%{IncludeDir.glm}"
     }
     
