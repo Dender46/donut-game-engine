@@ -1,23 +1,9 @@
 #pragma once
 
-#include "Core.h"
 #include "Window.h"
-#include "Donut\Input.h"
-#include "Donut\LayerStack.h"
-
-#include "Donut\Events\Event.h"
-#include "Donut\Events\KeyEvent.h"
-#include "Donut\Events\MouseEvent.h"
-#include "Donut\Events\ApplicationEvent.h"
-
-#include "Donut\Renderer\Shader.h"
-#include "Donut\Renderer\Buffers.h"
-#include "Donut\Renderer\VertexArray.h"
-#include "Donut\Renderer\RenderCommand.h"
-#include "Donut\Renderer\Renderer.h"
-#include "Donut\Renderer\Camera.h"
-
-#include "Donut\ImGui\ImGuiLayer.h"
+#include "Donut/LayerStack.h"
+#include "Donut/Events/Event.h"
+#include "Donut/ImGui/ImGuiLayer.h"
 
 namespace Donut {
 
@@ -41,9 +27,10 @@ namespace Donut {
 		bool OnWindowClosed(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
-		ImGuiLayer* m_ImGuiLayer;
-		bool m_Running = true;
 		LayerStack m_LayerStack;
+		ImGuiLayer* m_ImGuiLayer;
+		
+		bool m_Running = true;
 	private:
 		static Application* s_Instance;
 	};
