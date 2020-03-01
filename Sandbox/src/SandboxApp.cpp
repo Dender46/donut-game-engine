@@ -1,6 +1,11 @@
 #include <Donut.h>
 
+#include "imgui/imgui.h"
+
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include "Donut/Platform/OpenGL/OpenGLShader.h"
 
 class ExampleLayer : public Donut::Layer
 {
@@ -83,14 +88,14 @@ public:
 				color = v_Color;
 			}
 		)";
-		m_RainbowShader.reset(new Donut::Shader(vertexSrc, fragmantSrc));
+		m_RainbowShader.reset(Donut::Shader::Create(vertexSrc, fragmantSrc));
 
 		m_SquareVA.reset(Donut::VertexArray::Create());
 		float squareVertices[3 * 4] = {
-			-0.75f, -0.75f,  0.0f,
-			 0.75f, -0.75f,  0.0f,
-			 0.75f,  0.75f,  0.0f,
-			-0.75f,  0.75f,  0.0f,
+			-0.5f, -0.5f,  0.0f,
+			 0.5f, -0.5f,  0.0f,
+			 0.5f,  0.5f,  0.0f,
+			-0.5f,  0.5f,  0.0f,
 		};
 		std::shared_ptr<Donut::VertexBuffer> squareVertexBuffer;
 		squareVertexBuffer.reset(Donut::VertexBuffer::Create(sizeof(squareVertices), squareVertices));
@@ -128,12 +133,14 @@ public:
 
 			in vec3 v_Position;
 
+			uniform vec3 u_Color;
+
 			void main()
 			{
-				color = vec4(0.2f, 0.2f, 0.8f, 1.0f);
+				color = vec4(u_Color, 1.0f);
 			}
 		)";
-		m_BlueShader.reset(new Donut::Shader(squareVertexSrc, squareFragmantSrc));
+		m_FlatColorShader.reset(Donut::Shader::Create(squareVertexSrc, squareFragmantSrc));
 	}
 
 	void OnUpdate(Donut::Timestep ts) override
@@ -158,14 +165,31 @@ public:
 		m_Camera.SetPosition(m_CameraPosition);
 		m_Camera.SetRotation(m_CameraRotation);
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-
 		Donut::Renderer::BeginScene(m_Camera);
 
-		Donut::Renderer::Submit(m_BlueShader, m_SquareVA, transform);
-		Donut::Renderer::Submit(m_RainbowShader, m_TriangleVA);
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+		std::dynamic_pointer_cast<Donut::OpenGLShader>(m_FlatColorShader)->Bind();
+		std::dynamic_pointer_cast<Donut::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+
+		for (int x = 0; x < 20; x++)
+			for (int y = 0; y < 20; y++)
+			{
+				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				Donut::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform);
+				Donut::Renderer::Submit(m_RainbowShader, m_TriangleVA);
+			}
+
 
 		Donut::Renderer::EndScene();
+	}
+
+	void OnImGuiRender() override
+	{
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+		ImGui::End();
 	}
 
 	void OnEvent(Donut::Event& e) override
@@ -178,11 +202,13 @@ public:
 		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
 		float m_CameraRotation = 0.0f;
 		
-		float m_CameraMoveSpeed = 1.0f;
-		float m_CameraRotationSpeed = 10.0f;
+		float m_CameraMoveSpeed = 2.0f;
+		float m_CameraRotationSpeed = 8.0f;
+
+		glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.9f };
 
 		std::shared_ptr<Donut::VertexArray> m_TriangleVA, m_SquareVA;
-		std::shared_ptr<Donut::Shader> m_RainbowShader, m_BlueShader;
+		std::shared_ptr<Donut::Shader> m_RainbowShader, m_FlatColorShader;
 };
 
 class Sandbox : public Donut::Application
