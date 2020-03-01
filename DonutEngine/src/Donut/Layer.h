@@ -1,7 +1,8 @@
 #pragma once
 
-#include "Donut\Core.h"
-#include "Donut\Events\Event.h"
+#include "Donut/Timestep.h"
+#include "Donut/Core.h"
+#include "Donut/Events/Event.h"
 
 namespace Donut {
 
@@ -13,7 +14,7 @@ namespace Donut {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(Timestep ts) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& e) {}
 

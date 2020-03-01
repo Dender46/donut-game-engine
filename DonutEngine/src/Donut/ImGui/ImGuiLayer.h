@@ -2,10 +2,6 @@
 
 #include "Donut\Layer.h"
 
-#include "Donut\Events\KeyEvent.h"
-#include "Donut\Events\MouseEvent.h"
-#include "Donut\Events\ApplicationEvent.h"
-
 namespace Donut {
 	
 	class  ImGuiLayer : public Layer
@@ -20,8 +16,6 @@ namespace Donut {
 
 		void Begin();
 		void End();
-	private:
-		float m_Time = 0.0f;
 	};
 
 }

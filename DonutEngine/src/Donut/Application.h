@@ -2,8 +2,10 @@
 
 #include "Window.h"
 #include "Donut/LayerStack.h"
-#include "Donut/Events/Event.h"
 #include "Donut/ImGui/ImGuiLayer.h"
+
+#include "Donut/Events/ApplicationEvent.h"
+#include "Donut/Events/Event.h"
 
 namespace Donut {
 
@@ -31,6 +33,7 @@ namespace Donut {
 		ImGuiLayer* m_ImGuiLayer;
 		
 		bool m_Running = true;
+		float m_LastFrameTime = 0.0f;
 	private:
 		static Application* s_Instance;
 	};

@@ -8,7 +8,7 @@ public:
 	{
 	}
 
-	void OnUpdate() override
+	void OnUpdate(Donut::Timestep ts) override
 	{
 		if (Donut::Input::IsKeyPressed(DN_KEY_TAB))
 			DN_TRACE("Tab key is pressed!");
@@ -132,38 +132,34 @@ public:
 		m_BlueShader.reset(new Donut::Shader(squareVertexSrc, squareFragmantSrc));
 	}
 
-	void OnUpdate() override
+	void OnUpdate(Donut::Timestep ts) override
 	{
 		Donut::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1 });
 		Donut::RenderCommand::Clear();
 
+		if (Donut::Input::IsKeyPressed(DN_KEY_LEFT))
+			m_CameraPosition.x += m_CameraMoveSpeed * ts;
+		if (Donut::Input::IsKeyPressed(DN_KEY_RIGHT))
+			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
+		if (Donut::Input::IsKeyPressed(DN_KEY_UP))
+			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
+		if (Donut::Input::IsKeyPressed(DN_KEY_DOWN))
+			m_CameraPosition.y += m_CameraMoveSpeed * ts;
+
+		if (Donut::Input::IsKeyPressed(DN_KEY_Q))
+			m_CameraRotation -= m_CameraRotationSpeed * ts;
+		if (Donut::Input::IsKeyPressed(DN_KEY_E))
+			m_CameraRotation += m_CameraRotationSpeed * ts;
+
+		m_Camera.SetPosition(m_CameraPosition);
+		m_Camera.SetRotation(m_CameraRotation);
+
 		Donut::Renderer::BeginScene(m_Camera);
 
-		CheckNewCameraPosition();
 		Donut::Renderer::Submit(m_BlueShader, m_SquareVA);
 		Donut::Renderer::Submit(m_RainbowShader, m_TriangleVA);
 
 		Donut::Renderer::EndScene();
-	}
-
-	void CheckNewCameraPosition()
-	{
-		glm::vec3 newPosition = {
-			m_Camera.GetPosition().x,
-			m_Camera.GetPosition().y,
-			m_Camera.GetPosition().z
-		};
-
-		if (Donut::Input::IsKeyPressed(DN_KEY_LEFT))
-			newPosition.x += 0.01f;
-		if (Donut::Input::IsKeyPressed(DN_KEY_RIGHT))
-			newPosition.x -= 0.01f;
-		if (Donut::Input::IsKeyPressed(DN_KEY_UP))
-			newPosition.y -= 0.01f;
-		if (Donut::Input::IsKeyPressed(DN_KEY_DOWN))
-			newPosition.y += 0.01f;
-		
-		m_Camera.SetPosition(newPosition);
 	}
 
 	void OnEvent(Donut::Event& e) override
@@ -173,6 +169,11 @@ public:
 
 	private:
 		Donut::OrthographicCamera m_Camera;
+		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
+		float m_CameraRotation = 0.0f;
+		
+		float m_CameraMoveSpeed = 1.0f;
+		float m_CameraRotationSpeed = 10.0f;
 
 		std::shared_ptr<Donut::VertexArray> m_TriangleVA, m_SquareVA;
 		std::shared_ptr<Donut::Shader> m_RainbowShader, m_BlueShader;
