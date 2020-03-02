@@ -219,11 +219,6 @@ public:
 		PushLayer(new ExampleLayer());
 		PushLayer(new OpenGLExampleLayer());
 	}
-
-	~Sandbox()
-	{
-
-	}
 };
 
 Donut::Application* Donut::CreateApplication()
