@@ -41,7 +41,7 @@ public:
 			 0.0f,  0.5f,  0.0f, 0.8f, 0.8f, 0.2f, 1.0f
 		};
 
-		std::shared_ptr<Donut::VertexBuffer> vertexBuffer;
+		Donut::Ref<Donut::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(Donut::VertexBuffer::Create(sizeof(vertices), vertices));
 		vertexBuffer->SetLayout({
 			{ Donut::ShaderDataType::Float3, "a_Position" },
@@ -50,7 +50,7 @@ public:
 		m_TriangleVA->AddVertexBuffer(vertexBuffer);
 
 		uint32_t indices[3] = { 0, 1, 2 };
-		std::shared_ptr<Donut::IndexBuffer> indexBuffer;
+		Donut::Ref<Donut::IndexBuffer> indexBuffer;
 		indexBuffer.reset(Donut::IndexBuffer::Create(sizeof(indices) / sizeof(uint32_t), indices));
 		m_TriangleVA->SetIndexBuffer(indexBuffer);
 
@@ -97,7 +97,7 @@ public:
 			 0.5f,  0.5f,  0.0f,
 			-0.5f,  0.5f,  0.0f,
 		};
-		std::shared_ptr<Donut::VertexBuffer> squareVertexBuffer;
+		Donut::Ref<Donut::VertexBuffer> squareVertexBuffer;
 		squareVertexBuffer.reset(Donut::VertexBuffer::Create(sizeof(squareVertices), squareVertices));
 		squareVertexBuffer->SetLayout({
 			{Donut::ShaderDataType::Float3, "a_Position"}
@@ -105,7 +105,7 @@ public:
 		m_SquareVA->AddVertexBuffer(squareVertexBuffer);
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		std::shared_ptr<Donut::IndexBuffer> squareIndexBuffer;
+		Donut::Ref<Donut::IndexBuffer> squareIndexBuffer;
 		squareIndexBuffer.reset(Donut::IndexBuffer::Create(sizeof(squareIndices) / sizeof(uint32_t), squareIndices));
 		m_SquareVA->SetIndexBuffer(squareIndexBuffer);
 
@@ -207,8 +207,8 @@ public:
 
 		glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.9f };
 
-		std::shared_ptr<Donut::VertexArray> m_TriangleVA, m_SquareVA;
-		std::shared_ptr<Donut::Shader> m_RainbowShader, m_FlatColorShader;
+		Donut::Ref<Donut::VertexArray> m_TriangleVA, m_SquareVA;
+		Donut::Ref<Donut::Shader> m_RainbowShader, m_FlatColorShader;
 };
 
 class Sandbox : public Donut::Application
