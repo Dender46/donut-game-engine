@@ -8,9 +8,4 @@ namespace Donut {
 	{
 	}
 
-	Layer::~Layer()
-	{
-
-	}
-
 }
