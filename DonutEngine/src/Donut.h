@@ -20,6 +20,8 @@
 #include "Donut/Renderer/Shader.h"
 #include "Donut/Renderer/VertexArray.h"
 
+#include "Donut/Renderer/Texture.h"
+
 // ----- Cameras -----
 #include "Donut/Renderer/Camera.h"
 

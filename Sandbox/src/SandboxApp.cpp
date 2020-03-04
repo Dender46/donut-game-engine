@@ -91,16 +91,17 @@ public:
 		m_RainbowShader.reset(Donut::Shader::Create(vertexSrc, fragmantSrc));
 
 		m_SquareVA.reset(Donut::VertexArray::Create());
-		float squareVertices[3 * 4] = {
-			-0.5f, -0.5f,  0.0f,
-			 0.5f, -0.5f,  0.0f,
-			 0.5f,  0.5f,  0.0f,
-			-0.5f,  0.5f,  0.0f,
+		float squareVertices[5 * 4] = {
+			-0.5f, -0.5f,  0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f,  0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f,  0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f,  0.0f, 0.0f, 1.0f
 		};
 		Donut::Ref<Donut::VertexBuffer> squareVertexBuffer;
 		squareVertexBuffer.reset(Donut::VertexBuffer::Create(sizeof(squareVertices), squareVertices));
 		squareVertexBuffer->SetLayout({
-			{Donut::ShaderDataType::Float3, "a_Position"}
+			{Donut::ShaderDataType::Float3, "a_Position"},
+			{Donut::ShaderDataType::Float2, "a_TexCoords"}
 		});
 		m_SquareVA->AddVertexBuffer(squareVertexBuffer);
 
@@ -141,6 +142,48 @@ public:
 			}
 		)";
 		m_FlatColorShader.reset(Donut::Shader::Create(squareVertexSrc, squareFragmantSrc));
+
+
+		std::string textureVertexSrc = R"(
+			#version 330 core
+
+			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec2 a_TexCoords;
+
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+
+			out vec3 v_Position;
+			out vec2 v_TexCoords;
+
+			void main()
+			{
+				v_Position = a_Position;
+				v_TexCoords = a_TexCoords;
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+			}
+		)";
+
+		std::string textureFragmantSrc = R"(
+			#version 330 core
+
+			layout(location = 0) out vec4 color;
+
+			in vec2 v_TexCoords;
+
+			uniform sampler2D u_Texture;
+
+			void main()
+			{
+				color = texture(u_Texture, v_TexCoords);
+			}
+		)";
+
+		m_TextureShader.reset(Donut::Shader::Create(textureVertexSrc, textureFragmantSrc));
+
+		m_Texture = Donut::Texture2D::Create("assets/textures/checker_board.png");
+		std::dynamic_pointer_cast<Donut::OpenGLShader>(m_TextureShader)->Bind();
+		std::dynamic_pointer_cast<Donut::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0); // 0 - texture slot
 	}
 
 	void OnUpdate(Donut::Timestep ts) override
@@ -178,9 +221,11 @@ public:
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
 				Donut::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform);
-				Donut::Renderer::Submit(m_RainbowShader, m_TriangleVA);
 			}
 
+		m_Texture->Bind();
+		Donut::Renderer::Submit(m_TextureShader, m_SquareVA, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
+		//Donut::Renderer::Submit(m_RainbowShader, m_TriangleVA);
 
 		Donut::Renderer::EndScene();
 	}
@@ -208,7 +253,9 @@ public:
 		glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.9f };
 
 		Donut::Ref<Donut::VertexArray> m_TriangleVA, m_SquareVA;
-		Donut::Ref<Donut::Shader> m_RainbowShader, m_FlatColorShader;
+		Donut::Ref<Donut::Shader> m_RainbowShader, m_FlatColorShader, m_TextureShader;
+
+		Donut::Ref<Donut::Texture2D> m_Texture;
 };
 
 class Sandbox : public Donut::Application
