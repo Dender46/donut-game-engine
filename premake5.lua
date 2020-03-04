@@ -13,10 +13,11 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
-IncludeDir["GLFW"]  = "DonutEngine/vendor/GLFW/include"
-IncludeDir["Glad"]  = "DonutEngine/vendor/Glad/include"
-IncludeDir["ImGui"] = "DonutEngine/vendor/imgui"
-IncludeDir["glm"]   = "DonutEngine/vendor/glm"
+IncludeDir["GLFW"]		= "DonutEngine/vendor/GLFW/include"
+IncludeDir["Glad"]		= "DonutEngine/vendor/Glad/include"
+IncludeDir["ImGui"]		= "DonutEngine/vendor/imgui"
+IncludeDir["glm"]		= "DonutEngine/vendor/glm"
+IncludeDir["stb_image"]	= "DonutEngine/vendor/stb_image"
 
 group "Dependencies"
     include "DonutEngine/vendor/GLFW"
@@ -47,7 +48,9 @@ project "DonutEngine"
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp",
         "%{prj.name}/vendor/glm/glm/**.hpp",
-        "%{prj.name}/vendor/glm/glm/**.inl"
+        "%{prj.name}/vendor/glm/glm/**.inl",
+		"%{prj.name}/vendor/stb_image/**.h",
+		"%{prj.name}/vendor/stb_image/**.cpp"
     }
 
     includedirs
@@ -58,6 +61,7 @@ project "DonutEngine"
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}"
     }
 
     links
