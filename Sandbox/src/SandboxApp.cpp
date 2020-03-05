@@ -184,6 +184,8 @@ public:
 		m_Texture = Donut::Texture2D::Create("assets/textures/checker_board.png");
 		std::dynamic_pointer_cast<Donut::OpenGLShader>(m_TextureShader)->Bind();
 		std::dynamic_pointer_cast<Donut::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0); // 0 - texture slot
+
+		m_ExplosionIconTexture = Donut::Texture2D::Create("assets/textures/explosion_icon.png");
 	}
 
 	void OnUpdate(Donut::Timestep ts) override
@@ -225,6 +227,8 @@ public:
 
 		m_Texture->Bind();
 		Donut::Renderer::Submit(m_TextureShader, m_SquareVA, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
+		m_ExplosionIconTexture->Bind();
+		Donut::Renderer::Submit(m_TextureShader, m_SquareVA, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
 		//Donut::Renderer::Submit(m_RainbowShader, m_TriangleVA);
 
 		Donut::Renderer::EndScene();
@@ -255,7 +259,7 @@ public:
 		Donut::Ref<Donut::VertexArray> m_TriangleVA, m_SquareVA;
 		Donut::Ref<Donut::Shader> m_RainbowShader, m_FlatColorShader, m_TextureShader;
 
-		Donut::Ref<Donut::Texture2D> m_Texture;
+		Donut::Ref<Donut::Texture2D> m_Texture, m_ExplosionIconTexture;
 };
 
 class Sandbox : public Donut::Application

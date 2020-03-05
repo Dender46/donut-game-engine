@@ -1,8 +1,9 @@
 #include "dnpch.h"
 
 #include "Application.h"
+#include "Renderer\Renderer.h"
 
-#include <GLFW/glfw3.h>
+#include <GLFW\glfw3.h>
 
 namespace Donut {
 
@@ -17,6 +18,8 @@ namespace Donut {
 
 		m_Window = Scope<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+
+		Renderer::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);

@@ -17,13 +17,26 @@ namespace Donut {
 		m_Width = width;
 		m_Height = height;
 
+		GLenum storageFormat = 0, subFormat = 0;
+		if (channels == 4)
+		{
+			storageFormat = GL_RGBA8;
+			subFormat = GL_RGBA;
+		}
+		else if (channels == 3)
+		{
+			storageFormat = GL_RGB8;
+			subFormat = GL_RGB;
+		}
+		DN_CORE_ASSERT(storageFormat && subFormat, "Invalid channels data!");
+
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-		glTextureStorage2D(m_RendererID, 1, GL_RGB8, width, height);
+		glTextureStorage2D(m_RendererID, 1, storageFormat, width, height);
 
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		glTextureSubImage2D(m_RendererID, 0, 0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTextureSubImage2D(m_RendererID, 0, 0, 0, width, height, subFormat, GL_UNSIGNED_BYTE, data);
 
 		stbi_image_free(data);
 	}
