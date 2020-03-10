@@ -143,43 +143,7 @@ public:
 		)";
 		m_FlatColorShader.reset(Donut::Shader::Create(squareVertexSrc, squareFragmantSrc));
 
-
-		std::string textureVertexSrc = R"(
-			#version 330 core
-
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec2 a_TexCoords;
-
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
-
-			out vec3 v_Position;
-			out vec2 v_TexCoords;
-
-			void main()
-			{
-				v_Position = a_Position;
-				v_TexCoords = a_TexCoords;
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-			}
-		)";
-
-		std::string textureFragmantSrc = R"(
-			#version 330 core
-
-			layout(location = 0) out vec4 color;
-
-			in vec2 v_TexCoords;
-
-			uniform sampler2D u_Texture;
-
-			void main()
-			{
-				color = texture(u_Texture, v_TexCoords);
-			}
-		)";
-
-		m_TextureShader.reset(Donut::Shader::Create(textureVertexSrc, textureFragmantSrc));
+		m_TextureShader.reset(Donut::Shader::Create("assets/shaders/Texture.glsl"));
 
 		m_Texture = Donut::Texture2D::Create("assets/textures/checker_board.png");
 		std::dynamic_pointer_cast<Donut::OpenGLShader>(m_TextureShader)->Bind();

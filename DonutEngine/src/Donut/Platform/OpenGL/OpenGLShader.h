@@ -1,15 +1,17 @@
 #pragma once
 
-#include <string>
+#include "Donut/Renderer/Shader.h"
 #include <glm/glm.hpp>
 
-#include "Donut/Renderer/Shader.h"
+// Temporary, because its included in SandboxApp
+typedef unsigned int GLenum;
 
 namespace Donut {
 
 	class OpenGLShader : public Shader
 	{
 	public:
+		OpenGLShader(const std::string &path);
 		OpenGLShader(const std::string &vertexSrc, const std::string &fragmentSrc);
 		virtual ~OpenGLShader() override;
 
@@ -25,6 +27,11 @@ namespace Donut {
 		void UploadUniformMat3(const std::string& name, const glm::mat3 matrix);
 		void UploadUniformMat4(const std::string& name, const glm::mat4 matrix);
 	private:
+		std::string ReadFile(const std::string &path);
+		std::unordered_map<GLenum, std::string> Parse(const std::string &source);
+		void Compile(const std::unordered_map<GLenum, std::string> &shaderSources);
+	private:
+		std::string m_Path;
 		uint32_t m_RendererID;
 	};
 
