@@ -33,7 +33,7 @@ public:
 	OpenGLExampleLayer()
 		: Layer("OpenGLExampleLayer"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
 	{
-		m_TriangleVA.reset(Donut::VertexArray::Create());
+		m_TriangleVA = Donut::VertexArray::Create();
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f,  0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
@@ -42,7 +42,7 @@ public:
 		};
 
 		Donut::Ref<Donut::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(Donut::VertexBuffer::Create(sizeof(vertices), vertices));
+		vertexBuffer = Donut::VertexBuffer::Create(sizeof(vertices), vertices);
 		vertexBuffer->SetLayout({
 			{ Donut::ShaderDataType::Float3, "a_Position" },
 			{ Donut::ShaderDataType::Float4, "a_Color" },
@@ -51,7 +51,7 @@ public:
 
 		uint32_t indices[3] = { 0, 1, 2 };
 		Donut::Ref<Donut::IndexBuffer> indexBuffer;
-		indexBuffer.reset(Donut::IndexBuffer::Create(sizeof(indices) / sizeof(uint32_t), indices));
+		indexBuffer = Donut::IndexBuffer::Create(sizeof(indices) / sizeof(uint32_t), indices);
 		m_TriangleVA->SetIndexBuffer(indexBuffer);
 
 		std::string vertexSrc = R"(
@@ -88,9 +88,9 @@ public:
 				color = v_Color;
 			}
 		)";
-		m_RainbowShader.reset(Donut::Shader::Create(vertexSrc, fragmantSrc));
+		m_RainbowShader = Donut::Shader::Create(vertexSrc, fragmantSrc);
 
-		m_SquareVA.reset(Donut::VertexArray::Create());
+		m_SquareVA = Donut::VertexArray::Create();
 		float squareVertices[5 * 4] = {
 			-0.5f, -0.5f,  0.0f, 0.0f, 0.0f,
 			 0.5f, -0.5f,  0.0f, 1.0f, 0.0f,
@@ -98,7 +98,7 @@ public:
 			-0.5f,  0.5f,  0.0f, 0.0f, 1.0f
 		};
 		Donut::Ref<Donut::VertexBuffer> squareVertexBuffer;
-		squareVertexBuffer.reset(Donut::VertexBuffer::Create(sizeof(squareVertices), squareVertices));
+		squareVertexBuffer = Donut::VertexBuffer::Create(sizeof(squareVertices), squareVertices);
 		squareVertexBuffer->SetLayout({
 			{Donut::ShaderDataType::Float3, "a_Position"},
 			{Donut::ShaderDataType::Float2, "a_TexCoords"}
@@ -107,7 +107,7 @@ public:
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
 		Donut::Ref<Donut::IndexBuffer> squareIndexBuffer;
-		squareIndexBuffer.reset(Donut::IndexBuffer::Create(sizeof(squareIndices) / sizeof(uint32_t), squareIndices));
+		squareIndexBuffer = Donut::IndexBuffer::Create(sizeof(squareIndices) / sizeof(uint32_t), squareIndices);
 		m_SquareVA->SetIndexBuffer(squareIndexBuffer);
 
 		std::string squareVertexSrc = R"(
@@ -141,9 +141,9 @@ public:
 				color = vec4(u_Color, 1.0f);
 			}
 		)";
-		m_FlatColorShader.reset(Donut::Shader::Create(squareVertexSrc, squareFragmantSrc));
+		m_FlatColorShader = Donut::Shader::Create(squareVertexSrc, squareFragmantSrc);
 
-		m_TextureShader.reset(Donut::Shader::Create("assets/shaders/Texture.glsl"));
+		m_TextureShader = Donut::Shader::Create("assets/shaders/Texture.glsl");
 
 		m_Texture = Donut::Texture2D::Create("assets/textures/checker_board.png");
 		std::dynamic_pointer_cast<Donut::OpenGLShader>(m_TextureShader)->Bind();

@@ -7,7 +7,7 @@
 
 namespace Donut {
 
-	VertexBuffer* VertexBuffer::Create(uint32_t size, float* vertices)
+	Ref<VertexBuffer> VertexBuffer::Create(uint32_t size, float* vertices)
 	{
 		switch (Renderer::CurrentAPI())
 		{
@@ -16,7 +16,7 @@ namespace Donut {
 			return nullptr;
 			break;
 		case RendererAPI::API::OpenGL:
-			return new OpenGLVertexBuffer(size, vertices);
+			return std::make_shared<OpenGLVertexBuffer>(size, vertices);
 			break;
 		}
 
@@ -24,7 +24,7 @@ namespace Donut {
 		return nullptr;
 	}
 
-	IndexBuffer* IndexBuffer::Create(uint32_t count, uint32_t* indices)
+	Ref<IndexBuffer> IndexBuffer::Create(uint32_t count, uint32_t* indices)
 	{
 		switch (Renderer::CurrentAPI())
 		{
@@ -33,7 +33,7 @@ namespace Donut {
 			return nullptr;
 			break;
 		case RendererAPI::API::OpenGL:
-			return new OpenGLIndexBuffer(count, indices);
+			return std::make_shared<OpenGLIndexBuffer>(count, indices);
 			break;
 		}
 

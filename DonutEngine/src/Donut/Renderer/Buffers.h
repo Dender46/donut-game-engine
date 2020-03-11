@@ -111,7 +111,7 @@ namespace Donut {
 		virtual void SetLayout(const BufferLayout& layout) = 0;
 		virtual const BufferLayout& GetLayout() const = 0;
 
-		static VertexBuffer* Create(uint32_t size, float* vertices);
+		static Ref<VertexBuffer> Create(uint32_t size, float* vertices);
 	};
 
 	class IndexBuffer
@@ -124,6 +124,6 @@ namespace Donut {
 
 		virtual inline uint32_t GetCount() const = 0;
 
-		static IndexBuffer* Create(uint32_t count, uint32_t* indices);
+		static Ref<IndexBuffer> Create(uint32_t count, uint32_t* indices);
 	};
 }

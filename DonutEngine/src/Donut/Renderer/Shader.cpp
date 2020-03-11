@@ -7,7 +7,7 @@
 
 namespace Donut {
 
-	Shader * Shader::Create(const std::string &path)
+	Ref<Shader> Shader::Create(const std::string &path)
 	{
 		switch (Renderer::CurrentAPI())
 		{
@@ -16,7 +16,7 @@ namespace Donut {
 			return nullptr;
 			break;
 		case RendererAPI::API::OpenGL:
-			return new OpenGLShader(path);
+			return std::make_shared<OpenGLShader>(path);
 			break;
 		}
 
@@ -24,7 +24,7 @@ namespace Donut {
 		return nullptr;
 	}
 
-	Shader * Shader::Create(const std::string & vertexSrc, const std::string & fragmentSrc)
+	Ref<Shader> Shader::Create(const std::string & vertexSrc, const std::string & fragmentSrc)
 	{
 		switch (Renderer::CurrentAPI())
 		{
@@ -33,7 +33,7 @@ namespace Donut {
 			return nullptr;
 			break;
 		case RendererAPI::API::OpenGL:
-			return new OpenGLShader(vertexSrc, fragmentSrc);
+			return std::make_shared<OpenGLShader>(vertexSrc, fragmentSrc);
 			break;
 		}
 

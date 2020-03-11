@@ -6,7 +6,7 @@
 
 namespace Donut {
 
-	Renderer::SceneData* Renderer::s_SceneData = new Renderer::SceneData;
+	Ref<Renderer::SceneData> Renderer::s_SceneData = std::make_shared<Renderer::SceneData>();
 
 	void Renderer::Init()
 	{
