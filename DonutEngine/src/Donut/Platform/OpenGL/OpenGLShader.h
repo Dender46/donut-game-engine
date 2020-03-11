@@ -11,12 +11,14 @@ namespace Donut {
 	class OpenGLShader : public Shader
 	{
 	public:
-		OpenGLShader(const std::string &path);
-		OpenGLShader(const std::string &vertexSrc, const std::string &fragmentSrc);
+		OpenGLShader(const std::string& path);
+		OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
 		virtual ~OpenGLShader() override;
 
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
+
+		virtual inline const std::string& GetName() const override { return m_Name; };
 
 		void UploadUniformInt(const std::string& name, const int value);
 		void UploadUniformFloat(const std::string& name, const float value);
@@ -31,6 +33,7 @@ namespace Donut {
 		std::unordered_map<GLenum, std::string> Parse(const std::string &source);
 		void Compile(const std::unordered_map<GLenum, std::string> &shaderSources);
 	private:
+		std::string m_Name;
 		std::string m_Path;
 		uint32_t m_RendererID;
 	};

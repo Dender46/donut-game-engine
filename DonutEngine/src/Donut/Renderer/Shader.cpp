@@ -7,7 +7,7 @@
 
 namespace Donut {
 
-	Ref<Shader> Shader::Create(const std::string &path)
+	Ref<Shader> Shader::Create(const std::string& path)
 	{
 		switch (Renderer::CurrentAPI())
 		{
@@ -24,7 +24,7 @@ namespace Donut {
 		return nullptr;
 	}
 
-	Ref<Shader> Shader::Create(const std::string & vertexSrc, const std::string & fragmentSrc)
+	Ref<Shader> Shader::Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
 	{
 		switch (Renderer::CurrentAPI())
 		{
@@ -33,12 +33,41 @@ namespace Donut {
 			return nullptr;
 			break;
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLShader>(vertexSrc, fragmentSrc);
+			return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
 			break;
 		}
 
 		DN_CORE_ASSERT(false, "Unknown RendererAPI!");
 		return nullptr;
+	}
+
+	
+	void ShaderLibrary::Add(const Ref<Shader>& shader)
+	{
+		auto& name = shader->GetName();
+		DN_CORE_ASSERT(!Exists(name), "Shader already exists with such name!");
+		m_Shaders[name] = shader;
+	}
+
+	Ref<Shader> ShaderLibrary::Load(const std::string& filepath)
+	{
+		auto shader = Shader::Create(filepath);
+		Add(shader);
+	}
+
+	Ref<Shader> ShaderLibrary::Load(const std::string& name, const std::string& filepath)
+	{
+		
+	}
+
+	Ref<Shader> ShaderLibrary::Get(const std::string& name) const
+	{
+		
+	}
+
+	bool ShaderLibrary::Exists(const std::string& name) const
+	{
+		return m_Shaders.find(name) != m_Shaders.end;
 	}
 
 }

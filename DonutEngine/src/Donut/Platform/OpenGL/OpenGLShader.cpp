@@ -2,6 +2,7 @@
 #include "OpenGLShader.h"
 
 #include <fstream>
+#include <filesystem>
 #include <glad/glad.h>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -19,16 +20,18 @@ namespace Donut {
 		return 0;
 	}
 
-	OpenGLShader::OpenGLShader(const std::string & path)
+	OpenGLShader::OpenGLShader(const std::string& path)
+		: m_Path(path)
 	{
-		m_Path = path;
-
 		const std::string& source = ReadFile(path);
 		auto shaderSources = Parse(source);
 		Compile(shaderSources);
+
+		m_Name = std::filesystem::path(path).stem().string;
 	}
 
-	OpenGLShader::OpenGLShader(const std::string &vertexSrc, const std::string &fragmentSrc)
+	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
+		: m_Name(name)
 	{
 		std::unordered_map<GLenum, std::string> sources;
 		sources[GL_VERTEX_SHADER] = vertexSrc;
@@ -170,6 +173,11 @@ namespace Donut {
 	void OpenGLShader::Unbind() const
 	{
 		glUseProgram(0);
+	}
+
+	const std::string & OpenGLShader::GetName() const
+	{
+		return
 	}
 
 	void OpenGLShader::UploadUniformInt(const std::string & name, const int value)
