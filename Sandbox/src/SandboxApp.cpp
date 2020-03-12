@@ -54,41 +54,7 @@ public:
 		indexBuffer = Donut::IndexBuffer::Create(sizeof(indices) / sizeof(uint32_t), indices);
 		m_TriangleVA->SetIndexBuffer(indexBuffer);
 
-		std::string vertexSrc = R"(
-			#version 330 core
 
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec4 a_Color;
-
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
-
-			out vec3 v_Position;
-			out vec4 v_Color;
-
-			void main()
-			{
-				v_Position  = a_Position;
-				v_Color = a_Color;
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-			}
-		)";
-
-		std::string fragmantSrc = R"(
-			#version 330 core
-
-			layout(location = 0) out vec4 color;
-
-			in vec3 v_Position;
-			in vec4 v_Color;
-
-			void main()
-			{
-				color = vec4(v_Position * 0.5 + 0.5, 1.0);
-				color = v_Color;
-			}
-		)";
-		m_RainbowShader = Donut::Shader::Create("VertexPosition", vertexSrc, fragmantSrc);
 
 		m_SquareVA = Donut::VertexArray::Create();
 		float squareVertices[5 * 4] = {
@@ -110,40 +76,9 @@ public:
 		squareIndexBuffer = Donut::IndexBuffer::Create(sizeof(squareIndices) / sizeof(uint32_t), squareIndices);
 		m_SquareVA->SetIndexBuffer(squareIndexBuffer);
 
-		std::string squareVertexSrc = R"(
-			#version 330 core
-
-			layout(location = 0) in vec3 a_Position;
-
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
-
-			out vec3 v_Position;
-
-			void main()
-			{
-				v_Position = a_Position;
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-			}
-		)";
-
-		std::string squareFragmantSrc = R"(
-			#version 330 core
-
-			layout(location = 0) out vec4 color;
-
-			in vec3 v_Position;
-
-			uniform vec3 u_Color;
-
-			void main()
-			{
-				color = vec4(u_Color, 1.0f);
-			}
-		)";
-		m_FlatColorShader = Donut::Shader::Create("FlatColor", squareVertexSrc, squareFragmantSrc);
-
 		// Creating shader with shader library
+		m_ShaderLib.Load("assets/shaders/VertexPosition.glsl");
+		m_ShaderLib.Load("assets/shaders/FlatColor.glsl");
 		auto textureShader = m_ShaderLib.Load("assets/shaders/Texture.glsl");
 
 		// adding texture to shader
@@ -180,15 +115,16 @@ public:
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-		std::dynamic_pointer_cast<Donut::OpenGLShader>(m_FlatColorShader)->Bind();
-		std::dynamic_pointer_cast<Donut::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+		auto flatColorShader = m_ShaderLib.Get("FlatColor");
+		std::dynamic_pointer_cast<Donut::OpenGLShader>(flatColorShader)->Bind();
+		std::dynamic_pointer_cast<Donut::OpenGLShader>(flatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
 
-		for (int x = 0; x < 20; x++)
+		for (int x = 0; x < 20 ; x++)
 			for (int y = 0; y < 20; y++)
 			{
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-				Donut::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform);
+				Donut::Renderer::Submit(flatColorShader, m_SquareVA, transform);
 			}
 
 		auto textureShader = m_ShaderLib.Get("Texture");
@@ -226,7 +162,6 @@ public:
 
 		Donut::ShaderLibrary m_ShaderLib;
 		Donut::Ref<Donut::VertexArray> m_TriangleVA, m_SquareVA;
-		Donut::Ref<Donut::Shader> m_RainbowShader, m_FlatColorShader;
 
 		Donut::Ref<Donut::Texture2D> m_Texture, m_ExplosionIconTexture;
 };
