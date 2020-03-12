@@ -49,25 +49,28 @@ namespace Donut {
 		m_Shaders[name] = shader;
 	}
 
+	void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader)
+	{
+		DN_CORE_ASSERT(!Exists(name), "Shader already exists with such name!");
+		m_Shaders[name] = shader;
+	}
+
 	Ref<Shader> ShaderLibrary::Load(const std::string& filepath)
 	{
 		auto shader = Shader::Create(filepath);
 		Add(shader);
+		return shader;
 	}
 
-	Ref<Shader> ShaderLibrary::Load(const std::string& name, const std::string& filepath)
+	Ref<Shader> ShaderLibrary::Get(const std::string& name)
 	{
-		
-	}
-
-	Ref<Shader> ShaderLibrary::Get(const std::string& name) const
-	{
-		
+		DN_CORE_ASSERT(Exists(name), "No shader with such name!");
+		return m_Shaders[name];
 	}
 
 	bool ShaderLibrary::Exists(const std::string& name) const
 	{
-		return m_Shaders.find(name) != m_Shaders.end;
+		return m_Shaders.find(name) != m_Shaders.end();
 	}
 
 }

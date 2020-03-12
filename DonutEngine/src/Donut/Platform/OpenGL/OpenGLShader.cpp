@@ -27,7 +27,7 @@ namespace Donut {
 		auto shaderSources = Parse(source);
 		Compile(shaderSources);
 
-		m_Name = std::filesystem::path(path).stem().string;
+		m_Name = std::filesystem::path(path).stem().string();
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc)
@@ -173,11 +173,6 @@ namespace Donut {
 	void OpenGLShader::Unbind() const
 	{
 		glUseProgram(0);
-	}
-
-	const std::string & OpenGLShader::GetName() const
-	{
-		return
 	}
 
 	void OpenGLShader::UploadUniformInt(const std::string & name, const int value)

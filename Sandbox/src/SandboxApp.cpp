@@ -88,7 +88,7 @@ public:
 				color = v_Color;
 			}
 		)";
-		m_RainbowShader = Donut::Shader::Create(vertexSrc, fragmantSrc);
+		m_RainbowShader = Donut::Shader::Create("VertexPosition", vertexSrc, fragmantSrc);
 
 		m_SquareVA = Donut::VertexArray::Create();
 		float squareVertices[5 * 4] = {
@@ -141,13 +141,15 @@ public:
 				color = vec4(u_Color, 1.0f);
 			}
 		)";
-		m_FlatColorShader = Donut::Shader::Create(squareVertexSrc, squareFragmantSrc);
+		m_FlatColorShader = Donut::Shader::Create("FlatColor", squareVertexSrc, squareFragmantSrc);
 
-		m_TextureShader = Donut::Shader::Create("assets/shaders/Texture.glsl");
+		// Creating shader with shader library
+		auto textureShader = m_ShaderLib.Load("assets/shaders/Texture.glsl");
 
+		// adding texture to shader
 		m_Texture = Donut::Texture2D::Create("assets/textures/checker_board.png");
-		std::dynamic_pointer_cast<Donut::OpenGLShader>(m_TextureShader)->Bind();
-		std::dynamic_pointer_cast<Donut::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0); // 0 - texture slot
+		std::dynamic_pointer_cast<Donut::OpenGLShader>(textureShader)->Bind();
+		std::dynamic_pointer_cast<Donut::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0); // 0 - texture slot
 
 		m_ExplosionIconTexture = Donut::Texture2D::Create("assets/textures/explosion_icon.png");
 	}
@@ -189,10 +191,12 @@ public:
 				Donut::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform);
 			}
 
+		auto textureShader = m_ShaderLib.Get("Texture");
+
 		m_Texture->Bind();
-		Donut::Renderer::Submit(m_TextureShader, m_SquareVA, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
+		Donut::Renderer::Submit(textureShader, m_SquareVA, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
 		m_ExplosionIconTexture->Bind();
-		Donut::Renderer::Submit(m_TextureShader, m_SquareVA, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
+		Donut::Renderer::Submit(textureShader, m_SquareVA, glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)));
 		//Donut::Renderer::Submit(m_RainbowShader, m_TriangleVA);
 
 		Donut::Renderer::EndScene();
@@ -220,8 +224,9 @@ public:
 
 		glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.9f };
 
+		Donut::ShaderLibrary m_ShaderLib;
 		Donut::Ref<Donut::VertexArray> m_TriangleVA, m_SquareVA;
-		Donut::Ref<Donut::Shader> m_RainbowShader, m_FlatColorShader, m_TextureShader;
+		Donut::Ref<Donut::Shader> m_RainbowShader, m_FlatColorShader;
 
 		Donut::Ref<Donut::Texture2D> m_Texture, m_ExplosionIconTexture;
 };
