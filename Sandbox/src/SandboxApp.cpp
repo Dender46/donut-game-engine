@@ -31,7 +31,7 @@ class OpenGLExampleLayer : public Donut::Layer
 {
 public:
 	OpenGLExampleLayer()
-		: Layer("OpenGLExampleLayer"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
+		: Layer("OpenGLExampleLayer"), m_CameraController(1280.0f / 720.0f, true)
 	{
 		m_TriangleVA = Donut::VertexArray::Create();
 
@@ -91,27 +91,12 @@ public:
 
 	void OnUpdate(Donut::Timestep ts) override
 	{
+		m_CameraController.OnUpdate(ts);
+
 		Donut::RenderCommand::SetClearColor({ 0.2f, 0.2f, 0.2f, 1 });
 		Donut::RenderCommand::Clear();
 
-		if (Donut::Input::IsKeyPressed(DN_KEY_LEFT))
-			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
-		if (Donut::Input::IsKeyPressed(DN_KEY_RIGHT))
-			m_CameraPosition.x += m_CameraMoveSpeed * ts;
-		if (Donut::Input::IsKeyPressed(DN_KEY_UP))
-			m_CameraPosition.y += m_CameraMoveSpeed * ts;
-		if (Donut::Input::IsKeyPressed(DN_KEY_DOWN))
-			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
-
-		if (Donut::Input::IsKeyPressed(DN_KEY_Q))
-			m_CameraRotation -= m_CameraRotationSpeed * ts;
-		if (Donut::Input::IsKeyPressed(DN_KEY_E))
-			m_CameraRotation += m_CameraRotationSpeed * ts;
-
-		m_Camera.SetPosition(m_CameraPosition);
-		m_Camera.SetRotation(m_CameraRotation);
-
-		Donut::Renderer::BeginScene(m_Camera);
+		Donut::Renderer::BeginScene(m_CameraController.GetCamera());
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
@@ -147,17 +132,12 @@ public:
 
 	void OnEvent(Donut::Event& e) override
 	{
-
+		m_CameraController.OnEvent(e);
 	}
 
 	private:
-		Donut::OrthographicCamera m_Camera;
-		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };
-		float m_CameraRotation = 0.0f;
+		Donut::OrthographicCameraController m_CameraController;
 		
-		float m_CameraMoveSpeed = 2.0f;
-		float m_CameraRotationSpeed = 8.0f;
-
 		glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.9f };
 
 		Donut::ShaderLibrary m_ShaderLib;
