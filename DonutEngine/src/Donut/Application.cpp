@@ -37,6 +37,7 @@ namespace Donut {
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(DN_BIND_EVENT_FN(Application::OnWindowClosed));
+		dispatcher.Dispatch<WindowResizeEvent>(DN_BIND_EVENT_FN(Application::OnWindowResize));
 
 		DN_CORE_TRACE("{0}", e);
 
@@ -56,8 +57,11 @@ namespace Donut {
 			Timestep ts = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
-			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate(ts);
+			if (!m_Minimized)
+			{
+				for (Layer* layer : m_LayerStack)
+					layer->OnUpdate(ts);
+			}
 
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)
@@ -71,6 +75,18 @@ namespace Donut {
 	bool Application::OnWindowClosed(WindowCloseEvent& e)
 	{
 		m_Running = false;
-		return true;
+		return false;
 	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+			m_Minimized = true;
+
+		m_Minimized = false;
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+		return false;
+	}
+
 }

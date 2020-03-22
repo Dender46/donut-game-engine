@@ -27,12 +27,14 @@ namespace Donut {
 		inline static Application& Get() { return *s_Instance; }
 	private:
 		bool OnWindowClosed(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 
 		Scope<Window> m_Window;
 		LayerStack m_LayerStack;
 		ImGuiLayer* m_ImGuiLayer;
 		
 		bool m_Running = true;
+		bool m_Minimized = false;
 		float m_LastFrameTime = 0.0f;
 	private:
 		static Application* s_Instance;
