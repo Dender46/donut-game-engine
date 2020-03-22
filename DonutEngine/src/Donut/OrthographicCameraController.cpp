@@ -35,6 +35,8 @@ namespace Donut {
 		}
 
 		m_Camera.SetPosition(m_CameraPosition);
+
+		m_CameraMoveSpeed = m_ZoomLevel;
 	}
 
 	void OrthographicCameraController::OnEvent(Event& e)
@@ -50,6 +52,7 @@ namespace Donut {
 		if (m_MinZoom <= m_ZoomLevel - zoom && m_ZoomLevel - zoom <= m_MaxZoom)
 			m_ZoomLevel -= zoom;
 		
+
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 		return false;
 	}
