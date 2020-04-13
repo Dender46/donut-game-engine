@@ -1,8 +1,8 @@
 #include "dnpch.h"
 
-#include "OrthographicCameraController.h"
-#include "Input.h"
-#include "KeyCodes.h"
+#include "Donut/Renderer/OrthographicCameraController.h"
+#include "Donut/Core/Input.h"
+#include "Donut/Core/KeyCodes.h"
 
 namespace Donut {
 

@@ -1,9 +1,9 @@
 #include "dnpch.h"
 
-#include "Donut\Application.h"
+#include "Donut/Core/Application.h"
 #include "WindowsInput.h"
 
-#include <GLFW\glfw3.h>
+#include <GLFW/glfw3.h>
 
 namespace Donut {
 

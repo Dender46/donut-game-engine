@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Donut\Window.h"
-#include "Donut\Renderer\RenderingContext.h"
+#include "Donut/Core/Window.h"
+#include "Donut/Renderer/RenderingContext.h"
 
-#include <GLFW\glfw3.h>
+#include <GLFW/glfw3.h>
 
 namespace Donut {
 

@@ -1,16 +1,16 @@
 #pragma once
 
 // For use by DonutEngine applications
-#include "Donut/Application.h"
+#include "Donut/Core/Application.h"
+#include "Donut/Core/Layer.h"
+#include "Donut/Core/Log.h"
 #include "Donut/ImGui/ImGuiLayer.h"
-#include "Donut/Layer.h"
-#include "Donut/Log.h"
 
-#include "Donut/Timestep.h"
+#include "Donut/Core/Timestep.h"
 
-#include "Donut/MouseButtonCode.h"
-#include "Donut/KeyCodes.h"
-#include "Donut/Input.h"
+#include "Donut/Core/MouseButtonCode.h"
+#include "Donut/Core/KeyCodes.h"
+#include "Donut/Core/Input.h"
 
 // ----- Renderer -----
 #include "Donut/Renderer/Renderer.h"
@@ -24,9 +24,9 @@
 
 // ----- Cameras -----
 #include "Donut/Renderer/Camera.h"
-#include "Donut/OrthographicCameraController.h"
+#include "Donut/Renderer/OrthographicCameraController.h"
 
 
 // ----- Entry Point -----
-#include "Donut/EntryPoint.h"
+#include "Donut/Core/EntryPoint.h"
 // -----------------------
