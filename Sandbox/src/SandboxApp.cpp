@@ -1,4 +1,5 @@
 #include <Donut.h>
+#include <Donut/Core/EntryPoint.h>
 
 #include "imgui/imgui.h"
 
@@ -7,25 +8,8 @@
 
 #include "Donut/Platform/OpenGL/OpenGLShader.h"
 
-class ExampleLayer : public Donut::Layer
-{
-public:
-	ExampleLayer()
-		: Layer("Example")
-	{
-	}
 
-	void OnUpdate(Donut::Timestep ts) override
-	{
-		if (Donut::Input::IsKeyPressed(DN_KEY_TAB))
-			DN_TRACE("Tab key is pressed!");
-	}
-
-	void OnEvent(Donut::Event& e) override
-	{
-		DN_TRACE("{0}", e);
-	}
-};
+#include "Sandbox2D.h"
 
 class OpenGLExampleLayer : public Donut::Layer
 {
@@ -46,7 +30,7 @@ public:
 		vertexBuffer->SetLayout({
 			{ Donut::ShaderDataType::Float3, "a_Position" },
 			{ Donut::ShaderDataType::Float4, "a_Color" },
-			});
+		});
 		m_TriangleVA->AddVertexBuffer(vertexBuffer);
 
 		uint32_t indices[3] = { 0, 1, 2 };
@@ -151,8 +135,7 @@ class Sandbox : public Donut::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());
-		PushLayer(new OpenGLExampleLayer());
+		PushLayer(new Sandbox2D());
 	}
 };
 

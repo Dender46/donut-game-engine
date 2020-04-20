@@ -25,8 +25,3 @@
 // ----- Cameras -----
 #include "Donut/Renderer/Camera.h"
 #include "Donut/Renderer/OrthographicCameraController.h"
-
-
-// ----- Entry Point -----
-#include "Donut/Core/EntryPoint.h"
-// -----------------------
