@@ -1,6 +1,7 @@
 #include "dnpch.h"
 
 #include "Renderer.h"
+#include "Renderer2D.h"
 
 #include "Donut/Platform/OpenGL/OpenGLShader.h"
 
@@ -11,6 +12,7 @@ namespace Donut {
 	void Renderer::Init()
 	{
 		RenderCommand::Init();
+		Renderer2D::Init();
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)

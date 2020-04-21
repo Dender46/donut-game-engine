@@ -14,6 +14,7 @@
 
 // ----- Renderer -----
 #include "Donut/Renderer/Renderer.h"
+#include "Donut/Renderer/Renderer2D.h"
 #include "Donut/Renderer/RenderCommand.h"
 
 #include "Donut/Renderer/Buffers.h"
