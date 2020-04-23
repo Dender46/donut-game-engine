@@ -16,7 +16,7 @@ public:
 private:
 	Donut::OrthographicCameraController m_CameraController;
 
-	Donut::Ref<Donut::VertexArray> m_SquareVA;
-	Donut::Ref<Donut::Shader> m_FlatColorShader;
-	glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.9f, 1.0f };
+	Donut::Ref<Donut::Texture2D> m_CheckerboardTexture;
+
+	glm::vec4 m_BlueColor = { 0.2f, 0.3f, 0.9f, 1.0f };
 };

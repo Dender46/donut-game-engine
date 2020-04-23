@@ -13,7 +13,7 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
-	
+	m_CheckerboardTexture = Donut::Texture2D::Create("assets/textures/checker_board.png");
 }
 
 void Sandbox2D::OnDetach()
@@ -28,15 +28,16 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 	Donut::RenderCommand::Clear();
 	
 	Donut::Renderer2D::BeginScene(m_CameraController.GetCamera());
-	Donut::Renderer2D::DrawQuad({ -0.3f, -0.3f, 0.0f }, { 0.8f, 0.8f }, m_SquareColor);
-	Donut::Renderer2D::DrawQuad({ 0.5f, 0.3f, 0.0f }, { 0.4f, 0.8f }, m_SquareColor);
+	Donut::Renderer2D::DrawQuad({ -0.3f, -0.3f, 0.0f }, { 0.8f, 0.8f }, m_BlueColor);
+	Donut::Renderer2D::DrawQuad({ 0.5f, 0.3f, 0.0f }, { 0.4f, 0.8f }, m_BlueColor);
+	Donut::Renderer2D::DrawQuad({ 0.5f, 0.7f, 0.0f }, { 0.5f, 0.5f }, m_CheckerboardTexture);
 	Donut::Renderer2D::EndScene();
 }
 
 void Sandbox2D::OnImGuiRender()
 {
 	ImGui::Begin("Settings");
-	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_BlueColor));
 	ImGui::End();
 }
 
