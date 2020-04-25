@@ -3,9 +3,23 @@
 
 #include "stb_image.h"
 
-#include <glad/glad.h>
-
 namespace Donut {
+
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
+		: m_Width(width), m_Height(height)
+	{
+		m_StorageFormat = GL_RGBA8;
+		m_DataFormat = GL_RGBA;
+
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+		glTextureStorage2D(m_RendererID, 1, m_StorageFormat, width, height);
+
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
 
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 		: m_Path(path)
@@ -17,21 +31,21 @@ namespace Donut {
 		m_Width = width;
 		m_Height = height;
 
-		GLenum storageFormat = 0, subFormat = 0;
+		m_StorageFormat = 0, m_DataFormat = 0;
 		if (channels == 4)
 		{
-			storageFormat = GL_RGBA8;
-			subFormat = GL_RGBA;
+			m_StorageFormat = GL_RGBA8;
+			m_DataFormat = GL_RGBA;
 		}
 		else if (channels == 3)
 		{
-			storageFormat = GL_RGB8;
-			subFormat = GL_RGB;
+			m_StorageFormat = GL_RGB8;
+			m_DataFormat = GL_RGB;
 		}
-		DN_CORE_ASSERT(storageFormat && subFormat, "Invalid channels data!");
+		DN_CORE_ASSERT(m_StorageFormat && m_DataFormat, "Invalid channels data!");
 
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-		glTextureStorage2D(m_RendererID, 1, storageFormat, width, height);
+		glTextureStorage2D(m_RendererID, 1, m_StorageFormat, width, height);
 
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -39,7 +53,7 @@ namespace Donut {
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-		glTextureSubImage2D(m_RendererID, 0, 0, 0, width, height, subFormat, GL_UNSIGNED_BYTE, data);
+		glTextureSubImage2D(m_RendererID, 0, 0, 0, width, height, m_DataFormat, GL_UNSIGNED_BYTE, data);
 
 		stbi_image_free(data);
 	}
@@ -54,5 +68,11 @@ namespace Donut {
 		glBindTextureUnit(slot, m_RendererID);
 	}
 
+	void OpenGLTexture2D::SetData(void* data, uint32_t size)
+	{
+		uint32_t bpp = m_DataFormat == GL_RGBA ? 4 : 3;		// bytes per pixel
+		DN_CORE_ASSERT(size == m_Width * m_Height * bpp, "Data must be enttire texture!");
+		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, m_DataFormat, GL_UNSIGNED_BYTE, data);
+	}
 }
 

@@ -30,7 +30,7 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 	Donut::Renderer2D::BeginScene(m_CameraController.GetCamera());
 	Donut::Renderer2D::DrawQuad({ -0.3f, -0.3f, 0.0f }, { 0.8f, 0.8f }, m_BlueColor);
 	Donut::Renderer2D::DrawQuad({ 0.5f, 0.3f, 0.0f }, { 0.4f, 0.8f }, m_BlueColor);
-	Donut::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture);
+	Donut::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, DN_WHITE, 10);
 	Donut::Renderer2D::EndScene();
 }
 

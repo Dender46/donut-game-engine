@@ -23,6 +23,12 @@
 
 #define BIT(x) (1 << x)
 
+#define DN_WHITE {1.0f, 1.0f, 1.0f, 1.0f}
+#define DN_BLACK {0.0f, 0.0f, 0.0f, 1.0f}
+#define DN_RED {0.8f, 0.1f, 0.1f, 1.0f}
+#define DN_BLUE {0.1f, 0.8f, 0.1f, 1.0f}
+#define DN_GREEN {0.1f, 0.1f, 0.8f, 1.0f}
+
 namespace Donut {
 
 	template<typename T>
