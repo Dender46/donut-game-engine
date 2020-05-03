@@ -16,7 +16,7 @@ namespace Donut {
 		DN_CORE_ASSERT(!s_Instance, "Application already exists");
 		s_Instance = this;
 
-		m_Window = Scope<Window>(Window::Create());
+		m_Window = Window::Create();
 		m_Window->SetEventCallback(DN_BIND_EVENT_FN(Application::OnEvent));
 
 		Renderer::Init();
@@ -25,6 +25,11 @@ namespace Donut {
 		PushOverlay(m_ImGuiLayer);
 	}
 	
+	Application::~Application()
+	{
+		Renderer::Shutdown();
+	}
+
 	void Application::PushLayer(Layer* layer)
 	{
 		DN_PROFILE_FUNCTION();

@@ -26,8 +26,7 @@ namespace Donut {
 			 0.5f,  0.5f,  0.0f, 1.0f, 1.0f,
 			-0.5f,  0.5f,  0.0f, 0.0f, 1.0f,
 		};
-		Ref<VertexBuffer> squareVertexBuffer;
-		squareVertexBuffer = VertexBuffer::Create(sizeof(squareVertices), squareVertices);
+		Ref<VertexBuffer> squareVertexBuffer = VertexBuffer::Create(sizeof(squareVertices), squareVertices);
 		squareVertexBuffer->SetLayout({
 			{ShaderDataType::Float3, "a_Position"},
 			{ShaderDataType::Float2, "a_TexCoords"},
@@ -35,8 +34,7 @@ namespace Donut {
 		s_Data->SquareVA->AddVertexBuffer(squareVertexBuffer);
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		Ref<IndexBuffer> squareIndexBuffer;
-		squareIndexBuffer = IndexBuffer::Create(sizeof(squareIndices) / sizeof(uint32_t), squareIndices);
+		Ref<IndexBuffer> squareIndexBuffer = IndexBuffer::Create(sizeof(squareIndices) / sizeof(uint32_t), squareIndices);
 		s_Data->SquareVA->SetIndexBuffer(squareIndexBuffer);
 
 		uint32_t whiteColor = 0xffffffff;

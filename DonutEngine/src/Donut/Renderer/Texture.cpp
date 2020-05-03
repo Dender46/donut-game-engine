@@ -15,7 +15,7 @@ namespace Donut {
 			return nullptr;
 			break;
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLTexture2D>(width, height);
+			return CreateRef<OpenGLTexture2D>(width, height);
 			break;
 		}
 
@@ -32,7 +32,7 @@ namespace Donut {
 			return nullptr;
 			break;
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLTexture2D>(path);
+			return CreateRef<OpenGLTexture2D>(path);
 			break;
 		}
 

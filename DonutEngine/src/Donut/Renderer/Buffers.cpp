@@ -16,7 +16,7 @@ namespace Donut {
 			return nullptr;
 			break;
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLVertexBuffer>(size, vertices);
+			return CreateRef<OpenGLVertexBuffer>(size, vertices);
 			break;
 		}
 
@@ -33,7 +33,7 @@ namespace Donut {
 			return nullptr;
 			break;
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLIndexBuffer>(count, indices);
+			return CreateRef<OpenGLIndexBuffer>(count, indices);
 			break;
 		}
 
