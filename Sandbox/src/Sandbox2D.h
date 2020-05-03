@@ -18,5 +18,5 @@ private:
 
 	Donut::Ref<Donut::Texture2D> m_CheckerboardTexture;
 
-	glm::vec4 m_BlueColor = { 0.2f, 0.3f, 0.9f, 1.0f };
+	glm::vec4 m_BlueColor = DN_BLUE;
 };
