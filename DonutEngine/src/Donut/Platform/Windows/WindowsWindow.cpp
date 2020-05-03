@@ -9,7 +9,7 @@
 
 namespace Donut {
 
-	static bool s_GLFWInitialized = false;
+	static uint8_t s_GLFWWindowsCount = 0;
 
 	static void GLFWErrorCallback(int error, const char* description)
 	{
@@ -41,7 +41,7 @@ namespace Donut {
 
 		DN_CORE_INFO("Creating window {0} ({1}, {2})", props.Title, props.Width, props.Height);
 
-		if (!s_GLFWInitialized)
+		if (s_GLFWWindowsCount == 0)
 		{
 			{
 				DN_PROFILE_SCOPE("glfwInit()");
@@ -49,12 +49,12 @@ namespace Donut {
 				DN_CORE_ASSERT(success, "Could not initiate GLFW!");
 			}
 			glfwSetErrorCallback(GLFWErrorCallback);
-			s_GLFWInitialized = true;
 		}
 
 		{
 			DN_PROFILE_SCOPE("glfwCreateWindow");
 			m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+			s_GLFWWindowsCount++;
 		}
 		{
 			DN_PROFILE_SCOPE("new OpenGLContext(window)");
@@ -157,6 +157,13 @@ namespace Donut {
 		DN_PROFILE_FUNCTION();
 
 		glfwDestroyWindow(m_Window);
+
+		s_GLFWWindowsCount--;
+		if (s_GLFWWindowsCount == 0)
+		{
+			DN_CORE_INFO("Terminating GLFW!");
+			glfwTerminate();
+		}
 	}
 
 	void WindowsWindow::OnUpdate()
