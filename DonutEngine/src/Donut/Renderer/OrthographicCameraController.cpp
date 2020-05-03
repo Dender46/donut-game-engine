@@ -15,6 +15,8 @@ namespace Donut {
 
 	void OrthographicCameraController::OnUpdate(Timestep& ts)
 	{
+		DN_PROFILE_FUNCTION();
+
 		if (Input::IsKeyPressed(DN_KEY_A))
 			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
 		else if (Input::IsKeyPressed(DN_KEY_D))
@@ -41,6 +43,8 @@ namespace Donut {
 
 	void OrthographicCameraController::OnEvent(Event& e)
 	{
+		DN_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<MouseScrolledEvent>(DN_BIND_EVENT_FN(OrthographicCameraController::OnMouseScrolled));
 		dispatcher.Dispatch<WindowResizeEvent>(DN_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
@@ -48,6 +52,8 @@ namespace Donut {
 
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
+		DN_PROFILE_FUNCTION();
+
 		float zoom = e.GetYOffset() * m_ZoomSpeed;
 		if (m_MinZoom <= m_ZoomLevel - zoom && m_ZoomLevel - zoom <= m_MaxZoom)
 			m_ZoomLevel -= zoom;
@@ -59,6 +65,8 @@ namespace Donut {
 
 	bool OrthographicCameraController::OnWindowResized(WindowResizeEvent& e)
 	{
+		DN_PROFILE_FUNCTION();
+
 		m_AspectRatio = (float)e.GetWidth() / (float)e.GetHeight();
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 		return false;

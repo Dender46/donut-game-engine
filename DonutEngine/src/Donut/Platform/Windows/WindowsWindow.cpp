@@ -33,6 +33,8 @@ namespace Donut {
 
 	void WindowsWindow::Init(const WindowProps& props)
 	{
+		DN_PROFILE_FUNCTION();
+
 		m_Data.Title  = props.Title;
 		m_Data.Width  = props.Width;
 		m_Data.Height = props.Height;
@@ -41,15 +43,24 @@ namespace Donut {
 
 		if (!s_GLFWInitialized)
 		{
-			int success = glfwInit();
-			DN_CORE_ASSERT(success, "Could not initiate GLFW!");
+			{
+				DN_PROFILE_SCOPE("glfwInit()");
+				int success = glfwInit();
+				DN_CORE_ASSERT(success, "Could not initiate GLFW!");
+			}
 			glfwSetErrorCallback(GLFWErrorCallback);
 			s_GLFWInitialized = true;
 		}
 
-		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
-		m_Context = new OpenGLContext(m_Window);
-		m_Context->Init();
+		{
+			DN_PROFILE_SCOPE("glfwCreateWindow");
+			m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
+		}
+		{
+			DN_PROFILE_SCOPE("new OpenGLContext(window)");
+			m_Context = new OpenGLContext(m_Window);
+			m_Context->Init();
+		}
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
@@ -143,17 +154,23 @@ namespace Donut {
 
 	void WindowsWindow::Shutdown()
 	{
+		DN_PROFILE_FUNCTION();
+
 		glfwDestroyWindow(m_Window);
 	}
 
 	void WindowsWindow::OnUpdate()
 	{
+		DN_PROFILE_FUNCTION();
+
 		glfwPollEvents();
 		m_Context->SwapBuffers();
 	}
 
 	void WindowsWindow::SetVSync(bool enabled)
 	{
+		DN_PROFILE_FUNCTION();
+
 		if (enabled)
 			glfwSwapInterval(1);
 		else

@@ -11,6 +11,8 @@ namespace Donut {
 
 	Application::Application()
 	{
+		DN_PROFILE_FUNCTION();
+
 		DN_CORE_ASSERT(!s_Instance, "Application already exists");
 		s_Instance = this;
 
@@ -25,16 +27,24 @@ namespace Donut {
 	
 	void Application::PushLayer(Layer* layer)
 	{
+		DN_PROFILE_FUNCTION();
+
 		m_LayerStack.PushLayer(layer);
+		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* overlay)
 	{
+		DN_PROFILE_FUNCTION();
+
 		m_LayerStack.PushOverlay(overlay);
+		overlay->OnAttach();
 	}
 
 	void Application::OnEvent(Event& e)
 	{
+		DN_PROFILE_FUNCTION();
+
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(DN_BIND_EVENT_FN(Application::OnWindowClosed));
 		dispatcher.Dispatch<WindowResizeEvent>(DN_BIND_EVENT_FN(Application::OnWindowResize));
@@ -51,24 +61,38 @@ namespace Donut {
 
 	void Application::Run()
 	{
+		DN_PROFILE_FUNCTION();
+
 		while (m_Running)
 		{
 			float time = (float)glfwGetTime();
 			Timestep ts = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
-			if (!m_Minimized)
 			{
-				for (Layer* layer : m_LayerStack)
-					layer->OnUpdate(ts);
+				DN_PROFILE_SCOPE("Layers OnUpdate");
+
+				if (!m_Minimized)
+				{
+					for (Layer* layer : m_LayerStack)
+						layer->OnUpdate(ts);
+				}
 			}
 
-			m_ImGuiLayer->Begin();
-			for (Layer* layer : m_LayerStack)
-				layer->OnImGuiRender();
-			m_ImGuiLayer->End();
+			{
+				DN_PROFILE_SCOPE("Layers OnImGuiRender");
 
-			m_Window->OnUpdate();
+				m_ImGuiLayer->Begin();
+				for (Layer* layer : m_LayerStack)
+					layer->OnImGuiRender();
+				m_ImGuiLayer->End();
+			}
+
+			{
+				DN_PROFILE_SCOPE("Window OnUpdate");
+
+				m_Window->OnUpdate();
+			}
 		}
 	}
 
@@ -80,6 +104,8 @@ namespace Donut {
 
 	bool Application::OnWindowResize(WindowResizeEvent& e)
 	{
+		DN_PROFILE_FUNCTION();
+
 		if (e.GetWidth() == 0 || e.GetHeight() == 0)
 			m_Minimized = true;
 

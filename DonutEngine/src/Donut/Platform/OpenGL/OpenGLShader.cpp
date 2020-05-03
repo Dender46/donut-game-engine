@@ -61,6 +61,8 @@ namespace Donut {
 
 	std::unordered_map<GLenum, std::string> OpenGLShader::Parse(const std::string &source)
 	{
+		DN_PROFILE_FUNCTION();
+
 		std::unordered_map<GLenum, std::string> shaderSources;
 
 		const char* typeToken = "#type";
@@ -85,6 +87,8 @@ namespace Donut {
 
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string> &shaderSources)
 	{
+		DN_PROFILE_FUNCTION();
+
 		m_RendererID = glCreateProgram();
 		std::vector<GLuint> glShaderIDs(shaderSources.size());
 
@@ -177,36 +181,50 @@ namespace Donut {
 
 	void OpenGLShader::SetInt(const std::string& name, const int value)
 	{
+		DN_PROFILE_FUNCTION();
+
 		UploadUniformInt(name, value);
 	}
 
 	void OpenGLShader::SetFloat(const std::string& name, const float value)
 	{
+		DN_PROFILE_FUNCTION();
+
 		UploadUniformFloat(name, value);
 	}
 
 	void OpenGLShader::SetFloat2(const std::string& name, const glm::vec2 value)
 	{
+		DN_PROFILE_FUNCTION();
+
 		UploadUniformFloat2(name, value);
 	}
 
 	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3 value)
 	{
+		DN_PROFILE_FUNCTION();
+
 		UploadUniformFloat3(name, value);
 	}
 
 	void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4 value)
 	{
+		DN_PROFILE_FUNCTION();
+
 		UploadUniformFloat4(name, value);
 	}
 
 	void OpenGLShader::SetMat3(const std::string& name, const glm::mat3 matrix)
 	{
+		DN_PROFILE_FUNCTION();
+
 		UploadUniformMat3(name, matrix);
 	}
 
 	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4 matrix)
 	{
+		DN_PROFILE_FUNCTION();
+
 		UploadUniformMat4(name, matrix);
 	}
 
