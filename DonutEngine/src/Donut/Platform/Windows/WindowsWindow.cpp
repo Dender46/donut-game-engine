@@ -58,7 +58,7 @@ namespace Donut {
 		}
 		{
 			DN_PROFILE_SCOPE("new OpenGLContext(window)");
-			m_Context = new OpenGLContext(m_Window);
+			m_Context = CreateScope<OpenGLContext>(m_Window);
 			m_Context->Init();
 		}
 

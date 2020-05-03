@@ -27,7 +27,7 @@ namespace Donut {
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
-		RenderingContext* m_Context;
+		Scope<RenderingContext> m_Context;
 
 		struct WindowData
 		{

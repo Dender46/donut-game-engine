@@ -16,7 +16,7 @@ namespace Donut {
 			return nullptr;
 			break;
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLShader>(path);
+			return CreateRef<OpenGLShader>(path);
 			break;
 		}
 
@@ -33,7 +33,7 @@ namespace Donut {
 			return nullptr;
 			break;
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
+			return CreateRef<OpenGLShader>(name, vertexSrc, fragmentSrc);
 			break;
 		}
 

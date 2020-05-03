@@ -32,6 +32,6 @@ namespace Donut {
 			s_RendererAPI->DrawIndexed(vertexArray);
 		}
 	private:
-		static Ref<RendererAPI> s_RendererAPI;
+		static Scope<RendererAPI> s_RendererAPI;
 	};
 }

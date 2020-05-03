@@ -25,7 +25,7 @@ namespace Donut {
 			glm::mat4 ViewProjectionMatrix;
 		};
 
-		static Ref<SceneData> s_SceneData;
+		static Scope<SceneData> s_SceneData;
 	};
 
 }
