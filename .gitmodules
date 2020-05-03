@@ -1,12 +1,16 @@
 [submodule "DonutEngine/vendor/spdlog"]
 	path = DonutEngine/vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
+	branch = v1.x
 [submodule "DonutEngine/vendor/GLFW"]
 	path = DonutEngine/vendor/GLFW
 	url = https://github.com/Dender46/glfw
+	branch = master
 [submodule "DonutEngine/vendor/glm"]
 	path = DonutEngine/vendor/glm
 	url = https://github.com/g-truc/glm.git
+	branch = master
 [submodule "DonutEngine/vendor/imgui"]
 	path = DonutEngine/vendor/imgui
 	url = https://github.com/Dender46/imgui.git
+	branch = docking
