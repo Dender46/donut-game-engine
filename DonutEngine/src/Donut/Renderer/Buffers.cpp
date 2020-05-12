@@ -6,8 +6,7 @@
 #include "Donut\Platform\OpenGL\OpenGLBuffers.h"
 
 namespace Donut {
-
-	Ref<VertexBuffer> VertexBuffer::Create(uint32_t size, float* vertices)
+	Ref<VertexBuffer> VertexBuffer::Create(uint32_t size)
 	{
 		switch (Renderer::CurrentAPI())
 		{
@@ -16,7 +15,7 @@ namespace Donut {
 			return nullptr;
 			break;
 		case RendererAPI::API::OpenGL:
-			return CreateRef<OpenGLVertexBuffer>(size, vertices);
+			return CreateRef<OpenGLVertexBuffer>(size);
 			break;
 		}
 
@@ -24,7 +23,7 @@ namespace Donut {
 		return nullptr;
 	}
 
-	Ref<IndexBuffer> IndexBuffer::Create(uint32_t count, uint32_t* indices)
+	Ref<VertexBuffer> VertexBuffer::Create(float* vertices, uint32_t size)
 	{
 		switch (Renderer::CurrentAPI())
 		{
@@ -33,7 +32,24 @@ namespace Donut {
 			return nullptr;
 			break;
 		case RendererAPI::API::OpenGL:
-			return CreateRef<OpenGLIndexBuffer>(count, indices);
+			return CreateRef<OpenGLVertexBuffer>(vertices, size);
+			break;
+		}
+
+		DN_CORE_ASSERT(false, "Unknown RendererAPI!");
+		return nullptr;
+	}
+
+	Ref<IndexBuffer> IndexBuffer::Create(uint32_t* indices, uint32_t count)
+	{
+		switch (Renderer::CurrentAPI())
+		{
+		case RendererAPI::API::None:
+			DN_CORE_ASSERT(false, "RendererAPI::None is currently unsupported!");
+			return nullptr;
+			break;
+		case RendererAPI::API::OpenGL:
+			return CreateRef<OpenGLIndexBuffer>(indices, count);
 			break;
 		}
 

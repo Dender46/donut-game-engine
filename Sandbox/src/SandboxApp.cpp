@@ -11,6 +11,7 @@
 
 #include "Sandbox2D.h"
 
+/*
 class OpenGLExampleLayer : public Donut::Layer
 {
 public:
@@ -129,7 +130,7 @@ public:
 
 		Donut::Ref<Donut::Texture2D> m_Texture, m_ExplosionIconTexture;
 };
-
+*/
 class Sandbox : public Donut::Application
 {
 public:
