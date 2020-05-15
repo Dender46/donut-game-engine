@@ -23,11 +23,11 @@
 
 #define BIT(x) (1 << x)
 
-#define DN_WHITE	glm::vec4(1.0f)
-#define DN_BLACK	glm::vec4(0.0f)
-#define DN_RED		{0.9f, 0.1f, 0.1f, 1.0f}
-#define DN_GREEN	{0.1f, 0.9f, 0.1f, 1.0f}
-#define DN_BLUE		{0.1f, 0.1f, 0.9f, 1.0f}
+#define DN_COLOR_WHITE	glm::vec4(1.0f)
+#define DN_COLOR_BLACK	glm::vec4(0.0f)
+#define DN_COLOR_RED	{0.9f, 0.1f, 0.1f, 1.0f}
+#define DN_COLOR_GREEN	{0.1f, 0.9f, 0.1f, 1.0f}
+#define DN_COLOR_BLUE	{0.1f, 0.1f, 0.9f, 1.0f}
 
 namespace Donut {
 
