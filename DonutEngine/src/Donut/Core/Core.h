@@ -25,9 +25,10 @@
 
 #define DN_COLOR_WHITE	glm::vec4(1.0f)
 #define DN_COLOR_BLACK	glm::vec4(0.0f)
-#define DN_COLOR_RED	{0.9f, 0.1f, 0.1f, 1.0f}
-#define DN_COLOR_GREEN	{0.1f, 0.9f, 0.1f, 1.0f}
-#define DN_COLOR_BLUE	{0.1f, 0.1f, 0.9f, 1.0f}
+#define DN_COLOR_RED	{0.90f, 0.10f, 0.10f, 1.0f}
+#define DN_COLOR_GREEN	{0.10f, 0.90f, 0.10f, 1.0f}
+#define DN_COLOR_BLUE	{0.10f, 0.10f, 0.90f, 1.0f}
+#define DN_COLOR_PURPLE	{0.20f, 0.10f, 0.35f, 1.0f}
 
 namespace Donut {
 

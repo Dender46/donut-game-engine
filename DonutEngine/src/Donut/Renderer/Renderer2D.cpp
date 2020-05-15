@@ -32,6 +32,9 @@ namespace Donut {
 		static const uint32_t MaxTextureSlots = 32;
 		std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
 		uint32_t TextureSlotIndex = 1; // 0 == white texture
+
+		glm::vec4 QuadVertexPositions[4];
+		glm::vec2 QuadTextureCoords[4];
 	};
 
 	static Renderer2DObject s_Data;
@@ -69,8 +72,10 @@ namespace Donut {
 		Ref<IndexBuffer> quadIndexBuffer = IndexBuffer::Create(quadIndices, s_Data.MaxIndices);
 		s_Data.QuadVA->SetIndexBuffer(quadIndexBuffer);
 
+		// IMPORTANT
 		delete[] quadIndices; 
 
+		// Creating white texture for pure-color quads
 		uint32_t whiteColor = 0xffffffff;
 		s_Data.WhiteTexture = Texture2D::Create(1, 1);
 		s_Data.WhiteTexture->SetData(&whiteColor, sizeof(uint32_t));
@@ -79,11 +84,24 @@ namespace Donut {
 		for (uint32_t i = 0; i < s_Data.MaxTextureSlots; i++)
 			samplers[i] = i;
 		
+		// Creating texture
 		s_Data.TextureShader = Shader::Create("assets/shaders/Texture.glsl");
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
 
+		// Assign default white texture
 		s_Data.TextureSlots[0] = s_Data.WhiteTexture;
+
+		// Predefined coords of vertices and textures
+		s_Data.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPositions[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
+		s_Data.QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
+
+		s_Data.QuadTextureCoords[0] = { 0.0f, 0.0f };
+		s_Data.QuadTextureCoords[1] = { 1.0f, 0.0f };
+		s_Data.QuadTextureCoords[2] = { 1.0f, 1.0f };
+		s_Data.QuadTextureCoords[3] = { 0.0f, 1.0f };
 	}
 
 	void Renderer2D::Shutdown()
@@ -129,45 +147,19 @@ namespace Donut {
 		const uint32_t textureIndex = 0;
 		const float tilingAmount = 1.0f;
 
-		s_Data.QuadVBPtr->Position = position;
-		s_Data.QuadVBPtr->Color = color;
-		s_Data.QuadVBPtr->TexCoords = { 0.0f, 0.0f };
-		s_Data.QuadVBPtr->TexIndex = textureIndex;
-		s_Data.QuadVBPtr->TilingAmount = tilingAmount;
-		s_Data.QuadVBPtr++;
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		s_Data.QuadVBPtr->Position = { position.x + size.x, position.y, 0.0f };
-		s_Data.QuadVBPtr->Color = color;
-		s_Data.QuadVBPtr->TexCoords = { 1.0f, 0.0f };
-		s_Data.QuadVBPtr->TexIndex = textureIndex;
-		s_Data.QuadVBPtr->TilingAmount = tilingAmount;
-		s_Data.QuadVBPtr++;
-
-		s_Data.QuadVBPtr->Position = { position.x + size.x, position.y + size.y, 0.0f };
-		s_Data.QuadVBPtr->Color = color;
-		s_Data.QuadVBPtr->TexCoords = { 1.0f, 1.0f };
-		s_Data.QuadVBPtr->TexIndex = textureIndex;
-		s_Data.QuadVBPtr->TilingAmount = tilingAmount;
-		s_Data.QuadVBPtr++;
-
-		s_Data.QuadVBPtr->Position = { position.x, position.y + size.y, 0.0f };
-		s_Data.QuadVBPtr->Color = color;
-		s_Data.QuadVBPtr->TexCoords = { 0.0f, 1.0f };
-		s_Data.QuadVBPtr->TexIndex = textureIndex;
-		s_Data.QuadVBPtr->TilingAmount = tilingAmount;
-		s_Data.QuadVBPtr++;
+		for (uint32_t i = 0; i < 4; i++)
+		{
+			s_Data.QuadVBPtr->Position = transform * s_Data.QuadVertexPositions[i];
+			s_Data.QuadVBPtr->Color = color;
+			s_Data.QuadVBPtr->TexCoords = s_Data.QuadTextureCoords[i];
+			s_Data.QuadVBPtr->TexIndex = textureIndex;
+			s_Data.QuadVBPtr->TilingAmount = tilingAmount;
+			s_Data.QuadVBPtr++;
+		}
 
 		s_Data.QuadIndexCount += 6;
-		/*
-		s_Data.TextureShader->SetFloat4("u_Color", color);
-		s_Data.WhiteTexture->Bind();
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		s_Data.TextureShader->SetMat4("u_Transform", transform);
-		 
-		s_Data.QuadVA->Bind();
-		RenderCommand::DrawIndexed(s_Data.QuadVA);
-		*/
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)
@@ -195,47 +187,19 @@ namespace Donut {
 			s_Data.TextureSlotIndex++;
 		}
 
-		s_Data.QuadVBPtr->Position = position;
-		s_Data.QuadVBPtr->Color = tint;
-		s_Data.QuadVBPtr->TexCoords = { 0.0f, 0.0f };
-		s_Data.QuadVBPtr->TexIndex = textureIndex;
-		s_Data.QuadVBPtr->TilingAmount = tilingAmount;
-		s_Data.QuadVBPtr++;
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		s_Data.QuadVBPtr->Position = { position.x + size.x, position.y, 0.0f };
-		s_Data.QuadVBPtr->Color = tint;
-		s_Data.QuadVBPtr->TexCoords = { 1.0f, 0.0f };
-		s_Data.QuadVBPtr->TexIndex = textureIndex;
-		s_Data.QuadVBPtr->TilingAmount = tilingAmount;
-		s_Data.QuadVBPtr++;
-
-		s_Data.QuadVBPtr->Position = { position.x + size.x, position.y + size.y, 0.0f };
-		s_Data.QuadVBPtr->Color = tint;
-		s_Data.QuadVBPtr->TexCoords = { 1.0f, 1.0f };
-		s_Data.QuadVBPtr->TexIndex = textureIndex;
-		s_Data.QuadVBPtr->TilingAmount = tilingAmount;
-		s_Data.QuadVBPtr++;
-
-		s_Data.QuadVBPtr->Position = { position.x, position.y + size.y, 0.0f };
-		s_Data.QuadVBPtr->Color = tint;
-		s_Data.QuadVBPtr->TexCoords = { 0.0f, 1.0f };
-		s_Data.QuadVBPtr->TexIndex = textureIndex;
-		s_Data.QuadVBPtr->TilingAmount = tilingAmount;
-		s_Data.QuadVBPtr++;
+		for (uint32_t i = 0; i < 4; i++)
+		{
+			s_Data.QuadVBPtr->Position = transform * s_Data.QuadVertexPositions[i];
+			s_Data.QuadVBPtr->Color = tint;
+			s_Data.QuadVBPtr->TexCoords = s_Data.QuadTextureCoords[i];
+			s_Data.QuadVBPtr->TexIndex = textureIndex;
+			s_Data.QuadVBPtr->TilingAmount = tilingAmount;
+			s_Data.QuadVBPtr++;
+		}
 
 		s_Data.QuadIndexCount += 6;
-
-		/*
-		texture->Bind();
-		s_Data.TextureShader->SetFloat("u_TilingAmount", tilingAmount);
-		s_Data.TextureShader->SetFloat4("u_Color", tint);
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		s_Data.TextureShader->SetMat4("u_Transform", transform);
-
-		s_Data.QuadVA->Bind();
-		RenderCommand::DrawIndexed(s_Data.QuadVA);
-		*/
 	}
 
 
@@ -247,16 +211,24 @@ namespace Donut {
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, const float rotation, const glm::vec4& color)
 	{
-		s_Data.TextureShader->SetFloat4("u_Color", color);
-		s_Data.WhiteTexture->Bind();
+		const uint32_t textureIndex = 0;
+		const float tilingAmount = 1.0f;
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		s_Data.TextureShader->SetMat4("u_Transform", transform);
+			* glm::scale (glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		s_Data.QuadVA->Bind();
-		RenderCommand::DrawIndexed(s_Data.QuadVA);
+		for (uint32_t i = 0; i < 4; i++)
+		{
+			s_Data.QuadVBPtr->Position = transform * s_Data.QuadVertexPositions[i];
+			s_Data.QuadVBPtr->Color = color;
+			s_Data.QuadVBPtr->TexCoords = s_Data.QuadTextureCoords[i];
+			s_Data.QuadVBPtr->TexIndex = textureIndex;
+			s_Data.QuadVBPtr->TilingAmount = tilingAmount;
+			s_Data.QuadVBPtr++;
+		}
+
+		s_Data.QuadIndexCount += 6;
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, const float rotation, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)
@@ -266,17 +238,39 @@ namespace Donut {
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, const float rotation, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)
 	{
-		texture->Bind();
-		s_Data.TextureShader->SetFloat("u_TilingAmount", tilingAmount);
-		s_Data.TextureShader->SetFloat4("u_Color", tint);
+		float textureIndex = 0;
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) 
+		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++)
+		{
+			if (*s_Data.TextureSlots[i].get() == *texture.get())
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		if (textureIndex == 0)
+		{
+			textureIndex = (float)s_Data.TextureSlotIndex;
+			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
+			s_Data.TextureSlotIndex++;
+		}
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
 			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		s_Data.TextureShader->SetMat4("u_Transform", transform);
+			* glm::scale (glm::mat4(1.0f), { size.x, size.y, 1.0f });
 
-		s_Data.QuadVA->Bind();
-		RenderCommand::DrawIndexed(s_Data.QuadVA);
+		for (uint32_t i = 0; i < 4; i++)
+		{
+			s_Data.QuadVBPtr->Position = transform * s_Data.QuadVertexPositions[i];
+			s_Data.QuadVBPtr->Color = tint;
+			s_Data.QuadVBPtr->TexCoords = s_Data.QuadTextureCoords[i];
+			s_Data.QuadVBPtr->TexIndex = textureIndex;
+			s_Data.QuadVBPtr->TilingAmount = tilingAmount;
+			s_Data.QuadVBPtr++;
+		}
+
+		s_Data.QuadIndexCount += 6;
 	}
 
 }
