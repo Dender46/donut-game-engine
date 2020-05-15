@@ -127,15 +127,14 @@ namespace Donut {
 				return;
 			}
 
-			// Vertex and fragment shaders are successfully compiled.
-			// Now time to link them together into a program.
-
 			// Attach our shaders to our program
 			glAttachShader(m_RendererID, shader);
 			glShaderIDs.push_back(shader);
 		}
 
-		
+		// Vertex and fragment shaders are successfully compiled.
+		// Now time to link them together into a program.
+
 		// Link our program
 		glLinkProgram(m_RendererID);
 
@@ -184,109 +183,107 @@ namespace Donut {
 		glUseProgram(0);
 	}
 
+	void OpenGLShader::SetIntArray(const std::string& name, const int* values, const uint32_t count)
+	{
+		DN_PROFILE_FUNCTION();
+		UploadUniformIntArray(name, values, count);
+	}
+
 	void OpenGLShader::SetInt(const std::string& name, const int value)
 	{
 		DN_PROFILE_FUNCTION();
-
 		UploadUniformInt(name, value);
 	}
 
 	void OpenGLShader::SetFloat(const std::string& name, const float value)
 	{
 		DN_PROFILE_FUNCTION();
-
 		UploadUniformFloat(name, value);
 	}
 
 	void OpenGLShader::SetFloat2(const std::string& name, const glm::vec2 value)
 	{
 		DN_PROFILE_FUNCTION();
-
 		UploadUniformFloat2(name, value);
 	}
 
 	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3 value)
 	{
 		DN_PROFILE_FUNCTION();
-
 		UploadUniformFloat3(name, value);
 	}
 
 	void OpenGLShader::SetFloat4(const std::string& name, const glm::vec4 value)
 	{
 		DN_PROFILE_FUNCTION();
-
 		UploadUniformFloat4(name, value);
 	}
 
 	void OpenGLShader::SetMat3(const std::string& name, const glm::mat3 matrix)
 	{
 		DN_PROFILE_FUNCTION();
-
 		UploadUniformMat3(name, matrix);
 	}
 
 	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4 matrix)
 	{
 		DN_PROFILE_FUNCTION();
-
 		UploadUniformMat4(name, matrix);
+	}
+
+	void OpenGLShader::UploadUniformIntArray(const std::string& name, const int* values, const uint32_t count)
+	{
+		int location = glGetUniformLocation(m_RendererID, name.c_str());
+		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program or uniform is defined but not used");
+		glUniform1iv(location, count, values);
 	}
 
 	void OpenGLShader::UploadUniformInt(const std::string & name, const int value)
 	{
 		int location = glGetUniformLocation(m_RendererID, name.c_str());
-		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program!");
-
+		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program or uniform is defined but not used");
 		glUniform1i(location, value);
 	}
 
 	void OpenGLShader::UploadUniformFloat(const std::string & name, const float value)
 	{
 		int location = glGetUniformLocation(m_RendererID, name.c_str());
-		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program!");
-
+		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program or uniform is defined but not used");
 		glUniform1f(location, value);
 	}
 
 	void OpenGLShader::UploadUniformFloat2(const std::string & name, const glm::vec2 value)
 	{
 		int location = glGetUniformLocation(m_RendererID, name.c_str());
-		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program!");
-
+		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program or uniform is defined but not used");
 		glUniform2f(location, value.x, value.y);
 	}
 
 	void OpenGLShader::UploadUniformFloat3(const std::string & name, const glm::vec3 value)
 	{
 		int location = glGetUniformLocation(m_RendererID, name.c_str());
-		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program!");
-
+		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program or uniform is defined but not used");
 		glUniform3f(location, value.x, value.y, value.z);
 	}
 
 	void OpenGLShader::UploadUniformFloat4(const std::string & name, const glm::vec4 value)
 	{
 		int location = glGetUniformLocation(m_RendererID, name.c_str());
-		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program!");
-
+		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program or uniform is defined but not used");
 		glUniform4f(location, value.x, value.y, value.z, value.w);
 	}
 
 	void OpenGLShader::UploadUniformMat3(const std::string & name, const glm::mat3 matrix)
 	{
 		int location = glGetUniformLocation(m_RendererID, name.c_str());
-		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program!");
-
+		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program or uniform is defined but not used");
 		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 	void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4 matrix)
 	{
 		int location = glGetUniformLocation(m_RendererID, name.c_str());
-		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program!");
-
+		DN_CORE_ASSERT(location != -1, name + " - does not correspond to an active uniform variable in program or uniform is defined but not used");
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
-
 }

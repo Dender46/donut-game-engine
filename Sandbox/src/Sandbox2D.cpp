@@ -41,7 +41,7 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 		Donut::Renderer2D::DrawQuad({ -0.3f, -0.3f, 0.0f }, { 0.8f, 0.8f }, m_BlueColor);
 		Donut::Renderer2D::DrawQuad({ 0.5f, 0.3f, 0.0f }, { 0.4f, 0.8f }, DN_COLOR_RED);
 		//Donut::Renderer2D::DrawRotatedQuad({ 0.5f, 0.3f, 0.0f }, { 0.4f, 0.8f }, glm::radians(30.0f), DN_COLOR_RED);
-		//Donut::Renderer2D::DrawQuad({ -5.0f, -5.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, DN_COLOR_WHITE, 10);
+		Donut::Renderer2D::DrawQuad({ -5.0f, -5.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, DN_COLOR_WHITE, 10);
 		Donut::Renderer2D::EndScene();
 	}
 }
