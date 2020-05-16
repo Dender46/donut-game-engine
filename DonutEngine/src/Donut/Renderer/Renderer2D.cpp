@@ -35,12 +35,16 @@ namespace Donut {
 
 		glm::vec4 QuadVertexPositions[4];
 		glm::vec2 QuadTextureCoords[4];
+		
+		Renderer2D::Statistics Stats;
 	};
 
 	static Renderer2DObject s_Data;
 
 	void Renderer2D::Init()
 	{
+		DN_PROFILE_FUNCTION();
+
 		s_Data.QuadVA = VertexArray::Create();
 
 		s_Data.QuadVB = VertexBuffer::Create(s_Data.MaxVertices * sizeof(QuadVertex));
@@ -106,11 +110,13 @@ namespace Donut {
 
 	void Renderer2D::Shutdown()
 	{
-		
+		DN_PROFILE_FUNCTION();
 	}
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
+		DN_PROFILE_FUNCTION();
+
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 
@@ -122,6 +128,8 @@ namespace Donut {
 
 	void Renderer2D::EndScene()
 	{
+		DN_PROFILE_FUNCTION();
+
 		uint32_t dataSize = (uint8_t*)s_Data.QuadVBPtr - (uint8_t*)s_Data.QuadVBBase;
 		s_Data.QuadVB->SetData(s_Data.QuadVBBase, dataSize);
 
@@ -130,11 +138,25 @@ namespace Donut {
 
 	void Renderer2D::Flush()
 	{
+		DN_PROFILE_FUNCTION();
+
 		// Bind textures
 		for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
 			s_Data.TextureSlots[i]->Bind(i);
 
 		RenderCommand::DrawIndexed(s_Data.QuadVA, s_Data.QuadIndexCount);
+
+		s_Data.Stats.DrawCalls++;
+	}
+
+	void Renderer2D::FlushAndReset()
+	{
+		EndScene();
+
+		s_Data.QuadIndexCount = 0;
+		s_Data.QuadVBPtr = s_Data.QuadVBBase;
+
+		s_Data.TextureSlotIndex = 1;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
@@ -144,6 +166,11 @@ namespace Donut {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
+		DN_PROFILE_FUNCTION();
+
+		if (s_Data.QuadIndexCount >= s_Data.MaxIndices)
+			FlushAndReset();
+
 		const uint32_t textureIndex = 0;
 		const float tilingAmount = 1.0f;
 
@@ -160,6 +187,9 @@ namespace Donut {
 		}
 
 		s_Data.QuadIndexCount += 6;
+
+		// Increment statistics
+		s_Data.Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)
@@ -169,8 +199,12 @@ namespace Donut {
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)
 	{
-		float textureIndex = 0;
+		DN_PROFILE_FUNCTION();
 
+		if (s_Data.QuadIndexCount >= s_Data.MaxIndices)
+			FlushAndReset();
+
+		float textureIndex = 0;
 		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++)
 		{
 			if (*s_Data.TextureSlots[i].get() == *texture.get())
@@ -200,6 +234,9 @@ namespace Donut {
 		}
 
 		s_Data.QuadIndexCount += 6;
+
+		// Increment statistics
+		s_Data.Stats.QuadCount++;
 	}
 
 
@@ -211,6 +248,11 @@ namespace Donut {
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, const float rotation, const glm::vec4& color)
 	{
+		DN_PROFILE_FUNCTION();
+
+		if (s_Data.QuadIndexCount >= s_Data.MaxIndices)
+			FlushAndReset();
+
 		const uint32_t textureIndex = 0;
 		const float tilingAmount = 1.0f;
 
@@ -229,6 +271,9 @@ namespace Donut {
 		}
 
 		s_Data.QuadIndexCount += 6;
+
+		// Increment statistics
+		s_Data.Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, const float rotation, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)
@@ -238,8 +283,12 @@ namespace Donut {
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, const float rotation, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)
 	{
-		float textureIndex = 0;
+		DN_PROFILE_FUNCTION();
 
+		if (s_Data.QuadIndexCount >= s_Data.MaxIndices)
+			FlushAndReset();
+
+		float textureIndex = 0;
 		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++)
 		{
 			if (*s_Data.TextureSlots[i].get() == *texture.get())
@@ -271,6 +320,18 @@ namespace Donut {
 		}
 
 		s_Data.QuadIndexCount += 6;
+
+		// Increment statistics
+		s_Data.Stats.QuadCount++;
+	}
+	
+	void Renderer2D::ResetStats()
+	{
+		memset(&s_Data.Stats, 0, sizeof(Statistics));
 	}
 
+	Renderer2D::Statistics Renderer2D::GetStats()
+	{
+		return s_Data.Stats;
+	}
 }

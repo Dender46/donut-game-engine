@@ -24,6 +24,7 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 {
 	DN_PROFILE_FUNCTION();
 
+	Donut::Renderer2D::ResetStats();
 	{
 		DN_PROFILE_SCOPE("Camera::OnUpdate");
 		m_CameraController.OnUpdate(ts);
@@ -48,7 +49,16 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 void Sandbox2D::OnImGuiRender()
 {
 	DN_PROFILE_FUNCTION();
+
 	ImGui::Begin("Settings");
+
+	auto stats = Donut::Renderer2D::GetStats();
+	ImGui::Text("Renderer2D Stats:");
+	ImGui::Text("DrawCalls: %d", stats.DrawCalls);
+	ImGui::Text("QuadCount: %d", stats.QuadCount);
+	ImGui::Text("VertexCount: %d", stats.GetTotalVertexCount());
+	ImGui::Text("IndexCount: %d", stats.GetTotalIndexCount());
+
 	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_BlueColor));
 	ImGui::End();
 }
