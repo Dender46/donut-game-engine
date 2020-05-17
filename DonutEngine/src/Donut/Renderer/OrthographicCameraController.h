@@ -7,6 +7,14 @@
 
 namespace Donut {
 
+	struct OrthographicCameraBounds
+	{
+		float Left, Right;
+		float Bottom, Top;
+		float GetWidth() { return Right - Left; }
+		float GetHeight() { return Top - Bottom; }
+	};
+
 	class OrthographicCameraController
 	{
 	public:
@@ -15,14 +23,16 @@ namespace Donut {
 		void OnUpdate(Timestep& ts);
 		void OnEvent(Event& e);
 
-		inline OrthographicCamera& GetCamera() { return m_Camera; }
-		inline const OrthographicCamera& GetCamera() const { return m_Camera; }
+		OrthographicCamera& GetCamera() { return m_Camera; }
+		const OrthographicCamera& GetCamera() const { return m_Camera; }
+		const OrthographicCameraBounds& GetBounds() const { return m_Bounds; }
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResized(WindowResizeEvent& e);
 	private:
 		float m_AspectRatio; // these members should be declared before m_Camera
 		float m_ZoomLevel = 1.0f;
+		OrthographicCameraBounds m_Bounds;
 		OrthographicCamera m_Camera;
 
 		glm::vec3 m_CameraPosition = { 0.0f, 0.0f, 0.0f };

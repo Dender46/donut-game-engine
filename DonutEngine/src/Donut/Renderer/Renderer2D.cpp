@@ -111,6 +111,8 @@ namespace Donut {
 	void Renderer2D::Shutdown()
 	{
 		DN_PROFILE_FUNCTION();
+
+		delete[] s_Data.QuadVBBase;
 	}
 
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
@@ -130,7 +132,7 @@ namespace Donut {
 	{
 		DN_PROFILE_FUNCTION();
 
-		uint32_t dataSize = (uint8_t*)s_Data.QuadVBPtr - (uint8_t*)s_Data.QuadVBBase;
+		uint32_t dataSize = (uint32_t) ((uint8_t*)s_Data.QuadVBPtr - (uint8_t*)s_Data.QuadVBBase);
 		s_Data.QuadVB->SetData(s_Data.QuadVBBase, dataSize);
 
 		Flush();
@@ -243,7 +245,7 @@ namespace Donut {
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, const float rotation, const glm::vec4& color)
 	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, color);
+		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, color);
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, const float rotation, const glm::vec4& color)
@@ -278,7 +280,7 @@ namespace Donut {
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, const float rotation, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)
 	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, texture, tint, tilingAmount);
+		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, texture, tint, tilingAmount);
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, const float rotation, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)

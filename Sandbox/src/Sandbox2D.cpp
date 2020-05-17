@@ -7,13 +7,25 @@
 
 
 Sandbox2D::Sandbox2D()
-	: Layer("Sandbox"), m_CameraController(1280.0f / 720.0f, true)
+	: Layer("Sandbox"), m_CameraController(1280.0f / 720.0f, true), m_ParticleSystem(1000)
 {
 }
 
 void Sandbox2D::OnAttach()
 {
 	m_CheckerboardTexture = Donut::Texture2D::Create("assets/textures/checker_board.png");
+
+	m_ParticleProps.Lifetime	= 1.0f;
+	m_ParticleProps.Position	= { 0.0f, 0.0f };
+	m_ParticleProps.ColorBegin	= { 255.0f / 255.0f, 194.0f / 255.0f, 144.0f / 255.0f, 1.0f };
+	m_ParticleProps.ColorEnd	= { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
+
+	m_ParticleProps.SizeBegin		= 0.5f;
+	m_ParticleProps.SizeEnd			= 0.0f;
+	m_ParticleProps.SizeVariation	= 0.3f;
+	
+	m_ParticleProps.Velocity			= { 0.0f, 0.0f };
+	m_ParticleProps.VelocityVariation	= { 3.0f, 1.0f };
 }
 
 void Sandbox2D::OnDetach()
@@ -44,6 +56,27 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 		Donut::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.99}, { 10.0f, 10.0f }, m_CheckerboardTexture, DN_COLOR_WHITE, 10);
 		Donut::Renderer2D::EndScene();
 	}
+
+
+	if (Donut::Input::IsMouseButtonPressed(DN_MOUSE_BUTTON_LEFT))
+	{
+		auto [x, y] = Donut::Input::GetMousePosition();
+		auto width = Donut::Application::Get().GetWindow().GetWidth();
+		auto height = Donut::Application::Get().GetWindow().GetHeight();
+
+		auto bounds = m_CameraController.GetBounds();
+		auto pos = m_CameraController.GetCamera().GetPosition();
+		
+		x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
+		y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
+		m_ParticleProps.Position = { x + pos.x, y + pos.y };
+		
+		for (int i = 0; i < 5; i++)
+			m_ParticleSystem.Emit(m_ParticleProps);
+	}
+
+	m_ParticleSystem.OnUpdate(ts);
+	m_ParticleSystem.OnRender(m_CameraController.GetCamera());
 }
 
 void Sandbox2D::OnImGuiRender()
@@ -58,8 +91,9 @@ void Sandbox2D::OnImGuiRender()
 	ImGui::Text("QuadCount: %d", stats.QuadCount);
 	ImGui::Text("VertexCount: %d", stats.GetTotalVertexCount());
 	ImGui::Text("IndexCount: %d", stats.GetTotalIndexCount());
-
+	ImGui::Text("--------------------");
 	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_BlueColor));
+
 	ImGui::End();
 }
 

@@ -1,12 +1,13 @@
 #pragma once
 
-// For use by DonutEngine applications
+// ----- Renderer -----
 #include "Donut/Core/Application.h"
 #include "Donut/Core/Layer.h"
 #include "Donut/Core/Log.h"
 #include "Donut/ImGui/ImGuiLayer.h"
 
 #include "Donut/Core/Timestep.h"
+#include "Donut/Core/Random.h"
 
 #include "Donut/Core/MouseButtonCode.h"
 #include "Donut/Core/KeyCodes.h"
@@ -26,3 +27,6 @@
 // ----- Cameras -----
 #include "Donut/Renderer/Camera.h"
 #include "Donut/Renderer/OrthographicCameraController.h"
+
+// ----- Systems -----
+#include "Donut/Systems/ParticleSystem.h"

@@ -18,5 +18,8 @@ private:
 
 	Donut::Ref<Donut::Texture2D> m_CheckerboardTexture;
 
+	Donut::ParticleSystem m_ParticleSystem;
+	Donut::ParticleProps m_ParticleProps;
+
 	glm::vec4 m_BlueColor = DN_COLOR_BLUE;
 };
