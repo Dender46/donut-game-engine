@@ -23,6 +23,7 @@
 #include "Donut/Renderer/VertexArray.h"
 
 #include "Donut/Renderer/Texture.h"
+#include "Donut/Renderer/SubTexture2D.h"
 
 // ----- Cameras -----
 #include "Donut/Renderer/Camera.h"

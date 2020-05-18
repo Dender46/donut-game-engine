@@ -16,7 +16,8 @@ public:
 private:
 	Donut::OrthographicCameraController m_CameraController;
 
-	Donut::Ref<Donut::Texture2D> m_CheckerboardTexture;
+	Donut::Ref<Donut::Texture2D> m_CheckerboardTexture, m_SpriteSheet;
+	Donut::Ref<Donut::SubTexture2D> m_TextureStairs, m_TextureTree;
 
 	Donut::ParticleSystem m_ParticleSystem;
 	Donut::ParticleProps m_ParticleProps;

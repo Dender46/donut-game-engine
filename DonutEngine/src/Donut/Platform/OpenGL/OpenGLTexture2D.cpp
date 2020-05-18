@@ -33,7 +33,7 @@ namespace Donut {
 			DN_PROFILE_SCOPE("stbi_load -> OpenGLTexture2D(const std::string& path)");
 			data = stbi_load(path.c_str(), &width, &height, &channels, 0);
 		}
-		DN_CORE_ASSERT(data, "Failed to load image!");
+		DN_CORE_ASSERT(data, "Failed to load image! Check path for image");
 		m_Width = width;
 		m_Height = height;
 

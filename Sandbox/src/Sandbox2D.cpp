@@ -14,6 +14,10 @@ Sandbox2D::Sandbox2D()
 void Sandbox2D::OnAttach()
 {
 	m_CheckerboardTexture = Donut::Texture2D::Create("assets/textures/checker_board.png");
+	m_SpriteSheet = Donut::Texture2D::Create("assets/textures/tilemap.png");
+
+	m_TextureStairs	= Donut::SubTexture2D::CreateFromTexture(m_SpriteSheet, { 2.0f, 5.0f }, { 16.0f, 16.0f });
+	m_TextureTree	= Donut::SubTexture2D::CreateFromTexture(m_SpriteSheet, { 16.0f, 5.0f }, { 16.0f, 16.0f }, { 1.0f, 2.0f });
 
 	m_ParticleProps.Lifetime	= 1.0f;
 	m_ParticleProps.Position	= { 0.0f, 0.0f };
@@ -51,9 +55,12 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 	{
 		DN_PROFILE_SCOPE("Renderer2D::Update");
 		Donut::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		Donut::Renderer2D::DrawQuad({ -0.3f, -0.3f, 0.0f }, { 0.8f, 0.8f }, m_BlueColor);
-		Donut::Renderer2D::DrawRotatedQuad({ 0.5f, 0.3f, 0.0f }, { 0.4f, 0.8f }, glm::radians(30.0f), DN_COLOR_RED);
-		Donut::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.99}, { 10.0f, 10.0f }, m_CheckerboardTexture, DN_COLOR_WHITE, 10);
+		Donut::Renderer2D::DrawQuad({  0.0f,  0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, DN_COLOR_WHITE, 10);
+		Donut::Renderer2D::DrawQuad({  0.0f,  0.0f,  0.1f }, { 0.8f, 0.8f }, m_BlueColor);
+		Donut::Renderer2D::DrawRotatedQuad({ 0.5f, 0.3f, 0.2f}, { 0.4f, 0.8f }, glm::radians(30.0f), DN_COLOR_RED);
+		
+		Donut::Renderer2D::DrawQuad({ -1.0f,  3.0f, 0.3f }, { 1.0f, 1.0f }, m_TextureStairs);
+		Donut::Renderer2D::DrawQuad({  0.0f,  3.5f, 0.3f }, { 1.0f, 2.0f }, m_TextureTree);
 		Donut::Renderer2D::EndScene();
 	}
 

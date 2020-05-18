@@ -178,6 +178,7 @@ namespace Donut {
 	}
 
 
+
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)
 	{
 		DrawQuad({ position.x, position.y, 0.0f }, size, texture, tint, tilingAmount);
@@ -189,6 +190,21 @@ namespace Donut {
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		AddDataToVertexBuffer(transform, tint, texture, tilingAmount);
+	}
+
+
+
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<SubTexture2D>& texture, const glm::vec4 tint, const float tilingAmount)
+	{
+		DrawQuad({ position.x, position.y, 0.0f }, size, texture, tint, tilingAmount);
+	}
+
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& texture, const glm::vec4 tint, const float tilingAmount)
+	{
+		DN_PROFILE_FUNCTION();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		AddDataToVertexBuffer(transform, tint, texture->GetTexture(), tilingAmount, texture->GetTextureCoords());
 	}
 
 
@@ -209,6 +225,8 @@ namespace Donut {
 		AddDataToVertexBuffer(transform, color);
 	}
 
+
+
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, const float rotation, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)
 	{
 		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, texture, tint, tilingAmount);
@@ -224,6 +242,26 @@ namespace Donut {
 
 		AddDataToVertexBuffer(transform, tint, texture, tilingAmount);
 	}
+
+
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, const float rotation, const Ref<SubTexture2D>& texture, const glm::vec4 tint, const float tilingAmount)
+	{
+		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, texture, tint, tilingAmount);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, const float rotation, const Ref<SubTexture2D>& texture, const glm::vec4 tint, const float tilingAmount)
+	{
+		DN_PROFILE_FUNCTION();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		AddDataToVertexBuffer(transform, tint, texture->GetTexture(), tilingAmount, texture->GetTextureCoords());
+	}
+
+
 
 	void Renderer2D::AddDataToVertexBuffer(const glm::mat4& transform, const glm::vec4& color)
 	{
@@ -247,7 +285,7 @@ namespace Donut {
 		s_Data.Stats.QuadCount++;
 	}
 
-	void Renderer2D::AddDataToVertexBuffer(const glm::mat4& transform, const glm::vec4& color, const Ref<Texture2D>& texture, const float tilingAmount)
+	void Renderer2D::AddDataToVertexBuffer(const glm::mat4& transform, const glm::vec4& color, const Ref<Texture2D>& texture, const float tilingAmount, const glm::vec2* texCoords)
 	{
 		DN_PROFILE_FUNCTION();
 		if (s_Data.QuadIndexCount >= s_Data.MaxIndices)
@@ -263,6 +301,7 @@ namespace Donut {
 			}
 		}
 
+		// Save texture for future quads
 		if (textureIndex == 0)
 		{
 			textureIndex = (float)s_Data.TextureSlotIndex;
@@ -270,11 +309,15 @@ namespace Donut {
 			s_Data.TextureSlotIndex++;
 		}
 
+		// Texture coords
+		if (texCoords == nullptr)
+			texCoords = s_Data.QuadTextureCoords;
+
 		for (uint32_t i = 0; i < 4; i++)
 		{
 			s_Data.QuadVBPtr->Position = transform * s_Data.QuadVertexPositions[i];
 			s_Data.QuadVBPtr->Color = color;
-			s_Data.QuadVBPtr->TexCoords = s_Data.QuadTextureCoords[i];
+			s_Data.QuadVBPtr->TexCoords = texCoords[i];
 			s_Data.QuadVBPtr->TexIndex = textureIndex;
 			s_Data.QuadVBPtr->TilingAmount = tilingAmount;
 			s_Data.QuadVBPtr++;
