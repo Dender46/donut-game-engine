@@ -39,6 +39,8 @@ namespace Donut {
 		static Statistics GetStats();
 	private:
 		static void FlushAndReset(); // to handle multiple draw calls if necessary 
+		static void AddDataToVertexBuffer(const glm::mat4& transform, const glm::vec4& color);
+		static void AddDataToVertexBuffer(const glm::mat4& transform, const glm::vec4& color, const Ref<Texture2D>& texture, const float tilingAmount);
 	};
 
 }
