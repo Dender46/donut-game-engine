@@ -33,6 +33,8 @@ namespace Donut {
 		static void DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, const float rotation, const Ref<SubTexture2D>& texture, const glm::vec4 tint = glm::vec4(1.0f), const float tilingAmount = 1.0f);
 		static void DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, const float rotation, const Ref<SubTexture2D>& texture, const glm::vec4 tint = glm::vec4(1.0f), const float tilingAmount = 1.0f);
 	
+		static void DrawLine(const glm::vec2& p1, const glm::vec2& p2, const float z, const glm::vec4& color, const float thickness = 0.05f);
+
 		struct Statistics {
 			uint32_t DrawCalls = 0;
 			uint32_t QuadCount = 0;

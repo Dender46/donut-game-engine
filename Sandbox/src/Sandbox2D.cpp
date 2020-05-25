@@ -32,9 +32,8 @@ void Sandbox2D::OnAttach()
 	m_ParticleProps.VelocityVariation	= { 3.0f, 1.0f };
 }
 
-void Sandbox2D::OnDetach()
-{
-}
+static float mouseX = 0;
+static float mouseY = 0;
 
 void Sandbox2D::OnUpdate(Donut::Timestep ts)
 {
@@ -47,11 +46,24 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 	}
 
 	{
+		DN_PROFILE_SCOPE("Update Mouse Pos");
+		auto [x, y] = Donut::Input::GetMousePosition();
+		auto width = Donut::Application::Get().GetWindow().GetWidth();
+		auto height = Donut::Application::Get().GetWindow().GetHeight();
+
+		auto bounds = m_CameraController.GetBounds();
+		auto pos = m_CameraController.GetCamera().GetPosition();
+
+		mouseX = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f + pos.x;
+		mouseY = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight() + pos.y;
+	}
+
+	{
 		DN_PROFILE_SCOPE("RenderCommands");
 		Donut::RenderCommand::SetClearColor(DN_COLOR_PURPLE);
 		Donut::RenderCommand::Clear();
 	}
-	
+
 	{
 		DN_PROFILE_SCOPE("Renderer2D::Update");
 		Donut::Renderer2D::BeginScene(m_CameraController.GetCamera());
@@ -61,26 +73,28 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 		
 		Donut::Renderer2D::DrawQuad({ -1.0f,  3.0f, 0.3f }, { 1.0f, 1.0f }, m_TextureStairs);
 		Donut::Renderer2D::DrawQuad({  0.0f,  3.5f, 0.3f }, { 1.0f, 2.0f }, m_TextureTree);
+
+		
+		Donut::Renderer2D::DrawLine({ 0.0f,  0.0f }, { mouseX, mouseY }, 0.4f, DN_COLOR_BLACK, 0.03f);
+
+		// just coordination guides
+		Donut::Renderer2D::DrawQuad({ 0.0f,  0.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
+		Donut::Renderer2D::DrawQuad({ 1.0f,  1.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
+		Donut::Renderer2D::DrawQuad({ 0.0f,  1.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
+		Donut::Renderer2D::DrawQuad({ 0.0f, -1.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
+
 		Donut::Renderer2D::EndScene();
 	}
 
-
+	// TODO: Check memory leaks
 	if (Donut::Input::IsMouseButtonPressed(DN_MOUSE_BUTTON_LEFT))
 	{
-		auto [x, y] = Donut::Input::GetMousePosition();
-		auto width = Donut::Application::Get().GetWindow().GetWidth();
-		auto height = Donut::Application::Get().GetWindow().GetHeight();
-
-		auto bounds = m_CameraController.GetBounds();
-		auto pos = m_CameraController.GetCamera().GetPosition();
-		
-		x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
-		y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
-		m_ParticleProps.Position = { x + pos.x, y + pos.y };
+		m_ParticleProps.Position = { mouseX, mouseY };
 		
 		for (int i = 0; i < 5; i++)
 			m_ParticleSystem.Emit(m_ParticleProps);
 	}
+
 
 	m_ParticleSystem.OnUpdate(ts);
 	m_ParticleSystem.OnRender(m_CameraController.GetCamera());

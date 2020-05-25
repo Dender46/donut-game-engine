@@ -16,9 +16,9 @@ namespace Donut {
 	};
 
 	struct Renderer2DObject {
-		const uint32_t MaxQuads		= 10000;
-		const uint32_t MaxVertices	= MaxQuads * 4;
-		const uint32_t MaxIndices	= MaxQuads * 6;
+		static const uint32_t MaxQuads		= 10000;
+		static const uint32_t MaxVertices	= MaxQuads * 4;
+		static const uint32_t MaxIndices	= MaxQuads * 6;
 
 		Ref<VertexArray> QuadVA;
 		Ref<VertexBuffer> QuadVB;
@@ -59,7 +59,7 @@ namespace Donut {
 
 		s_Data.QuadVBBase = new QuadVertex[s_Data.MaxVertices];
 
-		uint32_t* quadIndices = new uint32_t[s_Data.MaxIndices];
+		uint32_t quadIndices[s_Data.MaxIndices];
 		uint32_t offset = 0;
 		for (uint32_t i = 0; i < s_Data.MaxIndices; i += 6)
 		{
@@ -76,8 +76,6 @@ namespace Donut {
 		Ref<IndexBuffer> quadIndexBuffer = IndexBuffer::Create(quadIndices, s_Data.MaxIndices);
 		s_Data.QuadVA->SetIndexBuffer(quadIndexBuffer);
 
-		// IMPORTANT
-		delete[] quadIndices; 
 
 		// Creating white texture for pure-color quads
 		uint32_t whiteColor = 0xffffffff;
@@ -261,7 +259,20 @@ namespace Donut {
 		AddDataToVertexBuffer(transform, tint, texture->GetTexture(), tilingAmount, texture->GetTextureCoords());
 	}
 
+	void Renderer2D::DrawLine(const glm::vec2& p1, const glm::vec2& p2, const float z, const glm::vec4& color, const float thickness)
+	{
+		DN_PROFILE_FUNCTION();
 
+		glm::vec3 position = { (p1.x + p2.x) / 2, (p1.y + p2.y) / 2, z };
+		float rotation = glm::atan(p2.y - p1.y, p2.x - p1.x);
+		float length = glm::sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { length, thickness, 1.0f });
+
+		AddDataToVertexBuffer(transform, color);
+	}
 
 	void Renderer2D::AddDataToVertexBuffer(const glm::mat4& transform, const glm::vec4& color)
 	{
