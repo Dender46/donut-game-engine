@@ -17,12 +17,15 @@ IncludeDir["GLFW"]		= "DonutEngine/vendor/GLFW/include"
 IncludeDir["Glad"]		= "DonutEngine/vendor/Glad/include"
 IncludeDir["ImGui"]		= "DonutEngine/vendor/imgui"
 IncludeDir["glm"]		= "DonutEngine/vendor/glm"
+IncludeDir["spdlog"]    = "DonutEngine/vendor/spdlog/include"
 IncludeDir["stb_image"]	= "DonutEngine/vendor/stb_image"
+IncludeDir["box2d"]	    = "DonutEngine/vendor/box2d"
 
 group "Dependencies"
     include "DonutEngine/vendor/GLFW"
     include "DonutEngine/vendor/Glad"
     include "DonutEngine/vendor/imgui"
+    include "DonutEngine/vendor/box2d"
 group ""
 
 project "DonutEngine"
@@ -50,18 +53,19 @@ project "DonutEngine"
         "%{prj.name}/vendor/glm/glm/**.hpp",
         "%{prj.name}/vendor/glm/glm/**.inl",
 		"%{prj.name}/vendor/stb_image/**.h",
-		"%{prj.name}/vendor/stb_image/**.cpp"
+        "%{prj.name}/vendor/stb_image/**.cpp"
     }
 
     includedirs
     {
         "%{prj.name}/src",
-        "%{prj.name}/vendor/spdlog/include",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
+        "%{IncludeDir.spdlog}",
         "%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+        "%{IncludeDir.box2d}"
     }
 
     links
@@ -69,6 +73,7 @@ project "DonutEngine"
         "GLFW",
         "Glad",
         "ImGui",
+        "box2d",
         "opengl32.lib"
     }
 
@@ -116,9 +121,9 @@ project "Sandbox"
     
     includedirs
     {
-        "DonutEngine/vendor/spdlog/include",
         "DonutEngine/src",
         "DonutEngine/vendor",
+        "%{IncludeDir.spdlog}",
         "%{IncludeDir.glm}"
     }
     

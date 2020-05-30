@@ -2,6 +2,8 @@
 
 #include <Donut.h>
 
+#include "box2d/include/box2d/box2d.h"
+
 class Sandbox2D : public Donut::Layer
 {
 public:
@@ -20,6 +22,11 @@ private:
 
 	Donut::ParticleSystem m_ParticleSystem;
 	Donut::ParticleProps m_ParticleProps;
+
+	b2Vec2 m_Gravity;
+	b2World m_World;
+	b2Body* m_GroundBody;
+	b2Body* m_DynamicBody;
 
 	glm::vec4 m_BlueColor = DN_COLOR_BLUE;
 };
