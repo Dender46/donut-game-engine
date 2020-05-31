@@ -1,4 +1,4 @@
-project "Box2D"
+project "box2d"
     kind "StaticLib"
     language "C++"
     staticruntime "on"
@@ -8,12 +8,9 @@ project "Box2D"
     
     files
     {
-        "include/box2d/**.h",
-        "src/collision/**.cpp",
-        "src/dynamics/**.h",
-        "src/dynamics/**.cpp",
-        "src/common/**.cpp",
-        "src/rope/**.cpp"
+        "include/**.h",
+        "src/**.cpp",
+        "src/**.h"
     }
     
     includedirs

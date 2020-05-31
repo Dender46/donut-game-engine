@@ -2,8 +2,6 @@
 
 #include <Donut.h>
 
-#include "box2d/include/box2d/box2d.h"
-
 class Sandbox2D : public Donut::Layer
 {
 public:

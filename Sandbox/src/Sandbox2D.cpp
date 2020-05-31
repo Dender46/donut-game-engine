@@ -1,7 +1,6 @@
 #include "Sandbox2D.h"
 
 #include "imgui/imgui.h"
-
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
@@ -71,15 +70,9 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 
 	{
 		DN_PROFILE_SCOPE("Update Mouse Pos");
-		auto [x, y] = Donut::Input::GetMousePosition();
-		auto width = Donut::Application::Get().GetWindow().GetWidth();
-		auto height = Donut::Application::Get().GetWindow().GetHeight();
-
-		auto bounds = m_CameraController.GetBounds();
-		auto pos = m_CameraController.GetCamera().GetPosition();
-
-		mouseX = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f + pos.x;
-		mouseY = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight() + pos.y;
+		auto [x, y] = Donut::Input::GetRelativeMousePosition(m_CameraController);
+		mouseX = x;
+		mouseY = y;
 	}
 
 	{
@@ -89,18 +82,20 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 	}
 
 	{
-		DN_PROFILE_SCOPE("Renderer2D::Update");
-		Donut::Renderer2D::BeginScene(m_CameraController.GetCamera());
-		Donut::Renderer2D::DrawQuad({  0.0f,  0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, DN_COLOR_WHITE, 10);
-
-		float timeStep = 1.0f / 60.0f;
+		DN_PROFILE_SCOPE("Physics");
 		int32 velocityIterations = 6;
 		int32 positionIterations = 2;
 
 		m_World.Step(ts, velocityIterations, positionIterations);
+	}
+
+	{
+		DN_PROFILE_SCOPE("Renderer2D::Update");
+		Donut::Renderer2D::BeginScene(m_CameraController.GetCamera());
+		Donut::Renderer2D::DrawQuad({  0.0f,  0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, DN_COLOR_WHITE, 10);
+
 		b2Vec2 position = m_DynamicBody->GetPosition();
 		float angle = m_DynamicBody->GetAngle();
-		printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
 
 		auto groundPos = m_GroundBody->GetPosition();
 		auto groundRot = m_GroundBody->GetAngle();
@@ -126,7 +121,7 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 	}
 
 	// TODO: Check memory leaks
-	/*
+	
 	if (Donut::Input::IsMouseButtonPressed(DN_MOUSE_BUTTON_LEFT))
 	{
 		m_ParticleProps.Position = { mouseX, mouseY };
@@ -138,7 +133,7 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 
 	m_ParticleSystem.OnUpdate(ts);
 	m_ParticleSystem.OnRender(m_CameraController.GetCamera());
-	*/
+	
 }
 
 void Sandbox2D::OnImGuiRender()

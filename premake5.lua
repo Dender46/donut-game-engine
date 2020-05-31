@@ -15,17 +15,17 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLFW"]		= "DonutEngine/vendor/GLFW/include"
 IncludeDir["Glad"]		= "DonutEngine/vendor/Glad/include"
+IncludeDir["box2d"]	    = "DonutEngine/vendor/box2d/include"
 IncludeDir["ImGui"]		= "DonutEngine/vendor/imgui"
 IncludeDir["glm"]		= "DonutEngine/vendor/glm"
 IncludeDir["spdlog"]    = "DonutEngine/vendor/spdlog/include"
 IncludeDir["stb_image"]	= "DonutEngine/vendor/stb_image"
-IncludeDir["box2d"]	    = "DonutEngine/vendor/box2d"
 
 group "Dependencies"
     include "DonutEngine/vendor/GLFW"
     include "DonutEngine/vendor/Glad"
-    include "DonutEngine/vendor/imgui"
     include "DonutEngine/vendor/box2d"
+    include "DonutEngine/vendor/imgui"
 group ""
 
 project "DonutEngine"
@@ -61,19 +61,19 @@ project "DonutEngine"
         "%{prj.name}/src",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
+        "%{IncludeDir.box2d}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.spdlog}",
         "%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}",
-        "%{IncludeDir.box2d}"
+		"%{IncludeDir.stb_image}"
     }
 
     links
     {
         "GLFW",
         "Glad",
-        "ImGui",
         "box2d",
+        "ImGui",
         "opengl32.lib"
     }
 
@@ -123,6 +123,7 @@ project "Sandbox"
     {
         "DonutEngine/src",
         "DonutEngine/vendor",
+        "%{IncludeDir.box2d}",
         "%{IncludeDir.spdlog}",
         "%{IncludeDir.glm}"
     }

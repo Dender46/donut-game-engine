@@ -29,5 +29,8 @@
 #include "Donut/Renderer/Camera.h"
 #include "Donut/Renderer/OrthographicCameraController.h"
 
+// ----- Physics -----
+#include "Donut/Physics/World.h"
+
 // ----- Systems -----
 #include "Donut/Systems/ParticleSystem.h"
