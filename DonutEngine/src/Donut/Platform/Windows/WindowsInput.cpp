@@ -44,4 +44,29 @@ namespace Donut {
 		return y;
 	}
 
+	std::pair<float, float> WindowsInput::GetRelativeMousePositionImpl(const OrthographicCameraController& camera)
+	{
+		auto [x, y] = Input::GetMousePosition();
+		auto width = Application::Get().GetWindow().GetWidth();
+		auto height = Application::Get().GetWindow().GetHeight();
+
+		auto bounds = camera.GetBounds();
+		auto pos = camera.GetCamera().GetPosition();
+
+		float mouseX = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f + pos.x;
+		float mouseY = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight() + pos.y;
+		return { mouseX, mouseY };
+	}
+
+	float WindowsInput::GetRelativeMouseXImpl(const OrthographicCameraController& camera)
+	{
+		auto [x, y] = GetRelativeMousePositionImpl(camera);
+		return x;
+	}
+
+	float WindowsInput::GetRelativeMouseYImpl(const OrthographicCameraController& camera)
+	{
+		auto [x, y] = GetRelativeMousePositionImpl(camera);
+		return y;
+	}
 }

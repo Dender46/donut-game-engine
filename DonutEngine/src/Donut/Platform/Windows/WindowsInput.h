@@ -13,6 +13,10 @@ namespace Donut {
 		virtual std::pair<float, float> GetMousePositionImpl() override;
 		virtual float GetMouseXImpl() override;
 		virtual float GetMouseYImpl() override;
+
+		virtual std::pair<float, float> WindowsInput::GetRelativeMousePositionImpl(const OrthographicCameraController& camera) override;
+		virtual float GetRelativeMouseXImpl(const OrthographicCameraController& camera) override;
+		virtual float GetRelativeMouseYImpl(const OrthographicCameraController& camera) override;
 	};
 
 }
