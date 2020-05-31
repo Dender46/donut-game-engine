@@ -59,7 +59,7 @@ namespace Donut {
 
 		s_Data.QuadVBBase = new QuadVertex[s_Data.MaxVertices];
 
-		uint32_t quadIndices[s_Data.MaxIndices];
+		uint32_t* quadIndices = new uint32_t[s_Data.MaxIndices];
 		uint32_t offset = 0;
 		for (uint32_t i = 0; i < s_Data.MaxIndices; i += 6)
 		{
@@ -75,7 +75,7 @@ namespace Donut {
 		}
 		Ref<IndexBuffer> quadIndexBuffer = IndexBuffer::Create(quadIndices, s_Data.MaxIndices);
 		s_Data.QuadVA->SetIndexBuffer(quadIndexBuffer);
-
+		delete[] quadIndices;
 
 		// Creating white texture for pure-color quads
 		uint32_t whiteColor = 0xffffffff;
