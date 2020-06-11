@@ -20,12 +20,14 @@ IncludeDir["ImGui"]		= "DonutEngine/vendor/imgui"
 IncludeDir["glm"]		= "DonutEngine/vendor/glm"
 IncludeDir["spdlog"]    = "DonutEngine/vendor/spdlog/include"
 IncludeDir["stb_image"]	= "DonutEngine/vendor/stb_image"
+IncludeDir["freetype"]	= "DonutEngine/vendor/freetype/include"
 
 group "Dependencies"
     include "DonutEngine/vendor/GLFW"
     include "DonutEngine/vendor/Glad"
     include "DonutEngine/vendor/box2d"
     include "DonutEngine/vendor/imgui"
+    include "DonutEngine/vendor/freetype"
 group ""
 
 project "DonutEngine"
@@ -65,7 +67,8 @@ project "DonutEngine"
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.spdlog}",
         "%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.freetype}"
     }
 
     links
@@ -74,6 +77,7 @@ project "DonutEngine"
         "Glad",
         "box2d",
         "ImGui",
+        "freetype",
         "opengl32.lib"
     }
 
@@ -125,7 +129,8 @@ project "Sandbox"
         "DonutEngine/vendor",
         "%{IncludeDir.box2d}",
         "%{IncludeDir.spdlog}",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.freetype}"
     }
     
     links
