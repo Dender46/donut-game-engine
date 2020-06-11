@@ -11,7 +11,7 @@ namespace Donut {
 	public:
 		Box(b2World* world, b2FixtureDef* phProps, glm::vec3 position, glm::vec2 size, float rotation, glm::vec4 color);
 		Box(b2World* world, b2PolygonShape* shape, float density, glm::vec3 position, glm::vec2 size, float rotation, glm::vec4 color);
-		
+
 		void Draw();
 	private:
 		void Init(b2World* world, b2FixtureDef* phProps, b2Vec2 position, float rotation);

@@ -22,7 +22,7 @@ namespace Donut {
 
 		Ref<VertexArray> QuadVA;
 		Ref<VertexBuffer> QuadVB;
-		Ref<Shader> TextureShader;
+		Ref<Shader> TextureShader, TextShader;
 		Ref<Texture2D> WhiteTexture;
 
 		uint32_t QuadIndexCount	= 0;
@@ -91,6 +91,10 @@ namespace Donut {
 		s_Data.TextureShader->Bind();
 		s_Data.TextureShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
 
+		s_Data.TextShader = Shader::Create("assets/shaders/TextShader.glsl");
+		s_Data.TextShader->Bind();
+		s_Data.TextShader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
+
 		// Assign default white texture
 		s_Data.TextureSlots[0] = s_Data.WhiteTexture;
 
@@ -113,12 +117,20 @@ namespace Donut {
 		delete[] s_Data.QuadVBBase;
 	}
 
-	void Renderer2D::BeginScene(const OrthographicCamera& camera)
+	void Renderer2D::BeginScene(const OrthographicCamera& camera, bool isText)
 	{
 		DN_PROFILE_FUNCTION();
 
-		s_Data.TextureShader->Bind();
-		s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		if (isText)
+		{
+			s_Data.TextShader->Bind();
+			s_Data.TextShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		}
+		else
+		{
+			s_Data.TextureShader->Bind();
+			s_Data.TextureShader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+		}
 
 		s_Data.QuadIndexCount = 0;
 		s_Data.QuadVBPtr = s_Data.QuadVBBase;
@@ -272,6 +284,28 @@ namespace Donut {
 			* glm::scale(glm::mat4(1.0f), { length, thickness, 1.0f });
 
 		AddDataToVertexBuffer(transform, color);
+	}
+
+	void Renderer2D::DrawText(const std::string& fontPath, const std::string& text, const glm::vec3& position, const glm::vec4& color)
+	{
+		DN_PROFILE_FUNCTION();
+
+		float x = position.x;
+		float y = position.y;
+		float scale = 1.0f;
+
+		for (char ch : text)
+		{
+			/*TextCharacter texture = Font::GetCharacter(ch);
+
+			float xpos = x + texture.Bearing.x * scale;
+			float ypos = y - (texture.Size.y - texture.Bearing.y) * scale;
+
+			float w = texture.Size.x * scale;
+			float h = texture.Size.y * scale;
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), {xpos, ypos, position.z}) * glm::scale(glm::mat4(1.0f), { w, h, 1.0f });
+			AddDataToVertexBuffer(transform, color, texture->GetTexture(), 1.0f);*/
+		}
 	}
 
 	void Renderer2D::AddDataToVertexBuffer(const glm::mat4& transform, const glm::vec4& color)

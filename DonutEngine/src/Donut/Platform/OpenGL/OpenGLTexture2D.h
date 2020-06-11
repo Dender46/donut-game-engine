@@ -11,6 +11,7 @@ namespace Donut {
 	public:
 		OpenGLTexture2D(uint32_t width, uint32_t height);
 		OpenGLTexture2D(const std::string& path);
+		OpenGLTexture2D(void* data, uint32_t width, uint32_t height, GLenum internalFormat = GL_RED, GLenum format = GL_RED);
 		virtual ~OpenGLTexture2D();
 
 		inline virtual const uint32_t GetWidth() const override { return m_Width; };

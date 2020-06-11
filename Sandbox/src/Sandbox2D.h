@@ -25,4 +25,6 @@ private:
 	std::vector<Donut::Box> m_Bodies;
 
 	glm::vec4 m_BlueColor = DN_COLOR_BLUE;
+	float m_MouseX = 0.0f;
+	float m_MouseY = 0.0f;
 };

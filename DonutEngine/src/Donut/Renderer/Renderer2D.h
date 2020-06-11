@@ -15,7 +15,7 @@ namespace Donut {
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene(const OrthographicCamera& camera);
+		static void BeginScene(const OrthographicCamera& camera, bool isText = false);
 		static void EndScene();
 		static void Flush();
 
@@ -34,6 +34,8 @@ namespace Donut {
 		static void DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, const float rotation, const Ref<SubTexture2D>& texture, const glm::vec4 tint = glm::vec4(1.0f), const float tilingAmount = 1.0f);
 	
 		static void DrawLine(const glm::vec2& p1, const glm::vec2& p2, const float z, const glm::vec4& color, const float thickness = 0.05f);
+
+		static void DrawText(const std::string& fontPath, const std::string& text, const glm::vec3& position, const glm::vec4& color);
 
 		struct Statistics {
 			uint32_t DrawCalls = 0;

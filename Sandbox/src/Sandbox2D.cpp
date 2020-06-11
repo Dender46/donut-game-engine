@@ -10,6 +10,8 @@ Sandbox2D::Sandbox2D()
 {
 }
 
+static Donut::Ref<Donut::Texture2D> fontTexture;
+
 void Sandbox2D::OnAttach()
 {
 	m_CheckerboardTexture = Donut::Texture2D::Create("assets/textures/checker_board.png");
@@ -30,6 +32,7 @@ void Sandbox2D::OnAttach()
 	m_ParticleProps.Velocity			= { 0.0f, 0.0f };
 	m_ParticleProps.VelocityVariation	= { 3.0f, 1.0f };
 	
+	// INITIALIZE PHYSICS OBJECTS
 	// Ground
 	b2PolygonShape groundBox;
 	Donut::Box boxGround(&m_World, &groundBox, 0.0f, { 0.0f, -6.0f, 0.6f }, { 10.0f, 5.0f }, 0.0f, DN_COLOR_BLUE);
@@ -42,10 +45,22 @@ void Sandbox2D::OnAttach()
 	fixtureDef.friction = 0.3f;
 	Donut::Box boxDynamic(&m_World, &fixtureDef, { 0.0f, 4.0f, 0.6f }, { 1.0f, 1.0f }, 0.0f, DN_COLOR_RED);
 	m_Bodies.push_back(boxDynamic);
-}
 
-static float mouseX = 0;
-static float mouseY = 0;
+	// TEXT RENDERING
+	Donut::Font::LoadFont(" path to  ");
+	FT_Library ft;
+	DN_ASSERT(!FT_Init_FreeType(&ft), "FREETYPE: Could not init FreeType Library");
+
+	FT_Face fc;
+	DN_ASSERT(!FT_New_Face(ft, "assets/fonts/roboto.ttf", 0, &fc), "FREETYPE: Failed to load font");
+
+	DN_ASSERT(!FT_Set_Pixel_Sizes(fc, 0, 48), "FREETYPE: Error");
+
+	DN_ASSERT(!FT_Load_Char(fc, 'X', FT_LOAD_RENDER), "FREETYPE: Error");
+
+	fontTexture = Donut::Texture2D::Create(fc->glyph->bitmap.buffer, fc->glyph->bitmap.width, fc->glyph->bitmap.rows);
+
+}
 
 void Sandbox2D::OnUpdate(Donut::Timestep ts)
 {
@@ -60,8 +75,8 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 	{
 		DN_PROFILE_SCOPE("Update Mouse Pos");
 		auto [x, y] = Donut::Input::GetRelativeMousePosition(m_CameraController);
-		mouseX = x;
-		mouseY = y;
+		m_MouseX = x;
+		m_MouseY = y;
 	}
 
 	{
@@ -82,27 +97,32 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 		DN_PROFILE_SCOPE("Renderer2D::Update");
 		Donut::Renderer2D::BeginScene(m_CameraController.GetCamera());
 		Donut::Renderer2D::DrawQuad({  0.0f,  0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, DN_COLOR_WHITE, 10);
-
+		
 		for (auto& body : m_Bodies)
 		{
 			body.Draw();
 		}
 		
-		//Donut::Renderer2D::DrawQuad({  0.0f,  0.0f,  0.1f }, { 0.8f, 0.8f }, m_BlueColor);
-		//Donut::Renderer2D::DrawRotatedQuad({ 0.5f, 0.3f, 0.2f}, { 0.4f, 0.8f }, glm::radians(30.0f), DN_COLOR_RED);
-		
+		// TEXTURES
 		//Donut::Renderer2D::DrawQuad({ -1.0f,  3.0f, 0.3f }, { 1.0f, 1.0f }, m_TextureStairs);
 		//Donut::Renderer2D::DrawQuad({  0.0f,  3.5f, 0.3f }, { 1.0f, 2.0f }, m_TextureTree);
 
-		
-		//Donut::Renderer2D::DrawLine({ 0.0f,  0.0f }, { mouseX, mouseY }, 0.4f, DN_COLOR_BLACK, 0.03f);
+		// SIMPLE LINE
+		//Donut::Renderer2D::DrawLine({ 0.0f,  0.0f }, { m_MouseX, m_MouseY }, 0.4f, DN_COLOR_BLACK, 0.03f);
 
-		// just coordination guides
+		// CORDINATES GUIDE
 		//Donut::Renderer2D::DrawQuad({ 0.0f,  0.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
 		//Donut::Renderer2D::DrawQuad({ 1.0f,  1.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
 		//Donut::Renderer2D::DrawQuad({ 0.0f,  1.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
 		//Donut::Renderer2D::DrawQuad({ 0.0f, -1.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
 
+		Donut::Renderer2D::EndScene();
+
+
+		// RENDER TEXT
+		Donut::Renderer2D::BeginScene(m_CameraController.GetCamera(), true);
+		//Donut::Renderer2D::DrawText("Test", { 1.0f, 1.0f, 0.0f }, 48.0f, m_BlueColor);
+		Donut::Renderer2D::DrawQuad({ 0.0f,  0.0f, 0.8f }, { 1.0f, 1.0f }, fontTexture, DN_COLOR_WHITE, 1.0f);
 		Donut::Renderer2D::EndScene();
 	}
 
@@ -110,7 +130,7 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 	
 	if (Donut::Input::IsMouseButtonPressed(DN_MOUSE_BUTTON_LEFT))
 	{
-		m_ParticleProps.Position = { mouseX, mouseY };
+		m_ParticleProps.Position = { m_MouseX, m_MouseY };
 		
 		for (int i = 0; i < 5; i++)
 			m_ParticleSystem.Emit(m_ParticleProps);

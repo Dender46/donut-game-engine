@@ -60,8 +60,31 @@ namespace Donut {
 		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, width, height, m_DataFormat, GL_UNSIGNED_BYTE, data);
-
+		
 		stbi_image_free(data);
+	}
+
+	OpenGLTexture2D::OpenGLTexture2D(void* data, uint32_t width, uint32_t height, GLenum internalFormat, GLenum format)
+		: m_Width(width), m_Height(height), m_StorageFormat(internalFormat), m_DataFormat(format)
+	{
+		glGenTextures(1, &m_RendererID);
+		glBindTexture(GL_TEXTURE_2D, m_RendererID);
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_RED,
+			width,
+			height,
+			0,
+			GL_RED,
+			GL_UNSIGNED_BYTE,
+			data
+		);
+		// set texture options
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D()
