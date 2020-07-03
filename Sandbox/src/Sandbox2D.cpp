@@ -47,19 +47,10 @@ void Sandbox2D::OnAttach()
 	m_Bodies.push_back(boxDynamic);
 
 	// TEXT RENDERING
-	Donut::Font::LoadFont(" path to  ");
-	FT_Library ft;
-	DN_ASSERT(!FT_Init_FreeType(&ft), "FREETYPE: Could not init FreeType Library");
+	Donut::Font::Init();
+	Donut::Font::LoadFont("assets/fonts/roboto.ttf", 480);
 
-	FT_Face fc;
-	DN_ASSERT(!FT_New_Face(ft, "assets/fonts/roboto.ttf", 0, &fc), "FREETYPE: Failed to load font");
-
-	DN_ASSERT(!FT_Set_Pixel_Sizes(fc, 0, 48), "FREETYPE: Error");
-
-	DN_ASSERT(!FT_Load_Char(fc, 'X', FT_LOAD_RENDER), "FREETYPE: Error");
-
-	fontTexture = Donut::Texture2D::Create(fc->glyph->bitmap.buffer, fc->glyph->bitmap.width, fc->glyph->bitmap.rows);
-
+	fontTexture = Donut::Font::GetChar('X').get()->Texture;
 }
 
 void Sandbox2D::OnUpdate(Donut::Timestep ts)
@@ -104,8 +95,8 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 		}
 		
 		// TEXTURES
-		//Donut::Renderer2D::DrawQuad({ -1.0f,  3.0f, 0.3f }, { 1.0f, 1.0f }, m_TextureStairs);
-		//Donut::Renderer2D::DrawQuad({  0.0f,  3.5f, 0.3f }, { 1.0f, 2.0f }, m_TextureTree);
+		Donut::Renderer2D::DrawQuad({ -1.0f,  3.0f, 0.3f }, { 1.0f, 1.0f }, m_TextureStairs);
+		Donut::Renderer2D::DrawQuad({  0.0f,  3.5f, 0.3f }, { 1.0f, 2.0f }, m_TextureTree);
 
 		// SIMPLE LINE
 		//Donut::Renderer2D::DrawLine({ 0.0f,  0.0f }, { m_MouseX, m_MouseY }, 0.4f, DN_COLOR_BLACK, 0.03f);
@@ -121,8 +112,10 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 
 		// RENDER TEXT
 		Donut::Renderer2D::BeginScene(m_CameraController.GetCamera(), true);
-		//Donut::Renderer2D::DrawText("Test", { 1.0f, 1.0f, 0.0f }, 48.0f, m_BlueColor);
-		Donut::Renderer2D::DrawQuad({ 0.0f,  0.0f, 0.8f }, { 1.0f, 1.0f }, fontTexture, DN_COLOR_WHITE, 1.0f);
+		//Donut::Renderer2D::DrawTextLine("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", { -10.0f, 1.0f, 0.0f }, DN_COLOR_BLACK);
+		Donut::Renderer2D::DrawTextLine("PQ", { 1.0f, 1.0f, 0.0f }, DN_COLOR_BLACK);
+
+		//Donut::Renderer2D::DrawQuad({ 0.0f,  0.0f, 0.8f }, { 1.0f, 1.0f }, fontTexture, DN_COLOR_WHITE, 1.0f);
 		Donut::Renderer2D::EndScene();
 	}
 

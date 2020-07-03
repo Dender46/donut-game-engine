@@ -2,6 +2,7 @@
 
 #include "Renderer2D.h"
 #include "RenderCommand.h"
+#include "Donut/Systems/Font.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -286,25 +287,27 @@ namespace Donut {
 		AddDataToVertexBuffer(transform, color);
 	}
 
-	void Renderer2D::DrawText(const std::string& fontPath, const std::string& text, const glm::vec3& position, const glm::vec4& color)
+	void Renderer2D::DrawTextLine(const std::string& text, const glm::vec3& position, const glm::vec4& color)
 	{
 		DN_PROFILE_FUNCTION();
 
 		float x = position.x;
 		float y = position.y;
-		float scale = 1.0f;
+		float scale = 0.001f;
 
 		for (char ch : text)
 		{
-			/*TextCharacter texture = Font::GetCharacter(ch);
+			const Ref<Font::Character> chInfo = Font::GetChar(ch);
 
-			float xpos = x + texture.Bearing.x * scale;
-			float ypos = y - (texture.Size.y - texture.Bearing.y) * scale;
+			float xpos = x + chInfo->Bearing.x * scale;
+			float ypos = y - (chInfo->Size.y - chInfo->Bearing.y) * scale;
 
-			float w = texture.Size.x * scale;
-			float h = texture.Size.y * scale;
-			glm::mat4 transform = glm::translate(glm::mat4(1.0f), {xpos, ypos, position.z}) * glm::scale(glm::mat4(1.0f), { w, h, 1.0f });
-			AddDataToVertexBuffer(transform, color, texture->GetTexture(), 1.0f);*/
+			float w = chInfo->Size.x * scale;
+			float h = chInfo->Size.y * scale;
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), {xpos, ypos, position.z}) * glm::scale(glm::mat4(1.0f), { w, -h, 1.0f });
+			AddDataToVertexBuffer(transform, color, chInfo->Texture, 1.0f);
+
+			x += (chInfo->Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
 		}
 	}
 
@@ -349,6 +352,8 @@ namespace Donut {
 		// Save texture for future quads
 		if (textureIndex == 0)
 		{
+			if (s_Data.TextureSlotIndex == s_Data.MaxTextureSlots)
+				FlushAndReset();
 			textureIndex = (float)s_Data.TextureSlotIndex;
 			s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
 			s_Data.TextureSlotIndex++;

@@ -35,7 +35,7 @@ namespace Donut {
 	
 		static void DrawLine(const glm::vec2& p1, const glm::vec2& p2, const float z, const glm::vec4& color, const float thickness = 0.05f);
 
-		static void DrawText(const std::string& fontPath, const std::string& text, const glm::vec3& position, const glm::vec4& color);
+		static void DrawTextLine(const std::string& text, const glm::vec3& position, const glm::vec4& color);
 
 		struct Statistics {
 			uint32_t DrawCalls = 0;
