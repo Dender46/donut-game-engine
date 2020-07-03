@@ -298,9 +298,11 @@ namespace Donut {
 		for (char ch : text)
 		{
 			const Ref<Font::Character> chInfo = Font::GetChar(ch);
-
+			 
 			float xpos = x + chInfo->Bearing.x * scale;
 			float ypos = y - (chInfo->Size.y - chInfo->Bearing.y) * scale;
+			xpos += chInfo->Texture->GetWidth() / 2.0f * scale;
+			ypos += chInfo->Texture->GetHeight() / 2.0f * scale;
 
 			float w = chInfo->Size.x * scale;
 			float h = chInfo->Size.y * scale;

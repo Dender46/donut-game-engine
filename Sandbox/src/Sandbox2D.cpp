@@ -10,8 +10,6 @@ Sandbox2D::Sandbox2D()
 {
 }
 
-static Donut::Ref<Donut::Texture2D> fontTexture;
-
 void Sandbox2D::OnAttach()
 {
 	m_CheckerboardTexture = Donut::Texture2D::Create("assets/textures/checker_board.png");
@@ -49,8 +47,6 @@ void Sandbox2D::OnAttach()
 	// TEXT RENDERING
 	Donut::Font::Init();
 	Donut::Font::LoadFont("assets/fonts/roboto.ttf", 480);
-
-	fontTexture = Donut::Font::GetChar('X').get()->Texture;
 }
 
 void Sandbox2D::OnUpdate(Donut::Timestep ts)
@@ -112,8 +108,7 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 
 		// RENDER TEXT
 		Donut::Renderer2D::BeginScene(m_CameraController.GetCamera(), true);
-		//Donut::Renderer2D::DrawTextLine("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", { -10.0f, 1.0f, 0.0f }, DN_COLOR_BLACK);
-		Donut::Renderer2D::DrawTextLine("PQ", { 1.0f, 1.0f, 0.0f }, DN_COLOR_BLACK);
+		Donut::Renderer2D::DrawTextLine("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", { -8.5f, -2.0f, 0.7f }, DN_COLOR_BLACK);
 
 		//Donut::Renderer2D::DrawQuad({ 0.0f,  0.0f, 0.8f }, { 1.0f, 1.0f }, fontTexture, DN_COLOR_WHITE, 1.0f);
 		Donut::Renderer2D::EndScene();
