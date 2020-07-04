@@ -16,6 +16,7 @@ namespace Donut {
 
 		inline virtual const uint32_t GetWidth() const override { return m_Width; };
 		inline virtual const uint32_t GetHeight() const override { return m_Height; };
+		inline virtual const uint32_t GetRendererID() const override { return m_RendererID; };
 
 		virtual void Bind(uint32_t slot = 0) const override;
 

@@ -101,6 +101,11 @@ namespace Donut {
 		}
 	}
 
+	void Application::Close()
+	{
+		m_Running = false;
+	}
+
 	bool Application::OnWindowClosed(WindowCloseEvent& e)
 	{
 		m_Running = false;
