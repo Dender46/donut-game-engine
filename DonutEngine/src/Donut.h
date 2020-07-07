@@ -21,6 +21,7 @@
 #include "Donut/Renderer/Buffers.h"
 #include "Donut/Renderer/Shader.h"
 #include "Donut/Renderer/VertexArray.h"
+#include "Donut/Renderer/Framebuffer.h"
 
 #include "Donut/Renderer/Texture.h"
 #include "Donut/Renderer/SubTexture2D.h"

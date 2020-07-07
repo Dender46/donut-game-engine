@@ -47,6 +47,8 @@ void Sandbox2D::OnAttach()
 	// TEXT RENDERING
 	Donut::Font::Init();
 	Donut::Font::LoadFont("assets/fonts/roboto.ttf", 480);
+
+	m_Framebuffer = Donut::Framebuffer::Create(m_FramebufferProps);
 }
 
 void Sandbox2D::OnUpdate(Donut::Timestep ts)
@@ -68,6 +70,7 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 
 	{
 		DN_PROFILE_SCOPE("RenderCommands");
+		m_Framebuffer->Bind();
 		Donut::RenderCommand::SetClearColor(DN_COLOR_PURPLE);
 		Donut::RenderCommand::Clear();
 	}
@@ -112,6 +115,7 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 
 		//Donut::Renderer2D::DrawQuad({ 0.0f,  0.0f, 0.8f }, { 1.0f, 1.0f }, fontTexture, DN_COLOR_WHITE, 1.0f);
 		Donut::Renderer2D::EndScene();
+		m_Framebuffer->Unbind();
 	}
 
 	// TODO: Check memory leaks
@@ -125,8 +129,8 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 	}
 
 
-	m_ParticleSystem.OnUpdate(ts);
-	m_ParticleSystem.OnRender(m_CameraController.GetCamera());
+	//m_ParticleSystem.OnUpdate(ts);
+	//m_ParticleSystem.OnRender(m_CameraController.GetCamera());
 	
 }
 
@@ -204,6 +208,7 @@ void Sandbox2D::OnImGuiRender()
 		ImGui::Text("IndexCount: %d", stats.GetTotalIndexCount());
 		ImGui::Text("--------------------");
 		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_BlueColor));
+		ImGui::Image((void*)m_Framebuffer->GetColorAttachmentRendererID(), { m_FramebufferProps.Width, m_FramebufferProps.Height }, {5, 5});
 
 		ImGui::End();
 

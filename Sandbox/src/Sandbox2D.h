@@ -15,6 +15,8 @@ public:
 private:
 	Donut::OrthographicCameraController m_CameraController;
 
+	Donut::Framebuffer::FramebufferProps m_FramebufferProps = {640.0f, 480.0f};
+	Donut::Ref<Donut::Framebuffer> m_Framebuffer;
 	Donut::Ref<Donut::Texture2D> m_CheckerboardTexture, m_SpriteSheet;
 	Donut::Ref<Donut::SubTexture2D> m_TextureStairs, m_TextureTree;
 
