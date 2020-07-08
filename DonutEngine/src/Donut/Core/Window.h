@@ -9,16 +9,9 @@ namespace Donut {
 
 	struct WindowProps
 	{
-		std::string Title;
-		unsigned int Width;
-		unsigned int Height;
-
-		WindowProps(const std::string& title = "Donut Engine",
-			unsigned int width = 1280,
-			unsigned int height = 720)
-			: Title(title), Width(width), Height(height)
-		{
-		}
+		std::string Title = "Window Name";
+		unsigned int Width = 1280;
+		unsigned int Height = 720;
 	};
 
 	class  Window

@@ -8,6 +8,7 @@ class Sandbox : public Donut::Application
 {
 public:
 	Sandbox()
+		: Donut::Application("Sandbox2D")
 	{
 		PushLayer(new Sandbox2D());
 	}

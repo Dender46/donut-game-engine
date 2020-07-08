@@ -12,7 +12,7 @@ namespace Donut {
 	class Application
 	{
 	public:
-		Application();
+		Application(const std::string& name = "Application Name");
 		virtual ~Application();
 
 		void Run();
