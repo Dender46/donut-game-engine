@@ -1,29 +1,27 @@
 #include "dnpch.h"
 
 #include "Donut/Core/Application.h"
-#include "WindowsInput.h"
+#include "Donut/Core/Input.h"
 
 #include <GLFW/glfw3.h>
 
 namespace Donut {
 
-	Scope<Input> Input::s_Instance = CreateScope<WindowsInput>();
-
-	bool WindowsInput::IsKeyPressedImpl(int keycode)
+	bool Input::IsKeyPressed(int keycode)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		auto state  = glfwGetKey(window, keycode);
 		return state == GLFW_PRESS || state == GLFW_REPEAT;
 	}
 
-	bool WindowsInput::IsMouseButtonPressedImpl(int button)
+	bool Input::IsMouseButtonPressed(int button)
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		auto state = glfwGetMouseButton(window, button);
 		return state == GLFW_PRESS;
 	}
 
-	std::pair<float, float> WindowsInput::GetMousePositionImpl()
+	std::pair<float, float> Input::GetMousePosition()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 		double xpos, ypos;
@@ -32,19 +30,19 @@ namespace Donut {
 		return { float(xpos), float(ypos) };
 	}
 
-	float WindowsInput::GetMouseXImpl()
+	float Input::GetMouseX()
 	{
-		auto[x, y] = GetMousePositionImpl();
+		auto[x, y] = GetMousePosition();
 		return x;
 	}
 
-	float WindowsInput::GetMouseYImpl()
+	float Input::GetMouseY()
 	{
-		auto[x, y] = GetMousePositionImpl();
+		auto[x, y] = GetMousePosition();
 		return y;
 	}
 
-	std::pair<float, float> WindowsInput::GetRelativeMousePositionImpl(const OrthographicCameraController& camera)
+	std::pair<float, float> Input::GetRelativeMousePosition(const OrthographicCameraController& camera)
 	{
 		auto [x, y] = Input::GetMousePosition();
 		auto width = Application::Get().GetWindow().GetWidth();
@@ -58,15 +56,15 @@ namespace Donut {
 		return { mouseX, mouseY };
 	}
 
-	float WindowsInput::GetRelativeMouseXImpl(const OrthographicCameraController& camera)
+	float Input::GetRelativeMouseX(const OrthographicCameraController& camera)
 	{
-		auto [x, y] = GetRelativeMousePositionImpl(camera);
+		auto [x, y] = GetRelativeMousePosition(camera);
 		return x;
 	}
 
-	float WindowsInput::GetRelativeMouseYImpl(const OrthographicCameraController& camera)
+	float Input::GetRelativeMouseY(const OrthographicCameraController& camera)
 	{
-		auto [x, y] = GetRelativeMousePositionImpl(camera);
+		auto [x, y] = GetRelativeMousePosition(camera);
 		return y;
 	}
 }
