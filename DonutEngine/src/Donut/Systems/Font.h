@@ -21,7 +21,7 @@ namespace Donut {
 			Ref<Texture2D> Texture; // ID handle of the glyph texture
 			glm::ivec2 Size;		// Size of glyph
 			glm::ivec2 Bearing;		// Offset from baseline to left/top of glyph
-			unsigned int Advance;   // Offset to advance to next glyph
+			uint32_t Advance;   // Offset to advance to next glyph
 		};
 
 		static const Ref<Character> GetChar(const char ch);

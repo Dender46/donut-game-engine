@@ -10,8 +10,8 @@ namespace Donut {
 	struct WindowProps
 	{
 		std::string Title = "Window Name";
-		unsigned int Width = 1280;
-		unsigned int Height = 720;
+		uint32_t Width = 1280;
+		uint32_t Height = 720;
 	};
 
 	class  Window
@@ -23,8 +23,8 @@ namespace Donut {
 
 		virtual void OnUpdate() = 0;
 
-		virtual unsigned int GetWidth()  const = 0;
-		virtual unsigned int GetHeight() const = 0;
+		virtual uint32_t GetWidth()  const = 0;
+		virtual uint32_t GetHeight() const = 0;
 
 		// Window attributes
 		virtual void SetEventCallback(const EventCallbackFn& callback) = 0;

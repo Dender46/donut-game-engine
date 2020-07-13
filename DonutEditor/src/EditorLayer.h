@@ -17,14 +17,19 @@ namespace Donut {
 	private:
 		OrthographicCameraController m_CameraController;
 
+		// Framebuffer specific
 		Framebuffer::FramebufferProps m_FramebufferProps = { 640.0f, 480.0f };
 		Ref<Framebuffer> m_Framebuffer;
+
+		// Textures
 		Ref<Texture2D> m_CheckerboardTexture, m_SpriteSheet;
 		Ref<SubTexture2D> m_TextureStairs, m_TextureTree;
 
+		// Particles
 		ParticleSystem m_ParticleSystem;
 		ParticleProps m_ParticleProps;
 
+		// Physics
 		b2World m_World;
 		std::vector<Box> m_Bodies;
 

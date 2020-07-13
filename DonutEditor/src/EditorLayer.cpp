@@ -109,26 +109,23 @@ namespace Donut {
 
 			Renderer2D::EndScene();
 
-
 			// RENDER TEXT
 			Renderer2D::BeginScene(m_CameraController.GetCamera(), true);
 			Renderer2D::DrawTextLine("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", { -8.5f, -2.0f, 0.7f }, DN_COLOR_BLACK);
-
-			//Renderer2D::DrawQuad({ 0.0f,  0.0f, 0.8f }, { 1.0f, 1.0f }, fontTexture, DN_COLOR_WHITE, 1.0f);
 			Renderer2D::EndScene();
+
 			m_Framebuffer->Unbind();
 		}
 
 		// TODO: Check memory leaks
 
-		if (Input::IsMouseButtonPressed(DN_MOUSE_BUTTON_LEFT))
-		{
-			m_ParticleProps.Position = { m_MouseX, m_MouseY };
-
-			for (int i = 0; i < 5; i++)
-				m_ParticleSystem.Emit(m_ParticleProps);
-		}
-
+		//if (Input::IsMouseButtonPressed(DN_MOUSE_BUTTON_LEFT))
+		//{
+		//	m_ParticleProps.Position = { m_MouseX, m_MouseY };
+		//
+		//	for (int i = 0; i < 5; i++)
+		//		m_ParticleSystem.Emit(m_ParticleProps);
+		//}
 
 		//m_ParticleSystem.OnUpdate(ts);
 		//m_ParticleSystem.OnRender(m_CameraController.GetCamera());
@@ -199,19 +196,31 @@ namespace Donut {
 		}
 
 
-		ImGui::Begin("Settings");
+			ImGui::Begin("Settings");
 
-		auto stats = Renderer2D::GetStats();
-		ImGui::Text("Renderer2D Stats:");
-		ImGui::Text("DrawCalls: %d", stats.DrawCalls);
-		ImGui::Text("QuadCount: %d", stats.QuadCount);
-		ImGui::Text("VertexCount: %d", stats.GetTotalVertexCount());
-		ImGui::Text("IndexCount: %d", stats.GetTotalIndexCount());
-		ImGui::Text("--------------------");
-		ImGui::ColorEdit4("Square Color", glm::value_ptr(m_BlueColor));
-		ImGui::Image((void*)m_Framebuffer->GetColorAttachmentRendererID(), { m_FramebufferProps.Width, m_FramebufferProps.Height }, {0, 1}, {1, 0});
+			auto stats = Renderer2D::GetStats();
+			ImGui::Text("Renderer2D Stats:");
+			ImGui::Text("DrawCalls: %d", stats.DrawCalls);
+			ImGui::Text("QuadCount: %d", stats.QuadCount);
+			ImGui::Text("VertexCount: %d", stats.GetTotalVertexCount());
+			ImGui::Text("IndexCount: %d", stats.GetTotalIndexCount());
+			ImGui::Text("--------------------");
+			ImGui::ColorEdit4("Square Color", glm::value_ptr(m_BlueColor));
 
-		ImGui::End();
+			ImGui::End();
+
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });
+			ImGui::Begin("Viewport");
+			ImGui::PopStyleVar();
+			ImVec2 framebufferSize = ImGui::GetContentRegionAvail();
+			if (framebufferSize.x != m_FramebufferProps.Width || framebufferSize.y != m_FramebufferProps.Height) {
+				m_Framebuffer->Resize(framebufferSize.x, framebufferSize.y);
+				m_CameraController.Resize(framebufferSize.x, framebufferSize.y);
+				m_FramebufferProps.Width = framebufferSize.x;
+				m_FramebufferProps.Height = framebufferSize.y;
+			}
+			ImGui::Image((void*)m_Framebuffer->GetColorAttachmentRendererID(), { m_FramebufferProps.Width, m_FramebufferProps.Height }, {0, 1}, {1, 0});
+			ImGui::End();
 
 		ImGui::End();
 	}
