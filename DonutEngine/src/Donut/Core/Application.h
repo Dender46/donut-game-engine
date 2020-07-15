@@ -25,6 +25,7 @@ namespace Donut {
 
 		inline Window& GetWindow() { return *m_Window; }
 
+		inline static ImGuiLayer* GetImGuiLayer() { return s_Instance->m_ImGuiLayer; }
 		inline static Application& Get() { return *s_Instance; }
 	private:
 		bool OnWindowClosed(WindowCloseEvent& e);
