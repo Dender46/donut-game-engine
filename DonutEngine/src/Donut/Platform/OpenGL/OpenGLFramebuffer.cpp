@@ -5,6 +5,8 @@
 
 namespace Donut {
 
+	static uint32_t s_MaxFramebufferSize = 16364;
+
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferProps& props)
 		: m_Props(props)
 	{
@@ -61,6 +63,13 @@ namespace Donut {
 
 	void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)
 	{
+		if ((width == 0 || width > s_MaxFramebufferSize) ||
+			(height == 0 || height > s_MaxFramebufferSize))
+		{
+			DN_CORE_WARN("Tried to resize framebuffer to size: {0}, {1}", width, height);
+			return;
+		}
+
 		m_Props.Width = width;
 		m_Props.Height = height;
 
