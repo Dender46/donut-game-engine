@@ -197,15 +197,12 @@ namespace Donut {
 		}
 
 
-			ImGui::Begin("Settings");
+			ImGui::Begin("Renderer2D Stats");
 			auto stats = Renderer2D::GetStats();
-			ImGui::Text("Renderer2D Stats:");
 			ImGui::Text("DrawCalls: %d", stats.DrawCalls);
 			ImGui::Text("QuadCount: %d", stats.QuadCount);
 			ImGui::Text("VertexCount: %d", stats.GetTotalVertexCount());
 			ImGui::Text("IndexCount: %d", stats.GetTotalIndexCount());
-			ImGui::Text("--------------------");
-			ImGui::ColorEdit4("Square Color", glm::value_ptr(m_BlueColor));
 			ImGui::End();
 
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });

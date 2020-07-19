@@ -34,7 +34,6 @@ namespace Donut {
 		b2World m_World;
 		std::vector<Box> m_Bodies;
 
-		glm::vec4 m_BlueColor = DN_COLOR_BLUE;
 		float m_MouseX = 0.0f;
 		float m_MouseY = 0.0f;
 	};
