@@ -25,7 +25,7 @@ namespace Donut {
                 texture,
                 glm::ivec2(m_Face->glyph->bitmap.width, m_Face->glyph->bitmap.rows),
                 glm::ivec2(m_Face->glyph->bitmap_left, m_Face->glyph->bitmap_top),
-                m_Face->glyph->advance.x
+                (uint32_t)m_Face->glyph->advance.x
             };
             m_Characters[ch] = CreateRef<Character>(character);
         }

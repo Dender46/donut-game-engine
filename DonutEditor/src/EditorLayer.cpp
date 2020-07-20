@@ -213,12 +213,12 @@ namespace Donut {
 			Application::GetImGuiLayer()->BlockEvents(!m_ViewportHovered);
 			ImVec2 framebufferSize = ImGui::GetContentRegionAvail();
 			if (framebufferSize.x != m_FramebufferProps.Width || framebufferSize.y != m_FramebufferProps.Height) {
-				m_Framebuffer->Resize(framebufferSize.x, framebufferSize.y);
-				m_CameraController.Resize(framebufferSize.x, framebufferSize.y);
-				m_FramebufferProps.Width = framebufferSize.x;
-				m_FramebufferProps.Height = framebufferSize.y;
+				m_FramebufferProps.Width  = (uint32_t)framebufferSize.x;
+				m_FramebufferProps.Height = (uint32_t)framebufferSize.y;
+				m_Framebuffer->Resize(m_FramebufferProps.Width, m_FramebufferProps.Height);
+				m_CameraController.Resize(m_FramebufferProps.Width, m_FramebufferProps.Height);
 			}
-			ImGui::Image((void*)m_Framebuffer->GetColorAttachmentRendererID(), { m_FramebufferProps.Width, m_FramebufferProps.Height }, {0, 1}, {1, 0});
+			ImGui::Image((void*)m_Framebuffer->GetColorAttachmentRendererID(), { framebufferSize.x, framebufferSize.y }, {0, 1}, {1, 0});
 			ImGui::End();
 
 		ImGui::End();
