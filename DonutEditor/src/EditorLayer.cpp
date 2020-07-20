@@ -50,6 +50,18 @@ namespace Donut {
 		Font::LoadFont("assets/fonts/roboto.ttf", 480);
 
 		m_Framebuffer = Framebuffer::Create(m_FramebufferProps);
+
+		Scene sc("name");
+
+		Entity e1("name");
+		sc.AddEntity(e1);
+
+		//Transform t1({ 0.0f, 0.0f, 0.0f });
+		//e1.AddComponent<Transform>(t1);
+		//e1.AddComponent<Texture>(tex1);
+
+
+
 	}
 
 	void EditorLayer::OnUpdate(Timestep ts)
@@ -203,6 +215,9 @@ namespace Donut {
 			ImGui::Text("QuadCount: %d", stats.QuadCount);
 			ImGui::Text("VertexCount: %d", stats.GetTotalVertexCount());
 			ImGui::Text("IndexCount: %d", stats.GetTotalIndexCount());
+			ImGui::End();
+
+			ImGui::Begin("Scene");
 			ImGui::End();
 
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });
