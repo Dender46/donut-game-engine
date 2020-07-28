@@ -37,5 +37,3 @@
 // ----- Systems -----
 #include "Donut/Systems/ParticleSystem.h"
 #include "Donut/Systems/Font.h"
-#include "Donut/ECS/Scene.h"
-#include "Donut/ECS/Entity.h"
