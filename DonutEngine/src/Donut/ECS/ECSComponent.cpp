@@ -3,11 +3,11 @@
 
 namespace Donut {
 
-	static uint32_t ComponentID = 0;
-
-	uint32_t BaseECSComponent::NextID()
+	uint32_t BaseECSComponent::RegisterComponent(ECSComponentCreateFunction createfn, ECSComponentFreeFunction freefn, size_t size)
 	{
-		return ComponentID++;
+		uint32_t index = m_ComponentTypes.size();
+		m_ComponentTypes.push_back({ createfn, freefn, size });
+		return index;
 	}
 
 }

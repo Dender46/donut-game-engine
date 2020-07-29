@@ -12,8 +12,25 @@ namespace Donut {
 
 	struct BaseECSComponent
 	{
-		static uint32_t NextID();
+	public:
+		static uint32_t RegisterComponent(ECSComponentCreateFunction createfn, ECSComponentFreeFunction freefn, size_t size);
+		static inline ECSComponentCreateFunction GetCreateFunctionOfType(uint32_t componentType)
+		{
+			return std::get<0>(m_ComponentTypes[componentType]);
+		}
+		static inline ECSComponentFreeFunction GetFreeFunctionOfType(uint32_t componentType)
+		{
+			return std::get<1>(m_ComponentTypes[componentType]);
+		}
+		static inline size_t GetSizeOfType(uint32_t componentType)
+		{
+			return std::get<2>(m_ComponentTypes[componentType]);
+		}
+
 		EntityHandle Entity;
+	private:
+		// This vector is used for retrieveing information about specific component type
+		static std::vector<std::tuple<ECSComponentCreateFunction, ECSComponentFreeFunction, size_t>> m_ComponentTypes;
 	};
 
 	// This type uses "Curiously recurring template pattern"
@@ -45,13 +62,15 @@ namespace Donut {
 	}
 
 	template<typename T>
+	const uint32_t ECSComponent<T>::ID(BaseECSComponent::RegisterComponent(
+		ECSComponentCreate<T>, ECSComponentFree<T>, sizeof(T))
+	);
+
+	template<typename T>
 	const ECSComponentCreateFunction ECSComponent<T>::CREATE_FUNCTION(ECSComponentCreate<T>);
 
 	template<typename T>
 	const ECSComponentFreeFunction ECSComponent<T>::FREE_FUNCTION(ECSComponentFree<T>);
-
-	template<typename T>
-	const uint32_t ECSComponent<T>::ID(BaseECSComponent::NextID());
 
 	template<typename T>
 	const uint32_t ECSComponent<T>::SIZE(sizeof(T));
