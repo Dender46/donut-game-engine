@@ -50,6 +50,9 @@ namespace Donut {
 		Font::LoadFont("assets/fonts/roboto.ttf", 480);
 
 		m_Framebuffer = Framebuffer::Create(m_FramebufferProps);
+
+		// TEST EXAMPLE
+		Transform t;
 	}
 
 	void EditorLayer::OnUpdate(Timestep ts)
