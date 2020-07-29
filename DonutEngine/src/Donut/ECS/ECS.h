@@ -12,21 +12,22 @@ namespace Donut {
 		ECS() = default;
 		~ECS() = default;
 
-		// Entity methods
+		/* Entity methods */
 		EntityHandle MakeEntity(BaseECSComponent* components, const uint32_t* componentIDs, size_t numComponents);
 		void RemoveEntity(EntityHandle entity);
 
-		// Component methods
+		/* Component methods */
 		template<typename Component>
 		void AddComponent(EntityHandle handle, Component* component);
 
+		// Which component shall be removed is determined by passed templated type name
 		template<typename Component>
-		void RemoveComponent(EntityHandle handle, Component* component);
+		void RemoveComponent(EntityHandle handle);
 		
 		template<typename Component>
-		BaseECSComponent& GetComponent(EntityHandle handle, uint32_t componentID);
+		BaseECSComponent& GetComponent(EntityHandle handle);
 		
-		// System methods
+		/* System methods */
 		inline void AddSystem(BaseECSSystem& system)
 		{
 			m_Systems.push_back(system);
