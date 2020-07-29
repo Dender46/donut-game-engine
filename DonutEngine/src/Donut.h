@@ -39,4 +39,4 @@
 #include "Donut/Systems/Font.h"
 
 // ----- ECS -----
-#include "Donut/ECS/ECSComponent.h"
+#include "Donut/ECS/ECS.h"
