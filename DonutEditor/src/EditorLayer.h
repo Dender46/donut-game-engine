@@ -18,7 +18,7 @@ namespace Donut {
 		OrthographicCameraController m_CameraController;
 
 		// Framebuffer and viewport specific
-		Framebuffer::FramebufferProps m_FramebufferProps = { 640.0f, 480.0f };
+		Framebuffer::FramebufferProps m_FramebufferProps = { 640, 480 };
 		Ref<Framebuffer> m_Framebuffer;
 		bool m_ViewportFocused, m_ViewportHovered;
 
