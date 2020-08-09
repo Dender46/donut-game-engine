@@ -10,7 +10,7 @@ namespace Donut {
 	{
 	public:
 		ECS() = default;
-		~ECS() = default;
+		~ECS();
 
 		/* Entity methods */
 		EntityHandle MakeEntity(BaseECSComponent* components, const uint32_t* componentIDs, size_t numComponents);

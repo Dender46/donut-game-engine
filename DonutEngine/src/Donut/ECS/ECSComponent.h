@@ -2,13 +2,13 @@
 #include <stdint.h>
 #include <vector>
 
-struct BaseECSComponent;
-
-typedef void* EntityHandle;
-typedef uint32_t(*ECSComponentCreateFunction)(std::vector<uint8_t>& memory, EntityHandle entity, BaseECSComponent* component);
-typedef void (*ECSComponentFreeFunction)(BaseECSComponent* component);
-
 namespace Donut {
+
+	struct BaseECSComponent;
+
+	typedef void* EntityHandle;
+	typedef uint32_t(*ECSComponentCreateFunction)(std::vector<uint8_t>& memory, EntityHandle entity, BaseECSComponent* component);
+	typedef void (*ECSComponentFreeFunction)(BaseECSComponent* component);
 
 	struct BaseECSComponent
 	{
