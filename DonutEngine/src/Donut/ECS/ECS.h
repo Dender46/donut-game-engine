@@ -14,7 +14,7 @@ namespace Donut {
 
 		/* Entity methods */
 		EntityHandle MakeEntity(BaseECSComponent* components, const uint32_t* componentIDs, size_t numComponents);
-		void RemoveEntity(EntityHandle entity);
+		void RemoveEntity(EntityHandle handle);
 
 		/* Component methods */
 		template<typename Component>
@@ -44,9 +44,10 @@ namespace Donut {
 		// Pointers to pairs allows for shuffling of vector
 		std::vector<std::pair<uint32_t, std::vector<std::pair<uint32_t, uint32_t> > >* > m_Entities;
 
-		inline std::pair<uint32_t, std::pair<uint32_t, uint32_t> >* HandleToRawType(EntityHandle handle)
+
+		inline std::pair<uint32_t, std::vector<std::pair<uint32_t, uint32_t>>>* HandleToRawType(EntityHandle handle)
 		{
-			return (std::pair<uint32_t, std::pair<uint32_t, uint32_t> >*)handle;
+			return (std::pair<uint32_t, std::vector<std::pair<uint32_t, uint32_t>>>*)handle;
 		}
 
 		inline uint32_t HandleToEntityIndex(EntityHandle handle)
@@ -54,10 +55,13 @@ namespace Donut {
 			return HandleToRawType(handle)->first;
 		}
 
-		inline std::pair<uint32_t, uint32_t> HandleToEntity(EntityHandle handle)
+		inline std::vector<std::pair<uint32_t, uint32_t>> HandleToEntity(EntityHandle handle)
 		{
 			return HandleToRawType(handle)->second;
 		}
+
+
+		void RemoveComponentInternally(uint32_t componentID, uint32_t componentIndex);
 	};
 
 }

@@ -1,3 +1,4 @@
+#include "dnpch.h"
 #include "ECS.h"
 
 namespace Donut {
@@ -36,9 +37,28 @@ namespace Donut {
 		return handle;
 	}
 
-	void ECS::RemoveEntity(EntityHandle entity)
+	void ECS::RemoveEntity(EntityHandle handle)
 	{
+		std::vector<std::pair<uint32_t, uint32_t>>& entity = HandleToEntity(handle);
+		for (size_t i = 0; i < entity.size(); i++)
+			RemoveComponentInternally(entity[i].first, entity[i].second);
+
+		auto srcIndex = HandleToEntityIndex(handle);
+		delete m_Entities[srcIndex];
+
+		auto destIndex = m_Entities.size() - 1;
+		m_Entities[srcIndex] = m_Entities[destIndex];
+		m_Entities[srcIndex]->first = srcIndex; // this is important as we place last entity into place of old entity
+
+		m_Entities.pop_back();
+	}
+
+	void ECS::RemoveComponentInternally(uint32_t componentID, uint32_t componentIndex)
+	{
+		//auto freeFn = BaseECSComponent::GetFreeFunctionOfType(componentID);
+		//freeFn(m_Components[componentID][componentIndex]);
 	}
 
 }
 
+;
