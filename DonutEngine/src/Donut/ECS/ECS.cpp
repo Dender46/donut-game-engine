@@ -20,7 +20,18 @@ namespace Donut {
 	{
 		std::pair<uint32_t, std::vector<std::pair<uint32_t, uint32_t>>> * newEntity = new std::pair<uint32_t, std::vector<std::pair<uint32_t, uint32_t>>>();
 		EntityHandle handle = (EntityHandle)newEntity;
-
+		
+		for (size_t i = 0; i < numComponents; i++)
+		{
+			auto createFn = BaseECSComponent::GetCreateFunctionOfType(componentIDs[i]);
+			std::pair<uint32_t, uint32_t> newComponent;
+			newComponent.first = componentIDs[i];
+			newComponent.second = createFn(m_Components[componentIDs[i]], handle, &components[i]);
+			newEntity->second.push_back(newComponent);
+		}
+		
+		newEntity->first = m_Entities.size();
+		m_Entities.push_back(newEntity);
 
 		return handle;
 	}
