@@ -41,7 +41,7 @@ namespace Donut {
 	{
 		std::vector<std::pair<uint32_t, uint32_t>>& entity = HandleToEntity(handle);
 		for (size_t i = 0; i < entity.size(); i++)
-			RemoveComponentInternally(entity[i].first, entity[i].second);
+			DeleteComponentInternal(entity[i].first, entity[i].second);
 
 		auto srcIndex = HandleToEntityIndex(handle);
 		delete m_Entities[srcIndex];
@@ -53,10 +53,47 @@ namespace Donut {
 		m_Entities.pop_back();
 	}
 
-	void ECS::RemoveComponentInternally(uint32_t componentID, uint32_t componentIndex)
+	void ECS::AddComponentInternal(EntityHandle handle, uint32_t componentID, BaseECSComponent* component)
 	{
-		//auto freeFn = BaseECSComponent::GetFreeFunctionOfType(componentID);
-		//freeFn(m_Components[componentID][componentIndex]);
+		auto& entity = HandleToEntity(handle);
+		auto createFn = BaseECSComponent::GetCreateFunctionOfType(componentID);
+
+		std::pair<uint32_t, uint32_t> newComponent;
+		newComponent.first = componentID;
+		newComponent.second = createFn(m_Components[componentID], handle, component);
+		entity.push_back(newComponent);
+	}
+
+	void ECS::DeleteComponentInternal(uint32_t componentID, uint32_t componentIndex)
+	{
+		auto& memArray = m_Components[componentID];
+		auto freeFn = BaseECSComponent::GetFreeFunctionOfType(componentID);
+		auto typeSize = BaseECSComponent::GetSizeOfType(componentID);
+		
+		size_t srcIndex = memArray.size() - typeSize; // index of last component
+		BaseECSComponent* srcComp = (BaseECSComponent*)&memArray[srcIndex];
+		BaseECSComponent* destComp = (BaseECSComponent*)&memArray[componentIndex];
+		freeFn(destComp);
+
+		// if asked component is last in array of components:
+		if (srcIndex == componentIndex)
+		{
+			memArray.resize(srcIndex);
+			return;
+		}
+
+		std::memcpy(destComp, srcComp, typeSize);
+		auto entity = HandleToEntity(destComp->Entity);
+		for (size_t i = 0; i < entity.size(); i++)
+		{
+			if (entity[i].first == componentID)
+			{
+				entity[i].second = componentIndex;
+				break;
+			}
+		}
+
+		memArray.resize(srcIndex);
 	}
 
 }

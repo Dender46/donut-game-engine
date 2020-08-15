@@ -61,7 +61,8 @@ namespace Donut {
 		}
 
 
-		void RemoveComponentInternally(uint32_t componentID, uint32_t componentIndex);
+		void AddComponentInternal(EntityHandle handle, uint32_t componentID, BaseECSComponent* component);
+		void DeleteComponentInternal(uint32_t componentID, uint32_t componentIndex);
 	};
 
 }
