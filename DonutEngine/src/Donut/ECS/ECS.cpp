@@ -43,10 +43,10 @@ namespace Donut {
 		for (size_t i = 0; i < entity.size(); i++)
 			DeleteComponentInternal(entity[i].first, entity[i].second);
 
-		auto srcIndex = HandleToEntityIndex(handle);
+		uint32_t srcIndex = HandleToEntityIndex(handle);
 		delete m_Entities[srcIndex];
 
-		auto destIndex = m_Entities.size() - 1;
+		uint32_t destIndex = m_Entities.size() - 1;
 		m_Entities[srcIndex] = m_Entities[destIndex];
 		m_Entities[srcIndex]->first = srcIndex; // this is important as we place last entity into place of old entity
 
@@ -68,7 +68,7 @@ namespace Donut {
 	{
 		auto& memArray = m_Components[componentID];
 		auto freeFn = BaseECSComponent::GetFreeFunctionOfType(componentID);
-		auto typeSize = BaseECSComponent::GetSizeOfType(componentID);
+		size_t typeSize = BaseECSComponent::GetSizeOfType(componentID);
 		
 		size_t srcIndex = memArray.size() - typeSize; // index of last component
 		BaseECSComponent* srcComp = (BaseECSComponent*)&memArray[srcIndex];
@@ -96,6 +96,33 @@ namespace Donut {
 		memArray.resize(srcIndex);
 	}
 
-}
+	bool ECS::RemoveComponentInternal(EntityHandle handle, uint32_t componentID)
+	{
+		auto entityComponents = HandleToEntity(handle);
+		for (size_t i = 0; i < entityComponents.size(); i++)
+		{
+			if (entityComponents[i].first = componentID)
+			{
+				DeleteComponentInternal(componentID, entityComponents[i].second);
+				uint32_t srcIndex  = entityComponents.size() - 1;
+				uint32_t destIndex = i;
+				entityComponents[destIndex] = entityComponents[srcIndex];
+				entityComponents.pop_back();
+				return true;
+			}
+		}
+		return false;
+	}
 
-;
+	BaseECSComponent* ECS::GetComponentInternal(EntityHandle handle, uint32_t componentID)
+	{
+		auto entityComponents = HandleToEntity(handle);
+		for (size_t i = 0; i < entityComponents.size(); i++)
+		{
+			if (entityComponents[i].first = componentID)
+				return (BaseECSComponent*)&m_Components[componentID][entityComponents[i].second];
+		}
+		return nullptr;
+	}
+
+}

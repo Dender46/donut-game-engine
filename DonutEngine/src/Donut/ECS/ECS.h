@@ -18,14 +18,23 @@ namespace Donut {
 
 		/* Component methods */
 		template<typename Component>
-		void AddComponent(EntityHandle handle, Component* component);
+		inline void AddComponent(EntityHandle handle, Component* component)
+		{
+			AddComponentInternal(handle, Component::ID, component);
+		}
 
 		// Which component shall be removed is determined by passed templated type name
 		template<typename Component>
-		void RemoveComponent(EntityHandle handle);
+		inline bool RemoveComponent(EntityHandle handle)
+		{
+			return RemoveComponentInternal(handle, Component::ID);
+		}
 		
 		template<typename Component>
-		BaseECSComponent& GetComponent(EntityHandle handle);
+		inline BaseECSComponent& GetComponent(EntityHandle handle)
+		{
+			return GetComponentInternal(handle, Component::ID);
+		}
 		
 		/* System methods */
 		inline void AddSystem(BaseECSSystem& system)
@@ -62,7 +71,11 @@ namespace Donut {
 
 
 		void AddComponentInternal(EntityHandle handle, uint32_t componentID, BaseECSComponent* component);
+		// deletes component in m_Components
 		void DeleteComponentInternal(uint32_t componentID, uint32_t componentIndex);
+		// deletes component in m_Entities
+		bool RemoveComponentInternal(EntityHandle handle, uint32_t componentID);
+		BaseECSComponent* GetComponentInternal(EntityHandle handle, uint32_t componentID);
 	};
 
 }
