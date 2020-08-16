@@ -1,6 +1,8 @@
 #include "dnpch.h"
 #include "ECS.h"
 
+#include <cmath>
+
 namespace Donut {
 
 	ECS::~ECS()
@@ -8,8 +10,8 @@ namespace Donut {
 		for (auto it = m_Components.begin(); it != m_Components.end(); it++)
 		{
 			auto freeFn   = BaseECSComponent::GetFreeFunctionOfType(it->first);
-			auto typeSize = BaseECSComponent::GetSizeOfType(it->first);
-			for (int i = 0; i < it->second.size(); i += typeSize)
+			size_t typeSize = BaseECSComponent::GetSizeOfType(it->first);
+			for (size_t i = 0; i < it->second.size(); i += typeSize)
 				freeFn((BaseECSComponent*)&it->second[i]);
 
 			for (auto entity : m_Entities)
@@ -31,7 +33,7 @@ namespace Donut {
 			newEntity->second.push_back(newComponent);
 		}
 		
-		newEntity->first = m_Entities.size();
+		newEntity->first = (uint32_t)m_Entities.size();
 		m_Entities.push_back(newEntity);
 
 		return handle;
@@ -43,14 +45,77 @@ namespace Donut {
 		for (size_t i = 0; i < entity.size(); i++)
 			DeleteComponentInternal(entity[i].first, entity[i].second);
 
-		uint32_t srcIndex = HandleToEntityIndex(handle);
+		size_t srcIndex = HandleToEntityIndex(handle);
 		delete m_Entities[srcIndex];
 
-		uint32_t destIndex = m_Entities.size() - 1;
+		size_t destIndex = m_Entities.size() - 1;
 		m_Entities[srcIndex] = m_Entities[destIndex];
-		m_Entities[srcIndex]->first = srcIndex; // this is important as we place last entity into place of old entity
+		m_Entities[srcIndex]->first = (uint32_t)srcIndex; // this is important as we place last entity into place of old entity
 
 		m_Entities.pop_back();
+	}
+
+	void ECS::UpdateSystems(Timestep ts)
+	{
+		std::vector<BaseECSComponent*> componentsParam;
+		for (size_t i = 0; i < m_Systems.size(); i++)
+		{
+			std::vector<uint32_t> systemTypes = m_Systems[i]->GetComponentTypes();
+
+			if (systemTypes.size() == 1)
+			{
+				size_t typeSize = BaseECSComponent::GetSizeOfType(systemTypes[0]);
+				std::vector<uint8_t> memArray = m_Components[systemTypes[0]];
+
+				for (size_t j = 0; j < memArray.size(); j += typeSize)
+				{
+					BaseECSComponent* component = (BaseECSComponent*)&memArray[j];
+					m_Systems[i]->UpdateComponents(ts, &component);
+				}
+			}
+			else
+			{
+				UpdateSystemWithMultipleTypes(i, systemTypes, componentsParam, ts);
+			}
+		}
+	}
+
+	void ECS::UpdateSystemWithMultipleTypes(size_t systemIndex, std::vector<uint32_t> systemTypes, std::vector<BaseECSComponent*>& componentsParam, Timestep ts)
+	{
+		componentsParam.resize(std::max(componentsParam.size(), systemTypes.size()));
+
+		size_t typeSize = BaseECSComponent::GetSizeOfType(systemTypes[0]);
+		std::vector<uint8_t> memArray = m_Components[systemTypes[0]];
+
+		for (size_t i = 0; i < memArray.size(); i += typeSize)
+		{
+			componentsParam[0] = (BaseECSComponent*)&memArray[i];
+			auto entityComponents = HandleToEntity(componentsParam[0]->Entity);
+
+			bool isEntityValid = true; // does entity have desired components of types
+			for (size_t j = 0; j < systemTypes.size(); j++)
+			{
+				if (j == 0) // to indicate that loop begins from second type
+					continue;
+
+				componentsParam[j] = GetComponentInternal(componentsParam[0]->Entity, systemTypes[j]);
+				if (componentsParam[j] == nullptr)
+				{
+					isEntityValid = false;
+					break;
+				}
+			}
+
+			if (isEntityValid)
+				m_Systems[systemIndex]->UpdateComponents(ts, &componentsParam[0]);
+		}
+	}
+
+	void ECS::RemoveSystem(BaseECSSystem& system)
+	{
+		for (size_t i = 0; i < m_Systems.size(); i++)
+			if (&system == m_Systems[i])
+				m_Systems.erase(m_Systems.begin() + i);
 	}
 
 	void ECS::AddComponentInternal(EntityHandle handle, uint32_t componentID, BaseECSComponent* component)
@@ -104,8 +169,8 @@ namespace Donut {
 			if (entityComponents[i].first = componentID)
 			{
 				DeleteComponentInternal(componentID, entityComponents[i].second);
-				uint32_t srcIndex  = entityComponents.size() - 1;
-				uint32_t destIndex = i;
+				size_t srcIndex  = entityComponents.size() - 1;
+				size_t destIndex = i;
 				entityComponents[destIndex] = entityComponents[srcIndex];
 				entityComponents.pop_back();
 				return true;
