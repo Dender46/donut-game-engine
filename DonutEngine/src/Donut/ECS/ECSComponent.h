@@ -40,7 +40,7 @@ namespace Donut {
 		static const ECSComponentCreateFunction CREATE_FUNCTION;
 		static const ECSComponentFreeFunction FREE_FUNCTION;
 		static const uint32_t ID;
-		static const uint32_t SIZE;
+		static const size_t SIZE;
 	};
 	
 	template<typename Component>
@@ -73,7 +73,7 @@ namespace Donut {
 	const ECSComponentFreeFunction ECSComponent<T>::FREE_FUNCTION(ECSComponentFree<T>);
 
 	template<typename T>
-	const uint32_t ECSComponent<T>::SIZE(sizeof(T));
+	const size_t ECSComponent<T>::SIZE(sizeof(T));
 
 	// EXAMPLE
 	struct Transform : public ECSComponent<Transform>

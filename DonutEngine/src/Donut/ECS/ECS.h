@@ -77,7 +77,13 @@ namespace Donut {
 		bool RemoveComponentInternal(EntityHandle handle, uint32_t componentID);
 		BaseECSComponent* GetComponentInternal(EntityHandle handle, uint32_t componentID);
 
-		void UpdateSystemWithMultipleTypes(size_t systemIndex, std::vector<uint32_t> systemTypes, std::vector<BaseECSComponent*>& componentsParam, Timestep ts);
+		void UpdateSystemWithMultipleTypes
+		(
+			size_t systemIndex, std::vector<uint32_t> systemTypes, std::vector<BaseECSComponent*>& componentsParam,
+			std::vector<std::vector<uint8_t>*>& componentsMemArray, Timestep ts
+		);
+
+		size_t FindLeastCommonComponent(std::vector<uint32_t> systemTypes);
 	};
 
 }

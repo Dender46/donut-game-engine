@@ -58,6 +58,8 @@ namespace Donut {
 	void ECS::UpdateSystems(Timestep ts)
 	{
 		std::vector<BaseECSComponent*> componentsParam;
+		std::vector<std::vector<uint8_t>*> componentsMemArray;
+
 		for (size_t i = 0; i < m_Systems.size(); i++)
 		{
 			std::vector<uint32_t> systemTypes = m_Systems[i]->GetComponentTypes();
@@ -75,22 +77,34 @@ namespace Donut {
 			}
 			else
 			{
-				UpdateSystemWithMultipleTypes(i, systemTypes, componentsParam, ts);
+				UpdateSystemWithMultipleTypes(i, systemTypes, componentsParam, componentsMemArray, ts);
 			}
 		}
 	}
 
-	void ECS::UpdateSystemWithMultipleTypes(size_t systemIndex, std::vector<uint32_t> systemTypes, std::vector<BaseECSComponent*>& componentsParam, Timestep ts)
+	void ECS::UpdateSystemWithMultipleTypes
+	(
+		size_t systemIndex, std::vector<uint32_t> systemTypes, std::vector<BaseECSComponent*>& componentsParam, 
+		std::vector<std::vector<uint8_t>*>& componentsMemArray, Timestep ts
+	)
 	{
+		// preparing temp 'cache'
 		componentsParam.resize(std::max(componentsParam.size(), systemTypes.size()));
+		componentsMemArray.resize(std::max(componentsMemArray.size(), systemTypes.size()));
+		for (size_t i = 0; i < systemTypes.size(); i++)
+			componentsMemArray[i] = &m_Components[systemTypes[i]];
 
-		size_t typeSize = BaseECSComponent::GetSizeOfType(systemTypes[0]);
-		std::vector<uint8_t> memArray = m_Components[systemTypes[0]];
+		// which component type has lesser amount of components
+		size_t minCountIndex = FindLeastCommonComponent(systemTypes);
+
+		// we only need one component type here
+		size_t typeSize = BaseECSComponent::GetSizeOfType(systemTypes[minCountIndex]);
+		std::vector<uint8_t>& memArray = *componentsMemArray[systemTypes[minCountIndex]];
 
 		for (size_t i = 0; i < memArray.size(); i += typeSize)
 		{
 			componentsParam[0] = (BaseECSComponent*)&memArray[i];
-			auto entityComponents = HandleToEntity(componentsParam[0]->Entity);
+			auto entityComponents = HandleToEntity(componentsParam[minCountIndex]->Entity);
 
 			bool isEntityValid = true; // does entity have desired components of types
 			for (size_t j = 0; j < systemTypes.size(); j++)
@@ -109,6 +123,22 @@ namespace Donut {
 			if (isEntityValid)
 				m_Systems[systemIndex]->UpdateComponents(ts, &componentsParam[0]);
 		}
+	}
+
+	size_t ECS::FindLeastCommonComponent(std::vector<uint32_t> systemTypes)
+	{
+		size_t minIndex = 0, minCount = -1;
+		for (size_t i = 0; i < systemTypes.size(); i++)
+		{
+			size_t typeSize = BaseECSComponent::GetSizeOfType(systemTypes[i]);
+			size_t count = m_Components[systemTypes[i]].size() / typeSize;
+			if (count < minCount)
+			{
+				minCount = count;
+				minIndex = i;
+			}
+		}
+		return minIndex;
 	}
 
 	void ECS::RemoveSystem(BaseECSSystem& system)
