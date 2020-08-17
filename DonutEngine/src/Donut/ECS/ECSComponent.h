@@ -16,21 +16,21 @@ namespace Donut {
 		static uint32_t RegisterComponent(ECSComponentCreateFunction createfn, ECSComponentFreeFunction freefn, size_t size);
 		static inline ECSComponentCreateFunction GetCreateFunctionOfType(uint32_t componentType)
 		{
-			return std::get<0>(m_ComponentTypes[componentType]);
+			return std::get<0>((*m_ComponentTypes)[componentType]);
 		}
 		static inline ECSComponentFreeFunction GetFreeFunctionOfType(uint32_t componentType)
 		{
-			return std::get<1>(m_ComponentTypes[componentType]);
+			return std::get<1>((*m_ComponentTypes)[componentType]);
 		}
 		static inline size_t GetSizeOfType(uint32_t componentType)
 		{
-			return std::get<2>(m_ComponentTypes[componentType]);
+			return std::get<2>((*m_ComponentTypes)[componentType]);
 		}
 
 		EntityHandle Entity;
 	private:
 		// This vector is used for retrieveing information about specific component type
-		static std::vector<std::tuple<ECSComponentCreateFunction, ECSComponentFreeFunction, size_t>> m_ComponentTypes;
+		static std::vector<std::tuple<ECSComponentCreateFunction, ECSComponentFreeFunction, size_t>>* m_ComponentTypes;
 	};
 
 	// This type uses "Curiously recurring template pattern"
@@ -74,12 +74,5 @@ namespace Donut {
 
 	template<typename T>
 	const size_t ECSComponent<T>::SIZE(sizeof(T));
-
-	// EXAMPLE
-	struct Transform : public ECSComponent<Transform>
-	{
-		float x;
-		float y;
-	};
 
 }
