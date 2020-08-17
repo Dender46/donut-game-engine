@@ -57,8 +57,8 @@ namespace Donut {
 	template<typename Component>
 	void ECSComponentFree(BaseECSComponent* component)
 	{
-		Component* component = *(Component*)component;
-		component->~Component();
+		Component* comp = (Component*)component;
+		comp->~Component();
 	}
 
 	template<typename T>

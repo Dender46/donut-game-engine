@@ -17,6 +17,7 @@ namespace Donut {
 	private:
 		OrthographicCameraController m_CameraController;
 		ECS m_ECS;
+		EntityHandle m_Entity;
 
 		// Framebuffer and viewport specific
 		Framebuffer::FramebufferProps m_FramebufferProps = { 640, 480 };

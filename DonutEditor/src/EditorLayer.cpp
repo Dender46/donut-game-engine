@@ -6,6 +6,20 @@
 
 namespace Donut {
 
+	struct Transform : public ECSComponent<Transform>
+	{
+		Transform(const glm::mat4& transform) : transform(transform) {}
+		glm::mat4 transform;
+	};
+
+	struct Color : public ECSComponent<Color>
+	{
+		Color(const glm::vec4& color) : color(color) {}
+		glm::vec4 color;
+	};
+
+
+
 	EditorLayer::EditorLayer()
 		: Layer("DonutEditorLayer"), m_CameraController(1280.0f / 720.0f, true), m_ParticleSystem(1000), m_World(b2Vec2(0.0f, -3.0f))
 	{
@@ -13,6 +27,12 @@ namespace Donut {
 
 	void EditorLayer::OnAttach()
 	{
+		// TEXT RENDERING
+		Font::Init();
+		Font::LoadFont("assets/fonts/roboto.ttf", 480);
+
+		m_Framebuffer = Framebuffer::Create(m_FramebufferProps);
+
 		m_CheckerboardTexture = Texture2D::Create("assets/textures/checker_board.png");
 		m_SpriteSheet = Texture2D::Create("assets/textures/tilemap.png");
 
@@ -37,7 +57,6 @@ namespace Donut {
 		Box boxGround(&m_World, &groundBox, 0.0f, { 0.0f, -6.0f, 0.6f }, { 10.0f, 5.0f }, 0.0f, DN_COLOR_BLUE);
 		m_Bodies.push_back(boxGround);
 
-
 		// Dynamic box
 		b2FixtureDef fixtureDef;
 		fixtureDef.density = 1.0f;
@@ -45,11 +64,11 @@ namespace Donut {
 		Box boxDynamic(&m_World, &fixtureDef, { 0.0f, 4.0f, 0.6f }, { 1.0f, 1.0f }, 0.0f, DN_COLOR_RED);
 		m_Bodies.push_back(boxDynamic);
 
-		// TEXT RENDERING
-		Font::Init();
-		Font::LoadFont("assets/fonts/roboto.ttf", 480);
-
-		m_Framebuffer = Framebuffer::Create(m_FramebufferProps);
+		Transform transform(glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f })
+			* glm::rotate(glm::mat4(1.0f), 0.0f, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { 1.0f, 1.0f, 1.0f }));
+		Color color(DN_COLOR_WHITE);
+		m_Entity = m_ECS.MakeEntity(transform, color);
 	}
 
 	void EditorLayer::OnUpdate(Timestep ts)
@@ -70,10 +89,9 @@ namespace Donut {
 		RenderCommand::Clear();
 		
 		Renderer2D::BeginScene(m_CameraController.GetCamera());
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), {0.0f, 0.0f, 0.0f})
-			* glm::rotate(glm::mat4(1.0f), 0.0f, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { 1.0f, 1.0f, 1.0f });
-		Renderer2D::DrawQuad(transform, DN_COLOR_WHITE);
+		Transform* t = (Transform*)m_ECS.GetComponent<Transform>(m_Entity);
+		Color* c = (Color*)m_ECS.GetComponent<Color>(m_Entity);
+		Renderer2D::DrawQuad(t->transform, c->color);
 		Renderer2D::EndScene();
 		/*
 		int32 velocityIterations = 6;

@@ -13,25 +13,19 @@ namespace Donut {
 			size_t typeSize = BaseECSComponent::GetSizeOfType(it->first);
 			for (size_t i = 0; i < it->second.size(); i += typeSize)
 				freeFn((BaseECSComponent*)&it->second[i]);
-
-			for (auto entity : m_Entities)
-				delete entity;
 		}
+
+		for (auto entity : m_Entities)
+			delete entity;
 	}
 
-	EntityHandle ECS::MakeEntity(BaseECSComponent* components, const uint32_t* componentIDs, size_t numComponents)
+	EntityHandle ECS::MakeEntity(BaseECSComponent** components, const uint32_t* componentIDs, size_t numComponents)
 	{
 		std::pair<uint32_t, std::vector<std::pair<uint32_t, uint32_t>>> * newEntity = new std::pair<uint32_t, std::vector<std::pair<uint32_t, uint32_t>>>();
 		EntityHandle handle = (EntityHandle)newEntity;
 		
 		for (size_t i = 0; i < numComponents; i++)
-		{
-			auto createFn = BaseECSComponent::GetCreateFunctionOfType(componentIDs[i]);
-			std::pair<uint32_t, uint32_t> newComponent;
-			newComponent.first = componentIDs[i];
-			newComponent.second = createFn(m_Components[componentIDs[i]], handle, &components[i]);
-			newEntity->second.push_back(newComponent);
-		}
+			AddComponentInternal(handle, newEntity->second, componentIDs[i], components[i]);
 		
 		newEntity->first = (uint32_t)m_Entities.size();
 		m_Entities.push_back(newEntity);
@@ -148,15 +142,14 @@ namespace Donut {
 				m_Systems.erase(m_Systems.begin() + i);
 	}
 
-	void ECS::AddComponentInternal(EntityHandle handle, uint32_t componentID, BaseECSComponent* component)
+	void ECS::AddComponentInternal(EntityHandle handle, std::vector<std::pair<uint32_t, uint32_t> >& entityComponents, uint32_t componentID, BaseECSComponent* component)
 	{
-		auto& entity = HandleToEntity(handle);
 		auto createFn = BaseECSComponent::GetCreateFunctionOfType(componentID);
 
 		std::pair<uint32_t, uint32_t> newComponent;
 		newComponent.first = componentID;
 		newComponent.second = createFn(m_Components[componentID], handle, component);
-		entity.push_back(newComponent);
+		entityComponents.push_back(newComponent);
 	}
 
 	void ECS::DeleteComponentInternal(uint32_t componentID, uint32_t componentIndex)
@@ -196,7 +189,7 @@ namespace Donut {
 		auto entityComponents = HandleToEntity(handle);
 		for (size_t i = 0; i < entityComponents.size(); i++)
 		{
-			if (entityComponents[i].first = componentID)
+			if (entityComponents[i].first == componentID)
 			{
 				DeleteComponentInternal(componentID, entityComponents[i].second);
 				size_t srcIndex  = entityComponents.size() - 1;
@@ -214,7 +207,7 @@ namespace Donut {
 		auto entityComponents = HandleToEntity(handle);
 		for (size_t i = 0; i < entityComponents.size(); i++)
 		{
-			if (entityComponents[i].first = componentID)
+			if (entityComponents[i].first == componentID)
 				return (BaseECSComponent*)&componentsMemArray[entityComponents[i].second];
 		}
 		return nullptr;

@@ -13,8 +13,16 @@ namespace Donut {
 		~ECS();
 
 		/* Entity methods */
-		EntityHandle MakeEntity(BaseECSComponent* components, const uint32_t* componentIDs, size_t numComponents);
+		EntityHandle MakeEntity(BaseECSComponent** components, const uint32_t* componentIDs, size_t numComponents);
 		void RemoveEntity(EntityHandle handle);
+
+		template<class... Components>
+		EntityHandle MakeEntity(Components&&... entitycomponents)
+		{
+			BaseECSComponent* entity_components[] = { (&entitycomponents)... };
+			uint32_t entity_componentIDs[] = { (std::remove_reference_t<Components>::ID)... }; // Or any function that removes references
+			return MakeEntity(entity_components, entity_componentIDs, sizeof...(Components));
+		}
 
 		/* Component methods */
 		template<typename Component>
@@ -31,9 +39,9 @@ namespace Donut {
 		}
 		
 		template<typename Component>
-		inline BaseECSComponent& GetComponent(EntityHandle handle)
+		inline BaseECSComponent* GetComponent(EntityHandle handle)
 		{
-			return GetComponentInternal(handle, Component::ID);
+			return GetComponentInternal(handle, Component::ID, m_Components[Component::ID]);
 		}
 		
 		/* System methods */
@@ -70,7 +78,7 @@ namespace Donut {
 		}
 
 
-		void AddComponentInternal(EntityHandle handle, uint32_t componentID, BaseECSComponent* component);
+		void AddComponentInternal(EntityHandle handle, std::vector<std::pair<uint32_t, uint32_t> >& entityComponents, uint32_t componentID, BaseECSComponent* component);
 		// deletes component in m_Components
 		void DeleteComponentInternal(uint32_t componentID, uint32_t componentIndex);
 		// deletes component in m_Entities
