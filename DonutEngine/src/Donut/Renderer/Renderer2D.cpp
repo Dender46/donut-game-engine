@@ -175,39 +175,21 @@ namespace Donut {
 		s_Data.TextureSlotIndex = 1;
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
-	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, color);
-	}
-
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 	{
 		DN_PROFILE_FUNCTION();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		AddDataToVertexBuffer(transform, color);
+		DrawQuad(transform, color);
 	}
 
-
-
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)
-	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, texture, tint, tilingAmount);
-	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)
 	{
 		DN_PROFILE_FUNCTION();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		AddDataToVertexBuffer(transform, tint, texture, tilingAmount);
-	}
-
-
-
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<SubTexture2D>& texture, const glm::vec4 tint, const float tilingAmount)
-	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, texture, tint, tilingAmount);
+		DrawQuad(transform, tint, texture, tilingAmount);
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<SubTexture2D>& texture, const glm::vec4 tint, const float tilingAmount)
@@ -215,105 +197,10 @@ namespace Donut {
 		DN_PROFILE_FUNCTION();
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		AddDataToVertexBuffer(transform, tint, texture->GetTexture(), tilingAmount, texture->GetTextureCoords());
+		DrawQuad(transform, tint, texture->GetTexture(), tilingAmount, texture->GetTextureCoords());
 	}
 
-
-
-	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, const float rotation, const glm::vec4& color)
-	{
-		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, color);
-	}
-
-	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, const float rotation, const glm::vec4& color)
-	{
-		DN_PROFILE_FUNCTION();
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
-			* glm::scale (glm::mat4(1.0f), { size.x, size.y, 1.0f });
-
-		AddDataToVertexBuffer(transform, color);
-	}
-
-
-
-	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, const float rotation, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)
-	{
-		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, texture, tint, tilingAmount);
-	}
-
-	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, const float rotation, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)
-	{
-		DN_PROFILE_FUNCTION();
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
-			* glm::scale (glm::mat4(1.0f), { size.x, size.y, 1.0f });
-
-		AddDataToVertexBuffer(transform, tint, texture, tilingAmount);
-	}
-
-
-
-	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, const float rotation, const Ref<SubTexture2D>& texture, const glm::vec4 tint, const float tilingAmount)
-	{
-		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, texture, tint, tilingAmount);
-	}
-
-	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, const float rotation, const Ref<SubTexture2D>& texture, const glm::vec4 tint, const float tilingAmount)
-	{
-		DN_PROFILE_FUNCTION();
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-
-		AddDataToVertexBuffer(transform, tint, texture->GetTexture(), tilingAmount, texture->GetTextureCoords());
-	}
-
-	void Renderer2D::DrawLine(const glm::vec2& p1, const glm::vec2& p2, const float z, const glm::vec4& color, const float thickness)
-	{
-		DN_PROFILE_FUNCTION();
-
-		glm::vec3 position = { (p1.x + p2.x) / 2, (p1.y + p2.y) / 2, z };
-		float rotation = glm::atan(p2.y - p1.y, p2.x - p1.x);
-		float length = glm::sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { length, thickness, 1.0f });
-
-		AddDataToVertexBuffer(transform, color);
-	}
-
-	void Renderer2D::DrawTextLine(const std::string& text, const glm::vec3& position, const glm::vec4& color)
-	{
-		DN_PROFILE_FUNCTION();
-
-		float x = position.x;
-		float y = position.y;
-		float scale = 0.001f;
-
-		for (char ch : text)
-		{
-			const Ref<Font::Character> chInfo = Font::GetChar(ch);
-			 
-			float xpos = x + chInfo->Bearing.x * scale;
-			float ypos = y - (chInfo->Size.y - chInfo->Bearing.y) * scale;
-			xpos += chInfo->Texture->GetWidth() / 2.0f * scale;
-			ypos += chInfo->Texture->GetHeight() / 2.0f * scale;
-
-			float w = chInfo->Size.x * scale;
-			float h = chInfo->Size.y * scale;
-			glm::mat4 transform = glm::translate(glm::mat4(1.0f), {xpos, ypos, position.z}) * glm::scale(glm::mat4(1.0f), { w, -h, 1.0f });
-			AddDataToVertexBuffer(transform, color, chInfo->Texture, 1.0f);
-
-			x += (chInfo->Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
-		}
-	}
-
-	void Renderer2D::AddDataToVertexBuffer(const glm::mat4& transform, const glm::vec4& color)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
 	{
 		DN_PROFILE_FUNCTION();
 		if (s_Data.QuadIndexCount >= s_Data.MaxIndices)
@@ -335,7 +222,7 @@ namespace Donut {
 		s_Data.Stats.QuadCount++;
 	}
 
-	void Renderer2D::AddDataToVertexBuffer(const glm::mat4& transform, const glm::vec4& color, const Ref<Texture2D>& texture, const float tilingAmount, const glm::vec2* texCoords)
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color, const Ref<Texture2D>& texture, const float tilingAmount, const glm::vec2* texCoords)
 	{
 		DN_PROFILE_FUNCTION();
 		if (s_Data.QuadIndexCount >= s_Data.MaxIndices)
@@ -380,7 +267,82 @@ namespace Donut {
 		// Increment statistics
 		s_Data.Stats.QuadCount++;
 	}
-	
+
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, const float rotation, const glm::vec4& color)
+	{
+		DN_PROFILE_FUNCTION();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+			* glm::scale (glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		DrawQuad(transform, color);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, const float rotation, const Ref<Texture2D>& texture, const glm::vec4 tint, const float tilingAmount)
+	{
+		DN_PROFILE_FUNCTION();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+			* glm::scale (glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		DrawQuad(transform, tint, texture, tilingAmount);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, const float rotation, const Ref<SubTexture2D>& texture, const glm::vec4 tint, const float tilingAmount)
+	{
+		DN_PROFILE_FUNCTION();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+
+		DrawQuad(transform, tint, texture->GetTexture(), tilingAmount, texture->GetTextureCoords());
+	}
+
+	void Renderer2D::DrawLine(const glm::vec2& p1, const glm::vec2& p2, const float z, const glm::vec4& color, const float thickness)
+	{
+		DN_PROFILE_FUNCTION();
+
+		glm::vec3 position = { (p1.x + p2.x) / 2, (p1.y + p2.y) / 2, z };
+		float rotation = glm::atan(p2.y - p1.y, p2.x - p1.x);
+		float length = glm::sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y));
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), rotation, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { length, thickness, 1.0f });
+
+		DrawQuad(transform, color);
+	}
+
+	void Renderer2D::DrawTextLine(const std::string& text, const glm::vec3& position, const glm::vec4& color)
+	{
+		DN_PROFILE_FUNCTION();
+
+		float x = position.x;
+		float y = position.y;
+		float scale = 0.001f;
+
+		for (char ch : text)
+		{
+			const Ref<Font::Character> chInfo = Font::GetChar(ch);
+			 
+			float xpos = x + chInfo->Bearing.x * scale;
+			float ypos = y - (chInfo->Size.y - chInfo->Bearing.y) * scale;
+			xpos += chInfo->Texture->GetWidth() / 2.0f * scale;
+			ypos += chInfo->Texture->GetHeight() / 2.0f * scale;
+
+			float w = chInfo->Size.x * scale;
+			float h = chInfo->Size.y * scale;
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), {xpos, ypos, position.z}) * glm::scale(glm::mat4(1.0f), { w, -h, 1.0f });
+			DrawQuad(transform, color, chInfo->Texture, 1.0f);
+
+			x += (chInfo->Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
+		}
+	}
+
 	void Renderer2D::ResetStats()
 	{
 		memset(&s_Data.Stats, 0, sizeof(Statistics));

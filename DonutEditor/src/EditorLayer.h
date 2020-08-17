@@ -16,11 +16,12 @@ namespace Donut {
 		virtual void OnEvent(Event& e) override;
 	private:
 		OrthographicCameraController m_CameraController;
+		ECS m_ECS;
 
 		// Framebuffer and viewport specific
 		Framebuffer::FramebufferProps m_FramebufferProps = { 640, 480 };
 		Ref<Framebuffer> m_Framebuffer;
-		bool m_ViewportFocused, m_ViewportHovered;
+		bool m_ViewportFocused = false, m_ViewportHovered = false;
 
 		// Textures
 		Ref<Texture2D> m_CheckerboardTexture, m_SpriteSheet;

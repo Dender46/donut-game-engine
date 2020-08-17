@@ -50,9 +50,6 @@ namespace Donut {
 		Font::LoadFont("assets/fonts/roboto.ttf", 480);
 
 		m_Framebuffer = Framebuffer::Create(m_FramebufferProps);
-
-		// TEST EXAMPLE
-		Transform t;
 	}
 
 	void EditorLayer::OnUpdate(Timestep ts)
@@ -60,66 +57,60 @@ namespace Donut {
 		DN_PROFILE_FUNCTION();
 
 		Renderer2D::ResetStats();
+		if (m_ViewportFocused)
+			m_CameraController.OnUpdate(ts);
+		
+
+		auto [x, y] = Input::GetRelativeMousePosition(m_CameraController);
+		m_MouseX = x;
+		m_MouseY = y;
+		
+		m_Framebuffer->Bind();
+		RenderCommand::SetClearColor(DN_COLOR_PURPLE);
+		RenderCommand::Clear();
+		
+		Renderer2D::BeginScene(m_CameraController.GetCamera());
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), {0.0f, 0.0f, 0.0f})
+			* glm::rotate(glm::mat4(1.0f), 0.0f, { 0.0f, 0.0f, 1.0f })
+			* glm::scale(glm::mat4(1.0f), { 1.0f, 1.0f, 1.0f });
+		Renderer2D::DrawQuad(transform, DN_COLOR_WHITE);
+		Renderer2D::EndScene();
+		/*
+		int32 velocityIterations = 6;
+		int32 positionIterations = 2;
+
+		m_World.Step(ts, velocityIterations, positionIterations);
+		
+		
+		Renderer2D::BeginScene(m_CameraController.GetCamera());
+		Renderer2D::DrawQuad({ 0.0f,  0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, DN_COLOR_WHITE, 10);
+
+		for (auto& body : m_Bodies)
 		{
-			DN_PROFILE_SCOPE("Camera::OnUpdate");
-			if (m_ViewportFocused)
-				m_CameraController.OnUpdate(ts);
+			body.Draw();
 		}
 
-		{
-			DN_PROFILE_SCOPE("Update Mouse Pos");
-			auto [x, y] = Input::GetRelativeMousePosition(m_CameraController);
-			m_MouseX = x;
-			m_MouseY = y;
-		}
+		// TEXTURES
+		Renderer2D::DrawQuad({ -1.0f,  3.0f, 0.3f }, { 1.0f, 1.0f }, m_TextureStairs);
+		Renderer2D::DrawQuad({ 0.0f,  3.5f, 0.3f }, { 1.0f, 2.0f }, m_TextureTree);
 
-		{
-			DN_PROFILE_SCOPE("RenderCommands");
-			m_Framebuffer->Bind();
-			RenderCommand::SetClearColor(DN_COLOR_PURPLE);
-			RenderCommand::Clear();
-		}
+		// SIMPLE LINE
+		Renderer2D::DrawLine({ 0.0f,  0.0f }, { m_MouseX, m_MouseY }, 0.4f, DN_COLOR_BLACK, 0.03f);
 
-		{
-			DN_PROFILE_SCOPE("Physics");
-			int32 velocityIterations = 6;
-			int32 positionIterations = 2;
+		// CORDINATES GUIDE
+		Renderer2D::DrawQuad({ 0.0f,  0.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
+		Renderer2D::DrawQuad({ 1.0f,  1.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
+		Renderer2D::DrawQuad({ 0.0f,  1.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
+		Renderer2D::DrawQuad({ 0.0f, -1.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
 
-			m_World.Step(ts, velocityIterations, positionIterations);
-		}
+		Renderer2D::EndScene();
 
-		{
-			DN_PROFILE_SCOPE("Renderer2D::Update");
-			Renderer2D::BeginScene(m_CameraController.GetCamera());
-			Renderer2D::DrawQuad({ 0.0f,  0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, DN_COLOR_WHITE, 10);
-
-			for (auto& body : m_Bodies)
-			{
-				body.Draw();
-			}
-
-			// TEXTURES
-			Renderer2D::DrawQuad({ -1.0f,  3.0f, 0.3f }, { 1.0f, 1.0f }, m_TextureStairs);
-			Renderer2D::DrawQuad({ 0.0f,  3.5f, 0.3f }, { 1.0f, 2.0f }, m_TextureTree);
-
-			// SIMPLE LINE
-			//Renderer2D::DrawLine({ 0.0f,  0.0f }, { m_MouseX, m_MouseY }, 0.4f, DN_COLOR_BLACK, 0.03f);
-
-			// CORDINATES GUIDE
-			//Renderer2D::DrawQuad({ 0.0f,  0.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
-			//Renderer2D::DrawQuad({ 1.0f,  1.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
-			//Renderer2D::DrawQuad({ 0.0f,  1.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
-			//Renderer2D::DrawQuad({ 0.0f, -1.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
-
-			Renderer2D::EndScene();
-
-			// RENDER TEXT
-			Renderer2D::BeginScene(m_CameraController.GetCamera(), true);
-			Renderer2D::DrawTextLine("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", { -8.5f, -2.0f, 0.7f }, DN_COLOR_BLACK);
-			Renderer2D::EndScene();
-
-			m_Framebuffer->Unbind();
-		}
+		// RENDER TEXT
+		Renderer2D::BeginScene(m_CameraController.GetCamera(), true);
+		Renderer2D::DrawTextLine("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", { -8.5f, -2.0f, 0.7f }, DN_COLOR_BLACK);
+		Renderer2D::EndScene();
+		*/
+		m_Framebuffer->Unbind();
 
 		// TODO: Check memory leaks
 
