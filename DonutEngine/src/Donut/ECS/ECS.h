@@ -75,7 +75,7 @@ namespace Donut {
 		void DeleteComponentInternal(uint32_t componentID, uint32_t componentIndex);
 		// deletes component in m_Entities
 		bool RemoveComponentInternal(EntityHandle handle, uint32_t componentID);
-		BaseECSComponent* GetComponentInternal(EntityHandle handle, uint32_t componentID);
+		BaseECSComponent* GetComponentInternal(EntityHandle handle, uint32_t componentID, std::vector<uint8_t>& componentsMemArray);
 
 		void UpdateSystemWithMultipleTypes
 		(

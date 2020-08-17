@@ -95,24 +95,24 @@ namespace Donut {
 			componentsMemArray[i] = &m_Components[systemTypes[i]];
 
 		// which component type has lesser amount of components
-		size_t minCountIndex = FindLeastCommonComponent(systemTypes);
+		size_t minTypeIndex = FindLeastCommonComponent(systemTypes);
 
 		// we only need one component type here
-		size_t typeSize = BaseECSComponent::GetSizeOfType(systemTypes[minCountIndex]);
-		std::vector<uint8_t>& memArray = *componentsMemArray[systemTypes[minCountIndex]];
+		size_t typeSize = BaseECSComponent::GetSizeOfType(systemTypes[minTypeIndex]);
+		std::vector<uint8_t>& memArray = *componentsMemArray[minTypeIndex];
 
 		for (size_t i = 0; i < memArray.size(); i += typeSize)
 		{
-			componentsParam[0] = (BaseECSComponent*)&memArray[i];
-			auto entityComponents = HandleToEntity(componentsParam[minCountIndex]->Entity);
+			componentsParam[minTypeIndex] = (BaseECSComponent*)&memArray[i];
+			auto entityComponents = HandleToEntity(componentsParam[minTypeIndex]->Entity);
 
 			bool isEntityValid = true; // does entity have desired components of types
 			for (size_t j = 0; j < systemTypes.size(); j++)
 			{
-				if (j == 0) // to indicate that loop begins from second type
+				if (j == minTypeIndex)
 					continue;
 
-				componentsParam[j] = GetComponentInternal(componentsParam[0]->Entity, systemTypes[j]);
+				componentsParam[j] = GetComponentInternal(componentsParam[0]->Entity, systemTypes[j], *componentsMemArray[j]);
 				if (componentsParam[j] == nullptr)
 				{
 					isEntityValid = false;
@@ -209,13 +209,13 @@ namespace Donut {
 		return false;
 	}
 
-	BaseECSComponent* ECS::GetComponentInternal(EntityHandle handle, uint32_t componentID)
+	BaseECSComponent* ECS::GetComponentInternal(EntityHandle handle, uint32_t componentID, std::vector<uint8_t>& componentsMemArray)
 	{
 		auto entityComponents = HandleToEntity(handle);
 		for (size_t i = 0; i < entityComponents.size(); i++)
 		{
 			if (entityComponents[i].first = componentID)
-				return (BaseECSComponent*)&m_Components[componentID][entityComponents[i].second];
+				return (BaseECSComponent*)&componentsMemArray[entityComponents[i].second];
 		}
 		return nullptr;
 	}
