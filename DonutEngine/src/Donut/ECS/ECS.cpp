@@ -49,14 +49,14 @@ namespace Donut {
 		m_Entities.pop_back();
 	}
 
-	void ECS::UpdateSystems(Timestep ts)
+	void ECS::UpdateSystems(ECSSystemList& systems, Timestep ts)
 	{
 		std::vector<BaseECSComponent*> componentsParam;
 		std::vector<std::vector<uint8_t>*> componentsMemArray;
 
-		for (size_t i = 0; i < m_Systems.size(); i++)
+		for (size_t i = 0; i < systems.size(); i++)
 		{
-			std::vector<uint32_t> systemTypes = m_Systems[i]->GetComponentTypes();
+			std::vector<uint32_t> systemTypes = systems[i]->GetComponentTypes();
 
 			if (systemTypes.size() == 1)
 			{
@@ -66,23 +66,23 @@ namespace Donut {
 				for (size_t j = 0; j < memArray.size(); j += typeSize)
 				{
 					BaseECSComponent* component = (BaseECSComponent*)&memArray[j];
-					m_Systems[i]->UpdateComponents(ts, &component);
+					systems[i]->UpdateComponents(ts, &component);
 				}
 			}
 			else
 			{
-				UpdateSystemWithMultipleTypes(i, systemTypes, componentsParam, componentsMemArray, ts);
+				UpdateSystemWithMultipleTypes(systems, i, systemTypes, componentsParam, componentsMemArray, ts);
 			}
 		}
 	}
 
 	void ECS::UpdateSystemWithMultipleTypes
 	(
-		size_t systemIndex, std::vector<uint32_t> systemTypes, std::vector<BaseECSComponent*>& componentsParam, 
+		ECSSystemList& systems, size_t systemIndex, std::vector<uint32_t> systemTypes, std::vector<BaseECSComponent*>& componentsParam,
 		std::vector<std::vector<uint8_t>*>& componentsMemArray, Timestep ts
 	)
 	{
-		const auto componentFlags = m_Systems[systemIndex]->GetComponentFlags();
+		const auto componentFlags = systems[systemIndex]->GetComponentFlags();
 
 		// preparing temp 'cache'
 		componentsParam.resize(std::max(componentsParam.size(), systemTypes.size()));
@@ -117,7 +117,7 @@ namespace Donut {
 			}
 
 			if (isEntityValid)
-				m_Systems[systemIndex]->UpdateComponents(ts, &componentsParam[0]);
+				systems[systemIndex]->UpdateComponents(ts, &componentsParam[0]);
 		}
 	}
 
@@ -138,13 +138,6 @@ namespace Donut {
 			}
 		}
 		return minIndex;
-	}
-
-	void ECS::RemoveSystem(BaseECSSystem& system)
-	{
-		for (size_t i = 0; i < m_Systems.size(); i++)
-			if (&system == m_Systems[i])
-				m_Systems.erase(m_Systems.begin() + i);
 	}
 
 	void ECS::AddComponentInternal(EntityHandle handle, std::vector<std::pair<uint32_t, uint32_t> >& entityComponents, uint32_t componentID, BaseECSComponent* component)

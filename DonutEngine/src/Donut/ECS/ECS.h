@@ -43,19 +43,9 @@ namespace Donut {
 			return GetComponentInternal(handle, Component::ID, m_Components[Component::ID]);
 		}
 		
-		/* System methods */
-		inline bool AddSystem(BaseECSSystem& system)
-		{
-			if (!system.IsValid())
-				return false;
-
-			m_Systems.push_back(&system);
-			return true;
-		}
-		void UpdateSystems(Timestep ts);
-		void RemoveSystem(BaseECSSystem& system);
+		/* System method */
+		void UpdateSystems(ECSSystemList& systems, Timestep ts);
 	private:
-		std::vector<BaseECSSystem*> m_Systems;
 		// uint32_t - ID of components type
 		// uint8_t in vector - because we don't know type of components we use general size of component
 		std::map<uint32_t, std::vector<uint8_t>> m_Components;
@@ -90,7 +80,7 @@ namespace Donut {
 
 		void UpdateSystemWithMultipleTypes
 		(
-			size_t systemIndex, std::vector<uint32_t> systemTypes, std::vector<BaseECSComponent*>& componentsParam,
+			ECSSystemList& systems, size_t systemIndex, std::vector<uint32_t> systemTypes, std::vector<BaseECSComponent*>& componentsParam,
 			std::vector<std::vector<uint8_t>*>& componentsMemArray, Timestep ts
 		);
 

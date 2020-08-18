@@ -13,14 +13,7 @@ namespace Donut {
 		};
 		BaseECSSystem(const std::vector<uint32_t>& componentTypes) : m_ComponentTypes(componentTypes) {}
  		virtual void UpdateComponents(Timestep ts, BaseECSComponent** components);
-		inline bool IsValid() const
-		{
-			for (size_t i = 0; i < m_ComponentFlags.size(); i++)
-				if ((m_ComponentFlags[i] & FLAG_OPTIONAL) == 0)
-					return true;
-
-			return false;
-		}
+		inline bool IsValid() const;
 
 		inline const std::vector<uint32_t>& GetComponentTypes() const { return m_ComponentTypes; }
 		inline const std::vector<uint32_t>& GetComponentFlags() const { return m_ComponentFlags; }
@@ -36,4 +29,18 @@ namespace Donut {
 		std::vector<uint32_t> m_ComponentFlags;
 	};
 
+
+	class ECSSystemList
+	{
+	public:
+		ECSSystemList() = default;
+
+		void RemoveSystem(BaseECSSystem& system);
+		inline bool AddSystem(BaseECSSystem& system);
+		
+		inline size_t size() const { return m_Systems.size(); }
+		inline BaseECSSystem* operator[](size_t index) const { return m_Systems[index]; }
+	private:
+		std::vector<BaseECSSystem*> m_Systems;
+	};
 }
