@@ -46,12 +46,12 @@ namespace Donut {
 	template<typename Component>
 	uint32_t ECSComponentCreate(std::vector<uint8_t>& memory, EntityHandle entity, BaseECSComponent* component)
 	{
-		uint32_t index = memory.size();
+		size_t index = memory.size();
 		memory.resize(index + Component::SIZE);
 		//copy provided component to provided memory field
 		Component* componentCopy = new(&memory[index]) Component(*(Component*)component);
 		componentCopy->Entity = entity;
-		return index;
+		return (uint32_t)index;
 	}
 
 	template<typename Component>
@@ -62,7 +62,8 @@ namespace Donut {
 	}
 
 	template<typename T>
-	const uint32_t ECSComponent<T>::ID(BaseECSComponent::RegisterComponent(
+	const uint32_t ECSComponent<T>::ID(BaseECSComponent::RegisterComponent
+	(
 		ECSComponentCreate<T>, ECSComponentFree<T>, sizeof(T))
 	);
 

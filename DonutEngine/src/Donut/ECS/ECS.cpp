@@ -82,6 +82,8 @@ namespace Donut {
 		std::vector<std::vector<uint8_t>*>& componentsMemArray, Timestep ts
 	)
 	{
+		const auto componentFlags = m_Systems[systemIndex]->GetComponentFlags();
+
 		// preparing temp 'cache'
 		componentsParam.resize(std::max(componentsParam.size(), systemTypes.size()));
 		componentsMemArray.resize(std::max(componentsMemArray.size(), systemTypes.size()));
@@ -89,7 +91,7 @@ namespace Donut {
 			componentsMemArray[i] = &m_Components[systemTypes[i]];
 
 		// which component type has lesser amount of components
-		size_t minTypeIndex = FindLeastCommonComponent(systemTypes);
+		size_t minTypeIndex = FindLeastCommonComponent(systemTypes, componentFlags);
 
 		// we only need one component type here
 		size_t typeSize = BaseECSComponent::GetSizeOfType(systemTypes[minTypeIndex]);
@@ -107,7 +109,7 @@ namespace Donut {
 					continue;
 
 				componentsParam[j] = GetComponentInternal(componentsParam[0]->Entity, systemTypes[j], *componentsMemArray[j]);
-				if (componentsParam[j] == nullptr)
+				if (componentsParam[j] == nullptr && (componentFlags[j] & BaseECSSystem::FLAG_OPTIONAL) == 0)
 				{
 					isEntityValid = false;
 					break;
@@ -119,14 +121,17 @@ namespace Donut {
 		}
 	}
 
-	size_t ECS::FindLeastCommonComponent(std::vector<uint32_t> systemTypes)
+	size_t ECS::FindLeastCommonComponent(const std::vector<uint32_t>& systemTypes, const std::vector<uint32_t>& systemFlags)
 	{
-		size_t minIndex = 0, minCount = -1;
+		size_t minIndex = -1, minCount = -1;
 		for (size_t i = 0; i < systemTypes.size(); i++)
 		{
+			if ((systemFlags[i] & BaseECSSystem::FLAG_OPTIONAL) != 0)
+				continue;
+
 			size_t typeSize = BaseECSComponent::GetSizeOfType(systemTypes[i]);
 			size_t count = m_Components[systemTypes[i]].size() / typeSize;
-			if (count < minCount)
+			if (count <= minCount)
 			{
 				minCount = count;
 				minIndex = i;

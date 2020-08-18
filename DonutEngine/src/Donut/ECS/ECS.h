@@ -31,7 +31,6 @@ namespace Donut {
 			AddComponentInternal(handle, Component::ID, component);
 		}
 
-		// Which component shall be removed is determined by passed templated type name
 		template<typename Component>
 		inline bool RemoveComponent(EntityHandle handle)
 		{
@@ -45,9 +44,13 @@ namespace Donut {
 		}
 		
 		/* System methods */
-		inline void AddSystem(BaseECSSystem& system)
+		inline bool AddSystem(BaseECSSystem& system)
 		{
+			if (!system.IsValid())
+				return false;
+
 			m_Systems.push_back(&system);
+			return true;
 		}
 		void UpdateSystems(Timestep ts);
 		void RemoveSystem(BaseECSSystem& system);
@@ -91,7 +94,7 @@ namespace Donut {
 			std::vector<std::vector<uint8_t>*>& componentsMemArray, Timestep ts
 		);
 
-		size_t FindLeastCommonComponent(std::vector<uint32_t> systemTypes);
+		size_t FindLeastCommonComponent(const std::vector<uint32_t>& systemTypes, const std::vector<uint32_t>& systemFlags);
 	};
 
 }
