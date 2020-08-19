@@ -6,17 +6,19 @@
 
 namespace Donut {
 
-	struct Transform : public ECSComponent<Transform>
+	Renderer2DSystem::Renderer2DSystem() : BaseECSSystem()
 	{
-		Transform(const glm::mat4& transform) : transform(transform) {}
-		glm::mat4 transform;
-	};
+		AddComponent(TransformComponent::ID);
+		AddComponent(ColorComponent::ID);
+	}
 
-	struct Color : public ECSComponent<Color>
+	void Renderer2DSystem::UpdateComponents(Timestep ts, BaseECSComponent** components)
 	{
-		Color(const glm::vec4& color) : color(color) {}
-		glm::vec4 color;
-	};
+		TransformComponent* t = (TransformComponent*)components[0];
+		ColorComponent* c = (ColorComponent*)components[1];
+
+		Renderer2D::DrawQuad(t->transform, c->color);
+	}
 
 
 
@@ -64,11 +66,13 @@ namespace Donut {
 		Box boxDynamic(&m_World, &fixtureDef, { 0.0f, 4.0f, 0.6f }, { 1.0f, 1.0f }, 0.0f, DN_COLOR_RED);
 		m_Bodies.push_back(boxDynamic);
 
-		Transform transform(glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f })
+		TransformComponent transform(glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f })
 			* glm::rotate(glm::mat4(1.0f), 0.0f, { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { 1.0f, 1.0f, 1.0f }));
-		Color color(DN_COLOR_WHITE);
+		ColorComponent color(DN_COLOR_WHITE);
 		m_Entity = m_ECS.MakeEntity(transform, color);
+
+		m_SystemList.AddSystem(m_Renderer2DSystem);
 	}
 
 	void EditorLayer::OnUpdate(Timestep ts)
@@ -89,9 +93,7 @@ namespace Donut {
 		RenderCommand::Clear();
 		
 		Renderer2D::BeginScene(m_CameraController.GetCamera());
-		Transform* t = (Transform*)m_ECS.GetComponent<Transform>(m_Entity);
-		Color* c = (Color*)m_ECS.GetComponent<Color>(m_Entity);
-		Renderer2D::DrawQuad(t->transform, c->color);
+		m_ECS.UpdateSystems(m_SystemList, ts);
 		Renderer2D::EndScene();
 		/*
 		int32 velocityIterations = 6;
