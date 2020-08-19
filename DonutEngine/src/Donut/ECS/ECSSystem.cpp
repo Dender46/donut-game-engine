@@ -12,9 +12,12 @@ namespace Donut {
 		return false;
 	}
 
+	void BaseECSSystem::UpdateComponents(Timestep ts, BaseECSComponent** components)
+	{
+	}
 
 
-	inline bool ECSSystemList::AddSystem(BaseECSSystem& system)
+	bool ECSSystemList::AddSystem(BaseECSSystem& system)
 	{
 		if (!system.IsValid())
 			return false;

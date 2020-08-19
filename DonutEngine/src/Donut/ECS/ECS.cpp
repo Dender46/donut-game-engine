@@ -108,7 +108,7 @@ namespace Donut {
 				if (j == minTypeIndex)
 					continue;
 
-				componentsParam[j] = GetComponentInternal(componentsParam[0]->Entity, systemTypes[j], *componentsMemArray[j]);
+				componentsParam[j] = GetComponentInternal(componentsParam[minTypeIndex]->Entity, systemTypes[j], *componentsMemArray[j]);
 				if (componentsParam[j] == nullptr && (componentFlags[j] & BaseECSSystem::FLAG_OPTIONAL) == 0)
 				{
 					isEntityValid = false;
