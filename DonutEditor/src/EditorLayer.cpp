@@ -6,22 +6,6 @@
 
 namespace Donut {
 
-	Renderer2DSystem::Renderer2DSystem() : BaseECSSystem()
-	{
-		AddComponent(TransformComponent::ID);
-		AddComponent(ColorComponent::ID);
-	}
-
-	void Renderer2DSystem::UpdateComponents(Timestep ts, BaseECSComponent** components)
-	{
-		TransformComponent* t = (TransformComponent*)components[0];
-		ColorComponent* c = (ColorComponent*)components[1];
-
-		Renderer2D::DrawQuad(t->transform, c->color);
-	}
-
-
-
 	EditorLayer::EditorLayer()
 		: Layer("DonutEditorLayer"), m_CameraController(1280.0f / 720.0f, true), m_ParticleSystem(1000), m_World(b2Vec2(0.0f, -3.0f))
 	{
@@ -66,10 +50,14 @@ namespace Donut {
 		Box boxDynamic(&m_World, &fixtureDef, { 0.0f, 4.0f, 0.6f }, { 1.0f, 1.0f }, 0.0f, DN_COLOR_RED);
 		m_Bodies.push_back(boxDynamic);
 
-		TransformComponent transform(glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f })
+		TransformComponent transform;
+		transform.transform = glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f })
 			* glm::rotate(glm::mat4(1.0f), 0.0f, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { 1.0f, 1.0f, 1.0f }));
-		ColorComponent color(DN_COLOR_WHITE);
+			* glm::scale(glm::mat4(1.0f), { 1.0f, 1.0f, 1.0f });
+		ColorComponent color;
+		color.color = DN_COLOR_WHITE;
+
+
 		m_Entity = m_ECS.MakeEntity(transform, color);
 
 		m_SystemList.AddSystem(m_Renderer2DSystem);
