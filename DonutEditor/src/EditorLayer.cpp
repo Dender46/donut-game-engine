@@ -7,7 +7,7 @@
 namespace Donut {
 
 	EditorLayer::EditorLayer()
-		: Layer("DonutEditorLayer"), m_CameraController(1280.0f / 720.0f, true), m_ParticleSystem(1000), m_World(b2Vec2(0.0f, -3.0f))
+		: Layer("DonutEditorLayer"), m_CameraController(1280.0f / 720.0f, true), m_World(b2Vec2(0.0f, -3.0f))
 	{
 	}
 
@@ -24,18 +24,6 @@ namespace Donut {
 
 		m_TextureStairs = SubTexture2D::CreateFromTexture(m_SpriteSheet, { 2.0f, 5.0f }, { 16.0f, 16.0f });
 		m_TextureTree = SubTexture2D::CreateFromTexture(m_SpriteSheet, { 16.0f, 5.0f }, { 16.0f, 16.0f }, { 1.0f, 2.0f });
-
-		m_ParticleProps.Lifetime = 1.0f;
-		m_ParticleProps.Position = { 0.0f, 0.0f };
-		m_ParticleProps.ColorBegin = { 255.0f / 255.0f, 194.0f / 255.0f, 144.0f / 255.0f, 1.0f };
-		m_ParticleProps.ColorEnd = { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
-
-		m_ParticleProps.SizeBegin = 0.5f;
-		m_ParticleProps.SizeEnd = 0.0f;
-		m_ParticleProps.SizeVariation = 0.3f;
-
-		m_ParticleProps.Velocity = { 0.0f, 0.0f };
-		m_ParticleProps.VelocityVariation = { 3.0f, 1.0f };
 
 		// INITIALIZE PHYSICS OBJECTS
 		// Ground
@@ -117,20 +105,6 @@ namespace Donut {
 		Renderer2D::EndScene();
 		*/
 		m_Framebuffer->Unbind();
-
-		// TODO: Check memory leaks
-
-		//if (Input::IsMouseButtonPressed(DN_MOUSE_BUTTON_LEFT))
-		//{
-		//	m_ParticleProps.Position = { m_MouseX, m_MouseY };
-		//
-		//	for (int i = 0; i < 5; i++)
-		//		m_ParticleSystem.Emit(m_ParticleProps);
-		//}
-
-		//m_ParticleSystem.OnUpdate(ts);
-		//m_ParticleSystem.OnRender(m_CameraController.GetCamera());
-
 	}
 
 	void EditorLayer::OnImGuiRender()

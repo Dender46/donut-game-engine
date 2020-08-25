@@ -35,7 +35,6 @@
 #include "Donut/Physics/Box.h"
 
 // ----- Systems -----
-#include "Donut/Systems/ParticleSystem.h"
 #include "Donut/Systems/Font.h"
 
 // ----- ECS -----
