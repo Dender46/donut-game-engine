@@ -42,3 +42,4 @@
 #include "Donut/ECS/ECS.h"
 #include "Donut/ECS/Components/ECSComponents.h"
 #include "Donut/ECS/Systems/ECSSystems.h"
+#include "Donut/ECS/Scene.h"

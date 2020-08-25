@@ -58,9 +58,7 @@ namespace Donut {
 		color.color = DN_COLOR_WHITE;
 
 
-		m_Entity = m_ECS.MakeEntity(transform, color);
-
-		m_SystemList.AddSystem(m_Renderer2DSystem);
+		m_Scene.MakeEntity(transform, color);
 	}
 
 	void EditorLayer::OnUpdate(Timestep ts)
@@ -81,7 +79,7 @@ namespace Donut {
 		RenderCommand::Clear();
 		
 		Renderer2D::BeginScene(m_CameraController.GetCamera());
-		m_ECS.UpdateSystems(m_SystemList, ts);
+		m_Scene.Update(ts);
 		Renderer2D::EndScene();
 		/*
 		int32 velocityIterations = 6;
