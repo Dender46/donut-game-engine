@@ -7,7 +7,7 @@ namespace Donut {
 	struct BaseECSComponent;
 
 	typedef void* EntityHandle;
-	typedef uint32_t(*ECSComponentCreateFunction)(std::vector<uint8_t>& memory, EntityHandle entity, BaseECSComponent* component);
+	typedef uint32_t(*ECSComponentCreateFunction)(std::vector<uint8_t>& memory, EntityHandle entity, const BaseECSComponent& component);
 	typedef void (*ECSComponentFreeFunction)(BaseECSComponent* component);
 
 	struct BaseECSComponent
@@ -44,12 +44,12 @@ namespace Donut {
 	};
 	
 	template<typename Component>
-	uint32_t ECSComponentCreate(std::vector<uint8_t>& memory, EntityHandle entity, BaseECSComponent* component)
+	uint32_t ECSComponentCreate(std::vector<uint8_t>& memory, EntityHandle entity, const BaseECSComponent& component)
 	{
 		size_t index = memory.size();
 		memory.resize(index + Component::SIZE);
-		//copy provided component to provided memory field
-		Component* componentCopy = new(&memory[index]) Component(*(Component*)component);
+		// Make a copy of component to specific memory field
+		Component* componentCopy = new(&memory[index]) Component(*(Component*)(&component));
 		componentCopy->Entity = entity;
 		return (uint32_t)index;
 	}

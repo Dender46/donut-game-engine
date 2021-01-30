@@ -29,7 +29,7 @@ namespace Donut {
 
 		/* Component methods */
 		template<typename Component>
-		inline void AddComponent(EntityHandle handle, Component* component)
+		inline void AddComponent(EntityHandle handle, Component& component)
 		{
 			AddComponentInternal(handle, *HandleToEntity(handle), Component::ID, component);
 		}
@@ -75,7 +75,7 @@ namespace Donut {
 		}
 
 
-		void AddComponentInternal(EntityHandle handle, std::vector<std::pair<uint32_t, uint32_t> >& entityComponents, uint32_t componentID, BaseECSComponent* component);
+		void AddComponentInternal(EntityHandle handle, std::vector<std::pair<uint32_t, uint32_t> >& entityComponents, uint32_t componentID, const BaseECSComponent& component);
 		// deletes component in m_Components
 		void DeleteComponentInternal(uint32_t componentID, uint32_t componentIndex);
 		// deletes component in m_Entities

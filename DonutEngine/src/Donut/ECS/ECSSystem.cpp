@@ -14,6 +14,7 @@ namespace Donut {
 
 	void BaseECSSystem::UpdateComponents(Timestep ts, BaseECSComponent** components)
 	{
+		// This should be overriden by child class
 	}
 
 

@@ -36,7 +36,7 @@ namespace Donut {
 		EntityHandle handle = (EntityHandle)newEntity;
 		
 		for (size_t i = 0; i < numComponents; i++)
-			AddComponentInternal(handle, newEntity->second, componentIDs[i], components[i]);
+			AddComponentInternal(handle, newEntity->second, componentIDs[i], *components[i]);
 		
 		newEntity->first = (uint32_t)m_Entities.size();
 		m_Entities.push_back(newEntity);
@@ -151,7 +151,7 @@ namespace Donut {
 		return minIndex;
 	}
 
-	void ECS::AddComponentInternal(EntityHandle handle, std::vector<std::pair<uint32_t, uint32_t> >& entityComponents, uint32_t componentID, BaseECSComponent* component)
+	void ECS::AddComponentInternal(EntityHandle handle, std::vector<std::pair<uint32_t, uint32_t> >& entityComponents, uint32_t componentID, const BaseECSComponent& component)
 	{
 		auto createFn = BaseECSComponent::GetCreateFunctionOfType(componentID);
 
