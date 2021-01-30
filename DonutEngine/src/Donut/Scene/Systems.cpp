@@ -1,6 +1,6 @@
 #include "dnpch.h"
-#include "Donut/ECS/Components/ECSComponents.h"
-#include "Donut/ECS/Systems/ECSSystems.h"
+#include "Donut/Scene/Systems.h"
+#include "Donut/Scene/Components.h"
 
 #include "Donut/Renderer/Renderer2D.h"
 
@@ -9,7 +9,6 @@ namespace Donut {
 	Renderer2DSystem::Renderer2DSystem() : BaseECSSystem()
 	{
 		AddComponent(TransformComponent::ID);
-		AddComponent(ColorComponent::ID);
 		AddComponent(ColorComponent::ID);
 	}
 
@@ -20,7 +19,5 @@ namespace Donut {
 
 		Renderer2D::DrawQuad(t->transform, c->color);
 	}
-
-
 
 }

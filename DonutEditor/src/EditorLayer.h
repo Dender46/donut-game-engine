@@ -23,17 +23,6 @@ namespace Donut {
 		Framebuffer::FramebufferProps m_FramebufferProps = { 640, 480 };
 		Ref<Framebuffer> m_Framebuffer;
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
-
-		// Textures
-		Ref<Texture2D> m_CheckerboardTexture, m_SpriteSheet;
-		Ref<SubTexture2D> m_TextureStairs, m_TextureTree;
-
-		// Physics
-		b2World m_World;
-		std::vector<Box> m_Bodies;
-
-		float m_MouseX = 0.0f;
-		float m_MouseY = 0.0f;
 	};
 
 }

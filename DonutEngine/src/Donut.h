@@ -39,6 +39,8 @@
 
 // ----- ECS -----
 #include "Donut/ECS/ECS.h"
-#include "Donut/ECS/Components/ECSComponents.h"
-#include "Donut/ECS/Systems/ECSSystems.h"
-#include "Donut/ECS/Scene.h"
+
+// ----- Scene -----
+#include "Donut/Scene/Scene.h"
+#include "Donut/Scene/Systems.h"
+#include "Donut/Scene/Components.h"

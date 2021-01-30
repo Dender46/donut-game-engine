@@ -7,46 +7,35 @@
 namespace Donut {
 
 	EditorLayer::EditorLayer()
-		: Layer("DonutEditorLayer"), m_CameraController(1280.0f / 720.0f, true), m_World(b2Vec2(0.0f, -3.0f))
+		: Layer("DonutEditorLayer"), m_CameraController(1280.0f / 720.0f, true)
 	{
 	}
 
 	void EditorLayer::OnAttach()
 	{
-		// TEXT RENDERING
-		Font::Init();
-		Font::LoadFont("assets/fonts/roboto.ttf", 480);
-
 		m_Framebuffer = Framebuffer::Create(m_FramebufferProps);
 
-		m_CheckerboardTexture = Texture2D::Create("assets/textures/checker_board.png");
-		m_SpriteSheet = Texture2D::Create("assets/textures/tilemap.png");
+		// Add rendering system to ECS, otherwise it doesn't throw error and doesn't draw anything
+		// TODO: remove static declaration
+		static Renderer2DSystem rendererSystem;
+		m_Scene.AddSystem(rendererSystem);
 
-		m_TextureStairs = SubTexture2D::CreateFromTexture(m_SpriteSheet, { 2.0f, 5.0f }, { 16.0f, 16.0f });
-		m_TextureTree = SubTexture2D::CreateFromTexture(m_SpriteSheet, { 16.0f, 5.0f }, { 16.0f, 16.0f }, { 1.0f, 2.0f });
-
-		// INITIALIZE PHYSICS OBJECTS
-		// Ground
-		b2PolygonShape groundBox;
-		Box boxGround(&m_World, &groundBox, 0.0f, { 0.0f, -6.0f, 0.6f }, { 10.0f, 5.0f }, 0.0f, DN_COLOR_BLUE);
-		m_Bodies.push_back(boxGround);
-
-		// Dynamic box
-		b2FixtureDef fixtureDef;
-		fixtureDef.density = 1.0f;
-		fixtureDef.friction = 0.3f;
-		Box boxDynamic(&m_World, &fixtureDef, { 0.0f, 4.0f, 0.6f }, { 1.0f, 1.0f }, 0.0f, DN_COLOR_RED);
-		m_Bodies.push_back(boxDynamic);
+		// Spaghetti code here, just to test out code
+		// Square
+		NameComponent name;
 
 		TransformComponent transform;
 		transform.transform = glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f })
 			* glm::rotate(glm::mat4(1.0f), 0.0f, { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { 1.0f, 1.0f, 1.0f });
 		ColorComponent color;
-		color.color = DN_COLOR_WHITE;
+		color.color = DN_COLOR_BLACK;
 
-
-		m_Scene.MakeEntity(transform, color);
+		// Create entity and add all components
+		EntityHandle squareEntity = m_Scene.CreateEntity();
+		m_Scene.AddComponent(squareEntity, name);
+		m_Scene.AddComponent(squareEntity, transform);
+		m_Scene.AddComponent(squareEntity, color);
 	}
 
 	void EditorLayer::OnUpdate(Timestep ts)
@@ -57,53 +46,14 @@ namespace Donut {
 		if (m_ViewportFocused)
 			m_CameraController.OnUpdate(ts);
 		
-
-		auto [x, y] = Input::GetRelativeMousePosition(m_CameraController);
-		m_MouseX = x;
-		m_MouseY = y;
-		
 		m_Framebuffer->Bind();
 		RenderCommand::SetClearColor(DN_COLOR_PURPLE);
 		RenderCommand::Clear();
 		
 		Renderer2D::BeginScene(m_CameraController.GetCamera());
-		m_Scene.Update(ts);
+		m_Scene.OnUpdate(ts);
 		Renderer2D::EndScene();
-		/*
-		int32 velocityIterations = 6;
-		int32 positionIterations = 2;
-
-		m_World.Step(ts, velocityIterations, positionIterations);
 		
-		
-		Renderer2D::BeginScene(m_CameraController.GetCamera());
-		Renderer2D::DrawQuad({ 0.0f,  0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, DN_COLOR_WHITE, 10);
-
-		for (auto& body : m_Bodies)
-		{
-			body.Draw();
-		}
-
-		// TEXTURES
-		Renderer2D::DrawQuad({ -1.0f,  3.0f, 0.3f }, { 1.0f, 1.0f }, m_TextureStairs);
-		Renderer2D::DrawQuad({ 0.0f,  3.5f, 0.3f }, { 1.0f, 2.0f }, m_TextureTree);
-
-		// SIMPLE LINE
-		Renderer2D::DrawLine({ 0.0f,  0.0f }, { m_MouseX, m_MouseY }, 0.4f, DN_COLOR_BLACK, 0.03f);
-
-		// CORDINATES GUIDE
-		Renderer2D::DrawQuad({ 0.0f,  0.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
-		Renderer2D::DrawQuad({ 1.0f,  1.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
-		Renderer2D::DrawQuad({ 0.0f,  1.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
-		Renderer2D::DrawQuad({ 0.0f, -1.0f, 0.8f }, {  0.1f,  0.1f }, DN_COLOR_BLACK);
-
-		Renderer2D::EndScene();
-
-		// RENDER TEXT
-		Renderer2D::BeginScene(m_CameraController.GetCamera(), true);
-		Renderer2D::DrawTextLine("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", { -8.5f, -2.0f, 0.7f }, DN_COLOR_BLACK);
-		Renderer2D::EndScene();
-		*/
 		m_Framebuffer->Unbind();
 	}
 

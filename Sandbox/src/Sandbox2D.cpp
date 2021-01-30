@@ -6,7 +6,7 @@
 
 
 Sandbox2D::Sandbox2D()
-	: Layer("Sandbox"), m_CameraController(1280.0f / 720.0f, true), m_ParticleSystem(1000), m_World(b2Vec2(0.0f, -3.0f))
+	: Layer("Sandbox"), m_CameraController(1280.0f / 720.0f, true), m_World(b2Vec2(0.0f, -3.0f))
 {
 }
 
@@ -18,18 +18,6 @@ void Sandbox2D::OnAttach()
 	m_TextureStairs	= Donut::SubTexture2D::CreateFromTexture(m_SpriteSheet, { 2.0f, 5.0f }, { 16.0f, 16.0f });
 	m_TextureTree	= Donut::SubTexture2D::CreateFromTexture(m_SpriteSheet, { 16.0f, 5.0f }, { 16.0f, 16.0f }, { 1.0f, 2.0f });
 
-	m_ParticleProps.Lifetime	= 1.0f;
-	m_ParticleProps.Position	= { 0.0f, 0.0f };
-	m_ParticleProps.ColorBegin	= { 255.0f / 255.0f, 194.0f / 255.0f, 144.0f / 255.0f, 1.0f };
-	m_ParticleProps.ColorEnd	= { 0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 1.0f };
-
-	m_ParticleProps.SizeBegin		= 0.5f;
-	m_ParticleProps.SizeEnd			= 0.0f;
-	m_ParticleProps.SizeVariation	= 0.3f;
-	
-	m_ParticleProps.Velocity			= { 0.0f, 0.0f };
-	m_ParticleProps.VelocityVariation	= { 3.0f, 1.0f };
-	
 	// INITIALIZE PHYSICS OBJECTS
 	// Ground
 	b2PolygonShape groundBox;
@@ -113,21 +101,6 @@ void Sandbox2D::OnUpdate(Donut::Timestep ts)
 		//Donut::Renderer2D::DrawQuad({ 0.0f,  0.0f, 0.8f }, { 1.0f, 1.0f }, fontTexture, DN_COLOR_WHITE, 1.0f);
 		Donut::Renderer2D::EndScene();
 	}
-
-	// TODO: Check memory leaks
-	
-	if (Donut::Input::IsMouseButtonPressed(DN_MOUSE_BUTTON_LEFT))
-	{
-		m_ParticleProps.Position = { m_MouseX, m_MouseY };
-		
-		for (int i = 0; i < 5; i++)
-			m_ParticleSystem.Emit(m_ParticleProps);
-	}
-
-
-	//m_ParticleSystem.OnUpdate(ts);
-	//m_ParticleSystem.OnRender(m_CameraController.GetCamera());
-	
 }
 
 void Sandbox2D::OnImGuiRender()
