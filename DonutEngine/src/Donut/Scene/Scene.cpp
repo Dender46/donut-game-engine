@@ -3,9 +3,10 @@
 
 namespace Donut {
 
-	Scene::~Scene()
+	void Scene::AddSystem(BaseECSSystem& system)
 	{
-		
+		bool isSystemValid = m_SystemList.AddSystem(system);
+		DN_CORE_ASSERT(isSystemValid, "System is not valid!");
 	}
 
 	EntityHandle Scene::CreateEntity()

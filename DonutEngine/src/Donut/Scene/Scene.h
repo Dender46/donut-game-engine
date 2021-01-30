@@ -8,16 +8,18 @@ namespace Donut {
 	class Scene
 	{
 	public:
-		Scene() = default;
-		~Scene();
+		Scene()  = default;
+		~Scene() = default;
 
-		void AddSystem(BaseECSSystem& system)
-		{
-			bool isSystemValid = m_SystemList.AddSystem(system);
-			DN_CORE_ASSERT(isSystemValid, "System is not valid!");
-		}
+		void AddSystem(BaseECSSystem& system);
 
 		EntityHandle CreateEntity();
+
+		template<class ...Components>
+		EntityHandle CreateEntity(Components&... entitycomponents)
+		{
+			return m_ECS.MakeEntity(entitycomponents...);
+		}
 
 		template<typename Component>
 		void AddComponent(EntityHandle entity, Component& component)

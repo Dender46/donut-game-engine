@@ -16,15 +16,13 @@ namespace Donut {
 		EntityHandle MakeEntity();
 		EntityHandle MakeEntity(BaseECSComponent** components, const uint32_t* componentIDs, size_t numComponents);
 		void RemoveEntity(EntityHandle handle);
-
-		// Currently I don't know how to solve issue with linkage when using this method...
-		// So this should NOT be used. Instead use more friendly MakeEntity() or version with explicit arguments above ^
-		template<class... Components>
-		EntityHandle MakeEntity(Components&&... entitycomponents)
+		
+		template<class ...Components>
+		EntityHandle MakeEntity(Components&... entitycomponents)
 		{
-			BaseECSComponent* entity_components[] = { (&entitycomponents)... };
-			uint32_t entity_componentIDs[] = { (std::remove_reference_t<Components>::ID)... }; // Or any function that removes references
-			return MakeEntity(entity_components, entity_componentIDs, sizeof...(Components));
+			BaseECSComponent* components[] = { &entitycomponents... };
+			uint32_t componentIDs[] = { Components::ID... };
+			return MakeEntity(components, componentIDs, sizeof...(Components));
 		}
 
 		/* Component methods */

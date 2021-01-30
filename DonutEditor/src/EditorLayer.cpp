@@ -32,10 +32,7 @@ namespace Donut {
 		color.color = DN_COLOR_BLACK;
 
 		// Create entity and add all components
-		EntityHandle squareEntity = m_Scene.CreateEntity();
-		m_Scene.AddComponent(squareEntity, name);
-		m_Scene.AddComponent(squareEntity, transform);
-		m_Scene.AddComponent(squareEntity, color);
+		EntityHandle squareEntity = m_Scene.CreateEntity(name, transform, color);
 	}
 
 	void EditorLayer::OnUpdate(Timestep ts)
