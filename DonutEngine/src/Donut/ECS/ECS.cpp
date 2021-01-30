@@ -19,6 +19,17 @@ namespace Donut {
 			delete entity;
 	}
 
+	EntityHandle ECS::MakeEntity()
+	{
+		std::pair<uint32_t, std::vector<std::pair<uint32_t, uint32_t>>>* newEntity = new std::pair<uint32_t, std::vector<std::pair<uint32_t, uint32_t>>>();
+		EntityHandle handle = (EntityHandle)newEntity;
+
+		newEntity->first = (uint32_t)m_Entities.size();
+		m_Entities.push_back(newEntity);
+
+		return handle;
+	}
+
 	EntityHandle ECS::MakeEntity(BaseECSComponent** components, const uint32_t* componentIDs, size_t numComponents)
 	{
 		std::pair<uint32_t, std::vector<std::pair<uint32_t, uint32_t>>> * newEntity = new std::pair<uint32_t, std::vector<std::pair<uint32_t, uint32_t>>>();

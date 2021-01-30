@@ -13,9 +13,12 @@ namespace Donut {
 		~ECS();
 
 		/* Entity methods */
+		EntityHandle MakeEntity();
 		EntityHandle MakeEntity(BaseECSComponent** components, const uint32_t* componentIDs, size_t numComponents);
 		void RemoveEntity(EntityHandle handle);
 
+		// Currently I don't know how to solve issue with linkage when using this method...
+		// So this should NOT be used. Instead use more friendly MakeEntity() or version with explicit arguments above ^
 		template<class... Components>
 		EntityHandle MakeEntity(Components&&... entitycomponents)
 		{
@@ -28,7 +31,7 @@ namespace Donut {
 		template<typename Component>
 		inline void AddComponent(EntityHandle handle, Component* component)
 		{
-			AddComponentInternal(handle, Component::ID, component);
+			AddComponentInternal(handle, HandleToEntity(handle), Component::ID, component);
 		}
 
 		template<typename Component>
