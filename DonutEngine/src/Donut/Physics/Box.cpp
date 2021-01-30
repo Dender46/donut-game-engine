@@ -25,12 +25,13 @@ namespace Donut {
 		if (phProps->density > 0)
 			bodyDef.type = b2_dynamicBody;
 		bodyDef.position.Set(position.x, position.y);
-		m_Body = world->CreateBody(&bodyDef);
+		bodyDef.angle = rotation;
 
 		b2PolygonShape dynamicBox;
 		dynamicBox.SetAsBox(m_Size.x, m_Size.y);
-
 		phProps->shape = &dynamicBox;
+
+		m_Body = world->CreateBody(&bodyDef);
 		m_Body->CreateFixture(phProps);
 	}
 
