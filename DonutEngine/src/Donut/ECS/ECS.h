@@ -31,7 +31,7 @@ namespace Donut {
 		template<typename Component>
 		inline void AddComponent(EntityHandle handle, Component* component)
 		{
-			AddComponentInternal(handle, HandleToEntity(handle), Component::ID, component);
+			AddComponentInternal(handle, *HandleToEntity(handle), Component::ID, component);
 		}
 
 		template<typename Component>
@@ -68,9 +68,10 @@ namespace Donut {
 			return HandleToRawType(handle)->first;
 		}
 
-		inline std::vector<std::pair<uint32_t, uint32_t>> HandleToEntity(EntityHandle handle)
+		// If we need to modify entity's component list (add/remove) we should return pointer here
+		inline std::vector<std::pair<uint32_t, uint32_t>>* HandleToEntity(EntityHandle handle)
 		{
-			return HandleToRawType(handle)->second;
+			return &(HandleToRawType(handle)->second);
 		}
 
 

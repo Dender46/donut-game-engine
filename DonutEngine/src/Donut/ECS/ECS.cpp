@@ -46,7 +46,7 @@ namespace Donut {
 
 	void ECS::RemoveEntity(EntityHandle handle)
 	{
-		std::vector<std::pair<uint32_t, uint32_t>>& entity = HandleToEntity(handle);
+		std::vector<std::pair<uint32_t, uint32_t>>& entity = *HandleToEntity(handle);
 		for (size_t i = 0; i < entity.size(); i++)
 			DeleteComponentInternal(entity[i].first, entity[i].second);
 
@@ -111,7 +111,7 @@ namespace Donut {
 		for (size_t i = 0; i < memArray.size(); i += typeSize)
 		{
 			componentsParam[minTypeIndex] = (BaseECSComponent*)&memArray[i];
-			auto entityComponents = HandleToEntity(componentsParam[minTypeIndex]->Entity);
+			auto& entityComponents = *HandleToEntity(componentsParam[minTypeIndex]->Entity);
 
 			bool isEntityValid = true; // does entity have desired components of types
 			for (size_t j = 0; j < systemTypes.size(); j++)
@@ -180,7 +180,7 @@ namespace Donut {
 		}
 
 		std::memcpy(destComp, srcComp, typeSize);
-		auto entity = HandleToEntity(destComp->Entity);
+		auto& entity = *HandleToEntity(destComp->Entity);
 		for (size_t i = 0; i < entity.size(); i++)
 		{
 			if (entity[i].first == componentID)
@@ -195,7 +195,7 @@ namespace Donut {
 
 	bool ECS::RemoveComponentInternal(EntityHandle handle, uint32_t componentID)
 	{
-		auto entityComponents = HandleToEntity(handle);
+		auto& entityComponents = *HandleToEntity(handle);
 		for (size_t i = 0; i < entityComponents.size(); i++)
 		{
 			if (entityComponents[i].first == componentID)
@@ -213,7 +213,7 @@ namespace Donut {
 
 	BaseECSComponent* ECS::GetComponentInternal(EntityHandle handle, uint32_t componentID, std::vector<uint8_t>& componentsMemArray)
 	{
-		auto entityComponents = HandleToEntity(handle);
+		auto& entityComponents = *HandleToEntity(handle);
 		for (size_t i = 0; i < entityComponents.size(); i++)
 		{
 			if (entityComponents[i].first == componentID)
