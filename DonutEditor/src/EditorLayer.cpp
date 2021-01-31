@@ -20,19 +20,12 @@ namespace Donut {
 		static Renderer2DSystem rendererSystem;
 		m_Scene.AddSystem(rendererSystem);
 
-		// Spaghetti code here, just to test out code
-		// Square
-		NameComponent name;
-
-		TransformComponent transform;
-		transform.transform = glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 0.0f })
-			* glm::rotate(glm::mat4(1.0f), 0.0f, { 0.0f, 0.0f, 1.0f })
-			* glm::scale(glm::mat4(1.0f), { 1.0f, 1.0f, 1.0f });
-		ColorComponent color;
-		color.color = DN_COLOR_BLACK;
+		// Square entity initialization
+		ColorComponent color = { DN_COLOR_GREEN };
 
 		// Create entity and add all components
-		EntityHandle squareEntity = m_Scene.CreateEntity(name, transform, color);
+		static Entity squareEntity = m_Scene.CreateEntity();
+		squareEntity.AddComponent(color);
 	}
 
 	void EditorLayer::OnUpdate(Timestep ts)

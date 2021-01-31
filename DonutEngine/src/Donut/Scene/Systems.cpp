@@ -17,7 +17,7 @@ namespace Donut {
 		TransformComponent* t = (TransformComponent*)components[0];
 		ColorComponent* c = (ColorComponent*)components[1];
 
-		Renderer2D::DrawQuad(t->transform, c->color);
+		Renderer2D::DrawQuad(t->Transform, c->Color);
 	}
 
 }

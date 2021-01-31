@@ -1,5 +1,7 @@
 #include "dnpch.h"
 #include "Donut/Scene/Scene.h"
+#include "Donut/Scene/Components.h"
+#include "Donut/Scene/Entity.h"
 
 namespace Donut {
 
@@ -9,9 +11,12 @@ namespace Donut {
 		DN_CORE_ASSERT(isSystemValid, "System is not valid!");
 	}
 
-	EntityHandle Scene::CreateEntity()
+	Entity Scene::CreateEntity(const std::string& name)
 	{
-		return m_ECS.MakeEntity();
+		Entity newEntity = { this, m_ECS.MakeEntity() };
+		newEntity.AddComponent(NameComponent(name.empty() ? "Unnamed Entity" : name));
+		newEntity.AddComponent(TransformComponent());
+		return newEntity;
 	}
 
 	void Scene::OnUpdate(Timestep ts)

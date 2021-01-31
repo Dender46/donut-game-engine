@@ -11,17 +11,35 @@ namespace Donut {
 
 	struct NameComponent : public ECSComponent<NameComponent>
 	{
-		std::string name{ "Unnamed Entity" };
+		std::string Name{ "Unnamed Entity" };
+
+		NameComponent() = default;
+		NameComponent(const NameComponent&) = default;
+		NameComponent(const std::string & name)
+			: Name(name) {}
 	};
 
 	struct TransformComponent : public ECSComponent<TransformComponent>
 	{
-		glm::mat4 transform{ 1.0f };
+		glm::mat4 Transform{ 1.0f };
+
+		TransformComponent() = default;
+		TransformComponent(const TransformComponent&) = default;
+		TransformComponent(const glm::mat4 & transform)
+			: Transform(transform) {}
+
+		operator glm::mat4& () { return Transform; }
+		operator const glm::mat4& () const { return Transform; }
 	};
 
 	struct ColorComponent : public ECSComponent<ColorComponent>
 	{
-		glm::vec4 color{ 1.0f };
+		glm::vec4 Color{ 1.0f };
+
+		ColorComponent() = default;
+		ColorComponent(const ColorComponent&) = default;
+		ColorComponent(const glm::vec4 & color)
+			: Color(color) {}
 	};
 
 }

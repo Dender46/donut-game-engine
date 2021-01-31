@@ -44,3 +44,4 @@
 #include "Donut/Scene/Scene.h"
 #include "Donut/Scene/Systems.h"
 #include "Donut/Scene/Components.h"
+#include "Donut/Scene/Entity.h"

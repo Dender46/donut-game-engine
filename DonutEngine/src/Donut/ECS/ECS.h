@@ -27,9 +27,9 @@ namespace Donut {
 
 		/* Component methods */
 		template<typename Component>
-		inline void AddComponent(EntityHandle handle, Component& component)
+		inline void AddComponent(EntityHandle handle, const Component& component)
 		{
-			AddComponentInternal(handle, *HandleToEntity(handle), Component::ID, component);
+			AddComponentInternal(handle, HandleToEntity(handle), Component::ID, component);
 		}
 
 		template<typename Component>
@@ -42,6 +42,12 @@ namespace Donut {
 		inline BaseECSComponent* GetComponent(EntityHandle handle)
 		{
 			return GetComponentInternal(handle, Component::ID, m_Components[Component::ID]);
+		}
+
+		template<typename Component>
+		inline bool HasComponent(EntityHandle handle)
+		{
+			return GetComponentInternal(handle, Component::ID, m_Components[Component::ID]) != nullptr;
 		}
 		
 		/* System method */
@@ -66,10 +72,10 @@ namespace Donut {
 			return HandleToRawType(handle)->first;
 		}
 
-		// If we need to modify entity's component list (add/remove) we should return pointer here
-		inline std::vector<std::pair<uint32_t, uint32_t>>* HandleToEntity(EntityHandle handle)
+		// If we need to modify entity's component list (add/remove) we should return reference here
+		inline std::vector<std::pair<uint32_t, uint32_t>>& HandleToEntity(EntityHandle handle)
 		{
-			return &(HandleToRawType(handle)->second);
+			return HandleToRawType(handle)->second;
 		}
 
 
