@@ -8,6 +8,7 @@ namespace Donut {
 	class Entity
 	{
 	public:
+		Entity() = default;
 		Entity(Scene* scene, EntityHandle handle);
 		Entity(const Entity& other) = default;
 
@@ -38,6 +39,8 @@ namespace Donut {
 			return m_Scene->m_ECS.HasComponent<T>(m_Handle);
 		}
 
+		// Helper function to see if entity is initialized
+		operator bool() { return m_Handle != nullptr; }
 	private:
 		EntityHandle m_Handle = nullptr;
 		Scene* m_Scene = nullptr;

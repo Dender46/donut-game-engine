@@ -18,6 +18,9 @@ namespace Donut {
 		OrthographicCameraController m_CameraController;
 
 		Scene m_Scene;
+		Entity m_MainCamera;
+		Entity m_ClipSizeCamera;
+		bool m_UsingMainCamera = true;
 
 		// Framebuffer and viewport specific
 		Framebuffer::FramebufferProps m_FramebufferProps = { 640, 480 };

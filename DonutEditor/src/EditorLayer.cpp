@@ -26,6 +26,12 @@ namespace Donut {
 		// Create entity and add all components
 		static Entity squareEntity = m_Scene.CreateEntity();
 		squareEntity.AddComponent(color);
+
+		m_MainCamera = m_Scene.CreateEntity("Main Camera");
+		m_MainCamera.AddComponent(CameraComponent(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f)));
+
+		m_ClipSizeCamera = m_Scene.CreateEntity("Clip-Size Camera");
+		m_ClipSizeCamera.AddComponent(CameraComponent(glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f), false));
 	}
 
 	void EditorLayer::OnUpdate(Timestep ts)
@@ -40,9 +46,8 @@ namespace Donut {
 		RenderCommand::SetClearColor(DN_COLOR_PURPLE);
 		RenderCommand::Clear();
 		
-		Renderer2D::BeginScene(m_CameraController.GetCamera());
+		// Draw and update scene
 		m_Scene.OnUpdate(ts);
-		Renderer2D::EndScene();
 		
 		m_Framebuffer->Unbind();
 	}
@@ -117,6 +122,14 @@ namespace Donut {
 			ImGui::Text("QuadCount: %d", stats.QuadCount);
 			ImGui::Text("VertexCount: %d", stats.GetTotalVertexCount());
 			ImGui::Text("IndexCount: %d", stats.GetTotalIndexCount());
+			
+			ImGui::Separator();
+			if (ImGui::Checkbox("Use Main Camera", &m_UsingMainCamera))
+			{
+				m_MainCamera.GetComponent<CameraComponent>().IsPrimary = m_UsingMainCamera;
+				m_ClipSizeCamera.GetComponent<CameraComponent>().IsPrimary = !m_UsingMainCamera;
+			}
+
 			ImGui::End();
 
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });

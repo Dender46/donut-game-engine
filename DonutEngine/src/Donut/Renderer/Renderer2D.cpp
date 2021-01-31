@@ -118,6 +118,29 @@ namespace Donut {
 		delete[] s_Data.QuadVBBase;
 	}
 
+	void Renderer2D::BeginScene(const glm::mat4& projection, const glm::mat4 transform, bool isText)
+	{
+		DN_PROFILE_FUNCTION();
+
+		glm::mat4 viewProj = projection * glm::inverse(transform);
+
+		if (isText)
+		{
+			s_Data.TextShader->Bind();
+			s_Data.TextShader->SetMat4("u_ViewProjection", viewProj);
+		}
+		else
+		{
+			s_Data.TextureShader->Bind();
+			s_Data.TextureShader->SetMat4("u_ViewProjection", viewProj);
+		}
+
+		s_Data.QuadIndexCount = 0;
+		s_Data.QuadVBPtr = s_Data.QuadVBBase;
+
+		s_Data.TextureSlotIndex = 1;
+	}
+
 	void Renderer2D::BeginScene(const OrthographicCamera& camera, bool isText)
 	{
 		DN_PROFILE_FUNCTION();

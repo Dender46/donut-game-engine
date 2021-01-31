@@ -2,6 +2,7 @@
 
 #include "Donut/Core/Core.h"
 #include "OrthographicCamera.h"
+#include "Camera.h"
 #include "Shader.h"
 #include "VertexArray.h"
 #include "Texture.h"
@@ -15,6 +16,7 @@ namespace Donut {
 		static void Init();
 		static void Shutdown();
 
+		static void BeginScene(const glm::mat4& projection, const glm::mat4 transform, bool isText = false);
 		static void BeginScene(const OrthographicCamera& camera, bool isText = false);
 		static void EndScene();
 		static void Flush();

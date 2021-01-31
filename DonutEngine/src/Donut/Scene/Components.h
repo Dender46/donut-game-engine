@@ -2,6 +2,7 @@
 #include <glm/glm.hpp>
 
 #include "Donut/ECS/ECS.h"
+#include "Donut/Renderer/Camera.h"
 
 namespace Donut {
 
@@ -40,6 +41,19 @@ namespace Donut {
 		ColorComponent(const ColorComponent&) = default;
 		ColorComponent(const glm::vec4 & color)
 			: Color(color) {}
+	};
+
+	struct CameraComponent : public ECSComponent<CameraComponent>
+	{
+		Donut::Camera Camera;
+		bool IsPrimary = true;
+
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
+		CameraComponent(const glm::mat4& projection)
+			: Camera(projection) {}
+		CameraComponent(const glm::mat4& projection, bool isPrimary)
+			: Camera(projection), IsPrimary(isPrimary) {}
 	};
 
 }

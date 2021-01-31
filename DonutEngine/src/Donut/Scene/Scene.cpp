@@ -3,6 +3,8 @@
 #include "Donut/Scene/Components.h"
 #include "Donut/Scene/Entity.h"
 
+#include "Donut/Renderer/Renderer2D.h"
+
 namespace Donut {
 
 	void Scene::AddSystem(BaseECSSystem& system)
@@ -21,7 +23,28 @@ namespace Donut {
 
 	void Scene::OnUpdate(Timestep ts)
 	{
-		m_ECS.UpdateSystems(m_SystemList, ts);
+		// Rendering part
+		Camera* primaryCamera = nullptr;
+		glm::mat4* cameraTransform = nullptr;
+		auto cameraComponents = m_ECS.GetComponentsOfType<CameraComponent>();
+
+		// Get primary camera that should be taken for drawing scene
+		for (auto camera : cameraComponents)
+			if (camera->IsPrimary)
+			{
+				primaryCamera = &camera->Camera;
+				cameraTransform = &m_ECS.GetComponent<TransformComponent>(camera->Entity)->Transform;
+				break;
+			}
+
+		if (primaryCamera)
+		{
+			Renderer2D::BeginScene(primaryCamera->GetProjection(), *cameraTransform, false);
+
+			m_ECS.UpdateSystems(m_SystemList, ts);
+
+			Renderer2D::EndScene();
+		}
 	}
 
 }

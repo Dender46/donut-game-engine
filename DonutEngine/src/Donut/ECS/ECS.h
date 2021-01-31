@@ -39,9 +39,9 @@ namespace Donut {
 		}
 		
 		template<typename Component>
-		inline BaseECSComponent* GetComponent(EntityHandle handle)
+		inline Component* GetComponent(EntityHandle handle)
 		{
-			return GetComponentInternal(handle, Component::ID, m_Components[Component::ID]);
+			return (Component*)GetComponentInternal(handle, Component::ID, m_Components[Component::ID]);
 		}
 
 		template<typename Component>
@@ -50,6 +50,20 @@ namespace Donut {
 			return GetComponentInternal(handle, Component::ID, m_Components[Component::ID]) != nullptr;
 		}
 		
+		template<typename Component>
+		inline std::vector<Component*> GetComponentsOfType()
+		{
+			size_t componentsCount = m_Components[Component::ID].size() / Component::SIZE;
+			std::vector<Component*> components;
+			components.resize(componentsCount);
+
+			size_t index = 0;
+			for (size_t i = 0; i < m_Components[Component::ID].size(); i += Component::SIZE)
+				components[index++] = (Component*)&m_Components[Component::ID][i];
+
+			return components;
+		}
+
 		/* System method */
 		void UpdateSystems(ECSSystemList& systems, Timestep ts);
 	private:
