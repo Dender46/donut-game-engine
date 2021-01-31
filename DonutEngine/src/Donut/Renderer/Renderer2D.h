@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Donut/Core/Core.h"
-#include "Camera.h"
+#include "OrthographicCamera.h"
 #include "Shader.h"
 #include "VertexArray.h"
 #include "Texture.h"

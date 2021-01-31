@@ -22,7 +22,7 @@ namespace Donut {
 		inline void AddComponent(uint32_t componentType, uint32_t componentFlag = 0)
 		{
 			m_ComponentTypes.push_back(componentType);
-			m_ComponentFlags .push_back(componentFlag);
+			m_ComponentFlags.push_back(componentFlag);
 		}
 	private:
 		std::vector<uint32_t> m_ComponentTypes;

@@ -27,7 +27,7 @@
 #include "Donut/Renderer/SubTexture2D.h"
 
 // ----- Cameras -----
-#include "Donut/Renderer/Camera.h"
+#include "Donut/Renderer/OrthographicCamera.h"
 #include "Donut/Renderer/OrthographicCameraController.h"
 
 // ----- Physics -----

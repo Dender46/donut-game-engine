@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Donut/Renderer/Camera.h"
+#include "Donut/Renderer/OrthographicCamera.h"
 #include "Donut/Core/Timestep.h"
 #include "Donut/Events/MouseEvent.h"
 #include "Donut/Events/ApplicationEvent.h"
